@@ -1,0 +1,372 @@
+{
+  "key": "FR-1551",
+  "fields": {
+    "summary": "Reusable Personal Information + Billing Address forms (B2C) with Google Places autocomplete",
+    "issuetype": { "name": "Historia" },
+    "priority": { "name": "Medium" },
+    "labels": [],
+    "components": [],
+    "updated": "2026-07-28T11:17:27.554-0500",
+    "issuelinks": [],
+    "attachment": [],
+    "comment": { "comments": [] },
+    "subtasks": [
+      { "key": "FR-1552" },
+      { "key": "FR-1553" },
+      { "key": "FR-1554" },
+      { "key": "FR-1555" },
+      { "key": "FR-1557" },
+      { "key": "FR-1558" },
+      { "key": "FR-1559" }
+    ],
+    "description": {
+      "type": "doc",
+      "version": 1,
+      "content": [
+        {
+          "type": "paragraph",
+          "content": [
+            { "type": "text", "text": "As a", "marks": [{ "type": "strong" }] },
+            { "type": "text", "text": " visitor in a B2C purchase flow, " },
+            { "type": "text", "text": "I want", "marks": [{ "type": "strong" }] },
+            { "type": "text", "text": " a personal-information + address form with address autocomplete, " },
+            { "type": "text", "text": "so that", "marks": [{ "type": "strong" }] },
+            { "type": "text", "text": " I complete checkout fast and without typing errors." }
+          ]
+        },
+        {
+          "type": "heading",
+          "attrs": { "level": 2 },
+          "content": [{ "type": "text", "text": "Context" }]
+        },
+        {
+          "type": "paragraph",
+          "content": [
+            { "type": "text", "text": "The B2C purchase flows (membership today; tickets/donations later) need a reusable " },
+            { "type": "text", "text": "Personal Information", "marks": [{ "type": "strong" }] },
+            { "type": "text", "text": " (contact + mailing address) form + an optional alternate " },
+            { "type": "text", "text": "Billing Address", "marks": [{ "type": "strong" }] },
+            { "type": "text", "text": ". Today this only exists in the legacy " },
+            { "type": "text", "text": "galas", "marks": [{ "type": "em" }] },
+            { "type": "text", "text": " checkout (" },
+            { "type": "text", "text": "OnlineAppFrontend", "marks": [{ "type": "code" }] },
+            { "type": "text", "text": "), coupled to Redux/" },
+            { "type": "text", "text": "forms-v2", "marks": [{ "type": "code" }] },
+            { "type": "text", "text": " + the legacy " },
+            { "type": "text", "text": "/services/user", "marks": [{ "type": "code" }] },
+            { "type": "text", "text": " backend. Veevart 2.0 already has " },
+            { "type": "text", "text": "@veevart/checkout-billing", "marks": [{ "type": "code" }] },
+            { "type": "text", "text": " (billing address, ported) but " },
+            { "type": "text", "text": "no", "marks": [{ "type": "strong" }] },
+            { "type": "text", "text": " standalone personal-information form. We port the galas logic into a clean, host-agnostic package and add Google Places autocomplete." }
+          ]
+        },
+        {
+          "type": "heading",
+          "attrs": { "level": 2 },
+          "content": [{ "type": "text", "text": "Scope / decisions" }]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    { "type": "text", "text": "New package " },
+                    { "type": "text", "text": "@veevart/constituents", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": " (" },
+                    { "type": "text", "text": "packages/constituents/", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": ") exposing " },
+                    { "type": "text", "text": "PersonalInformationForm", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": "." }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    { "type": "text", "text": "Personal info and billing are " },
+                    { "type": "text", "text": "separate", "marks": [{ "type": "strong" }] },
+                    { "type": "text", "text": "; " },
+                    { "type": "text", "text": "reuse", "marks": [{ "type": "strong" }] },
+                    { "type": "text", "text": " the existing " },
+                    { "type": "text", "text": "@veevart/checkout-billing", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": " " },
+                    { "type": "text", "text": "BillingAddressForm", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": " for the alternate billing (consumer composes both, like galas " },
+                    { "type": "text", "text": "CheckoutPage", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": ")." }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    { "type": "text", "text": "Google Places autocomplete", "marks": [{ "type": "strong" }] },
+                    { "type": "text", "text": " is included in this story (on the address fields)." }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    { "type": "text", "text": "Email " },
+                    { "type": "text", "text": "auto-login", "marks": [{ "type": "strong" }] },
+                    { "type": "text", "text": " is included " },
+                    { "type": "text", "text": "via callbacks", "marks": [{ "type": "strong" }] },
+                    { "type": "text", "text": " (" },
+                    { "type": "text", "text": "onEmailBlur", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": "/" },
+                    { "type": "text", "text": "isIdentifying", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": "/prefill); the host wires it to the constituents/identity API (not the legacy " },
+                    { "type": "text", "text": "/services/user", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": ")." }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "attrs": { "level": 2 },
+          "content": [{ "type": "text", "text": "Acceptance criteria" }]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    { "type": "text", "text": "@veevart/constituents", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": " exports " },
+                    { "type": "text", "text": "PersonalInformationForm", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": " — " },
+                    { "type": "text", "text": "RHF + Zod", "marks": [{ "type": "strong" }] },
+                    { "type": "text", "text": ", ref-based (" },
+                    { "type": "text", "text": "validate()", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": " / " },
+                    { "type": "text", "text": "getValues()", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": "); fields: firstName, lastName, email, phone, street, city, state, postalCode, country (DS " },
+                    { "type": "text", "text": "Autocomplete", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": " with flags, reusing " },
+                    { "type": "text", "text": "COUNTRIES", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": " from checkout-billing). DS primitives only." }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    { "type": "text", "text": "Auto-login: props " },
+                    { "type": "text", "text": "onEmailBlur", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": ", " },
+                    { "type": "text", "text": "isIdentifying", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": ", " },
+                    { "type": "text", "text": "onIdentified", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": " (prefill) + clear; hides phone/address when the identified contact already has them (" },
+                    { "type": "text", "text": "autoHide", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": " flag). No backend coupling." }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    { "type": "text", "text": "Billing: " },
+                    { "type": "text", "text": "reuse", "marks": [{ "type": "strong" }] },
+                    { "type": "text", "text": " " },
+                    { "type": "text", "text": "@veevart/checkout-billing", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": " " },
+                    { "type": "text", "text": "BillingAddressForm", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": " (toggle \"different billing address\"); not duplicated." }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    { "type": "text", "text": "Google Places autocomplete", "marks": [{ "type": "strong" }] },
+                    { "type": "text", "text": " on the address field (personal + billing): selecting a suggestion fills street/city/state/zip/country; " },
+                    { "type": "text", "text": "manual entry remains as fallback", "marks": [{ "type": "strong" }] },
+                    { "type": "text", "text": ". Implemented as a reusable " },
+                    { "type": "text", "text": "AddressAutocomplete", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": " (in " },
+                    { "type": "text", "text": "@veevart/checkout-billing", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": ", opt-in via prop + " },
+                    { "type": "text", "text": "googleMapsApiKey", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": "); uses session tokens." }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    { "type": "text", "text": "API key from " },
+                    { "type": "text", "text": "SSM", "marks": [{ "type": "strong" }] },
+                    { "type": "text", "text": " " },
+                    { "type": "text", "text": "/{stage}/platform/frontend/google-maps/api-key", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": ", restricted by HTTP referrer + Places API; passed to packages " },
+                    { "type": "text", "text": "by prop", "marks": [{ "type": "strong" }] },
+                    { "type": "text", "text": " (never read env in a package). Graceful fallback if key absent/script fails." }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    { "type": "text", "text": "i18n " },
+                    { "type": "text", "text": "en + fr", "marks": [{ "type": "strong" }] },
+                    { "type": "text", "text": " (mandatory) for both packages; " },
+                    { "type": "text", "text": "check:i18n", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": " green. typecheck + lint + tests green." }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "attrs": { "level": 2 },
+          "content": [{ "type": "text", "text": "Reference / reuse" }]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    { "type": "text", "text": "Logic to port (strip Redux/forms-v2/legacy backend → props/callbacks): " },
+                    { "type": "text", "text": "OnlineAppFrontend/apps/galas/src/components/checkout/{PersonalInformationForm,BillingAddressToggle}.tsx", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": "." }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    { "type": "text", "text": "Reuse: " },
+                    { "type": "text", "text": "@veevart/checkout-billing", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": " (" },
+                    { "type": "text", "text": "COUNTRIES", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": ", " },
+                    { "type": "text", "text": "getFieldConfig", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": ", " },
+                    { "type": "text", "text": "AddressData", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": ", " },
+                    { "type": "text", "text": "BillingAddressForm", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": ")." }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    { "type": "text", "text": "Pattern: " },
+                    { "type": "text", "text": "packages/checkout-billing", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": " (package shape, RHF + next-intl) and " },
+                    { "type": "text", "text": "@veevart/fundraising/.../PersonalInfoForm.tsx", "marks": [{ "type": "code" }] },
+                    { "type": "text", "text": "." }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "attrs": { "level": 2 },
+          "content": [{ "type": "text", "text": "Out of scope" }]
+        },
+        {
+          "type": "bulletList",
+          "content": [
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    { "type": "text", "text": "The identify-by-email backend endpoint (host wires the existing constituents/identity API)." }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    { "type": "text", "text": "Payment/Salesforce payload assembly (consumer concern)." }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "listItem",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [
+                    { "type": "text", "text": "Google Cloud project + billing + budget-alert setup (infra/ops task, can run in parallel)." }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
