@@ -1,5 +1,5 @@
 /**
- * @qa-agent/istqb — the deterministic core of the QA Agent.
+ * @kriteria/istqb — the deterministic core of Kriteria.
  *
  * No LLM calls, no I/O, no domain knowledge about any particular customer.
  * Given a description of the situation it produces a full ISTQB test strategy
