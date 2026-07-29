@@ -24,16 +24,26 @@ export function createAnthropicCaller(
   const client = options.client ?? new Anthropic();
 
   return async (req) => {
-    const response = await client.messages.create({
+    // Plain format object (type + schema only): the SDK's AutoParseable
+    // wrapper would auto-parse inside the stream helper and throw an opaque
+    // error on truncated output before our stop_reason check can run.
+    const autoFormat = zodOutputFormat(req.schema);
+    const params = {
       model: req.model,
       max_tokens: req.maxTokens,
       system: req.system,
       output_config: {
         effort: req.effort,
-        format: zodOutputFormat(req.schema),
+        format: { type: autoFormat.type, schema: autoFormat.schema },
       },
-      messages: [{ role: "user", content: req.user }],
-    });
+      messages: [{ role: "user" as const, content: req.user }],
+    };
+
+    // Stream above ~16k output tokens to stay clear of SDK HTTP timeouts.
+    const response =
+      req.maxTokens > 16000
+        ? await client.messages.stream(params).finalMessage()
+        : await client.messages.create(params);
 
     if (response.stop_reason === "refusal") {
       const category = response.stop_details?.category ?? "unspecified";

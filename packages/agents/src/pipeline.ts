@@ -11,6 +11,7 @@
  * tokens — @kriteria/istqb computes it from validated signals.
  */
 
+import { createHash } from "node:crypto";
 import {
   AnalysisSchema,
   CriticReportSchema,
@@ -32,6 +33,16 @@ import {
 } from "./routing.js";
 import { runAgent, type AgentRunRecord, type CallModel } from "./runner.js";
 
+/**
+ * Stage cache — cost protection for re-runs. Keys are content hashes of
+ * (role, model, system, user prompt), so a stage replays from cache only when
+ * its exact input is unchanged; any upstream change changes the key.
+ */
+export interface StageCache {
+  get(key: string): unknown | undefined;
+  set(key: string, value: unknown): void;
+}
+
 export interface PipelineOptions {
   call: CallModel;
   routing?: Record<AgentRole, RouteConfig>;
@@ -39,6 +50,8 @@ export interface PipelineOptions {
   maxRevisions?: number;
   /** Tenant memory snippets to inject as labelled context. */
   tenantContext?: string;
+  /** When provided, successful stage outputs are reused across runs. */
+  cache?: StageCache;
   log?: (message: string) => void;
 }
 
@@ -55,6 +68,12 @@ export interface PlanResult {
   totalUsage: { inputTokens: number; outputTokens: number };
 }
 
+/**
+ * Cost guard: caps the designer's output volume regardless of depth. Depth
+ * governs per-case thoroughness; total volume is an economic decision.
+ */
+const MAX_TOTAL_CASES = 24;
+
 export async function runPlanPipeline(
   basis: TestBasis,
   options: PipelineOptions,
@@ -69,18 +88,26 @@ export async function runPlanPipeline(
     schema: S,
     user: string,
   ) => {
+    const fullUser = withTenantContext(user, options.tenantContext);
+    const cacheKey = stageCacheKey(role, routing[role].model, fullUser);
+
+    const cached = options.cache?.get(cacheKey);
+    if (cached !== undefined) {
+      const parsed = schema.safeParse(cached);
+      if (parsed.success) {
+        log(`▸ ${role} (cached — $0)`);
+        return parsed.data;
+      }
+      // Stale/corrupt entry: fall through to a live call.
+    }
+
     log(`▸ ${role} (${routing[role].model})`);
     const { output, record } = await runAgent(
-      {
-        role,
-        schema,
-        system: SYSTEM_BY_ROLE[role],
-        user: withTenantContext(user, options.tenantContext),
-        ...routing[role],
-      },
+      { role, schema, system: SYSTEM_BY_ROLE[role], user: fullUser, ...routing[role] },
       options.call,
     );
     runs.push(record);
+    options.cache?.set(cacheKey, output);
     return output;
   };
 
@@ -117,7 +144,13 @@ ${json(analysis)}
 ${json(riskRegister)}
 
 ## Selected strategy (deterministic — implement, do not re-litigate)
-${json(strategySummary(strategy))}`;
+${json(strategySummary(strategy))}
+
+## Hard output budget
+Design AT MOST ${MAX_TOTAL_CASES} cases in total, prioritized by risk: cover
+every high/critical risk and mandatory technique first; push what does not fit
+into exclusions with reasons. Depth guides thoroughness per case, never total
+volume beyond this cap.`;
 
   let design = DesignOutputSchema.parse(
     await stage("designer", DesignOutputSchema, designerBrief),
@@ -185,6 +218,14 @@ ${json(design)}`,
 
 function json(value: unknown): string {
   return JSON.stringify(value, null, 1);
+}
+
+export function stageCacheKey(role: string, model: string, user: string): string {
+  const digest = createHash("sha256")
+    .update(`${role}\0${model}\0${SYSTEM_BY_ROLE[role as AgentRole]}\0${user}`)
+    .digest("hex")
+    .slice(0, 20);
+  return `${role}-${digest}`;
 }
 
 function withTenantContext(user: string, context?: string): string {

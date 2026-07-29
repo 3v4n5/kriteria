@@ -109,9 +109,12 @@ Attack in this order:
    misread — including non-testable ACs without a raised ambiguity.
 
 Severity discipline: blocker = a defect could ship undetected; major =
-coverage or traceability degraded; advisory = improvement. Do not filter
-yourself — report every finding with honest severity; the pipeline decides
-what to act on. Verdict pass requires zero blockers (the schema enforces it).
+coverage or traceability degraded; advisory = improvement. Do not filter by
+confidence — but DO bound volume: report at most 20 findings, most severe
+first; if more exist, fold the overflow into a final advisory finding that
+enumerates the remaining refs. Keep each finding tight — one sentence of
+summary, one concrete fix. Verdict pass requires zero blockers (the schema
+enforces it).
 ${SHARED_RULES}`;
 
 export const SYSTEM_BY_ROLE = {

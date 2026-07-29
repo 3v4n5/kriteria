@@ -4,10 +4,12 @@
  * just narration.
  */
 
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import type { StageCache } from "@kriteria/agents";
 import {
   createAnthropicCaller,
+  estimateCostUsd,
   runPlanPipeline,
   type PlanResult,
 } from "@kriteria/agents";
@@ -50,23 +52,47 @@ export async function planCommand(options: PlanCommandOptions): Promise<void> {
       (redactions.total > 0 ? ` ${JSON.stringify(redactions.counts)}` : ""),
   );
 
-  // 2. Run the pipeline.
+  // 2. Run the pipeline, with a file-backed stage cache so a failed run never
+  //    re-bills the stages that already succeeded.
+  const dir = join(options.outDir, basis.source.ref);
   const result = await runPlanPipeline(basis, {
     call: createAnthropicCaller(),
     maxRevisions: options.maxRevisions,
+    cache: fileStageCache(join(dir, ".cache")),
     log: (msg) => console.log(`  ${msg}`),
   });
 
   // 3. Write artifacts.
-  const dir = join(options.outDir, basis.source.ref);
   mkdirSync(dir, { recursive: true });
   writeArtifacts(dir, basis.source.ref, result);
 
   console.log(`\n✓ verdict: ${result.critique.verdict} (${result.revisions} revision(s))`);
+  const costUsd = result.runs.reduce(
+    (sum, r) => sum + estimateCostUsd(r.model, r.usage),
+    0,
+  );
   console.log(
-    `  usage: ${result.totalUsage.inputTokens} in / ${result.totalUsage.outputTokens} out tokens across ${result.runs.length} call(s)`,
+    `  usage: ${result.totalUsage.inputTokens} in / ${result.totalUsage.outputTokens} out tokens across ${result.runs.length} call(s) ≈ $${costUsd.toFixed(3)} USD`,
   );
   console.log(`  artifacts: ${dir}/`);
+}
+
+function fileStageCache(cacheDir: string): StageCache {
+  return {
+    get(key) {
+      const path = join(cacheDir, `${key}.json`);
+      if (!existsSync(path)) return undefined;
+      try {
+        return JSON.parse(readFileSync(path, "utf8"));
+      } catch {
+        return undefined;
+      }
+    },
+    set(key, value) {
+      mkdirSync(cacheDir, { recursive: true });
+      writeFileSync(join(cacheDir, `${key}.json`), JSON.stringify(value), "utf8");
+    },
+  };
 }
 
 function writeArtifacts(dir: string, ref: string, result: PlanResult): void {
