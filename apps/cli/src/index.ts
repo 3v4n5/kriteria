@@ -7,11 +7,13 @@
 
 import { parseArgs } from "node:util";
 import { planCommand } from "./plan.js";
+import { reportCommand } from "./report.js";
 
 const HELP = `kriteria — agentic QA strategy engine (Fase 0)
 
 Usage:
   qa plan --from <jira:KEY | file:path> [options]
+  qa report <out/REF>       Genera informe HTML legible de una corrida
 
 Options:
   --from <src>        Work item source: jira:PROJ-123 or file:raw-issue.json
@@ -29,6 +31,12 @@ async function main(): Promise<void> {
 
   if (!command || command === "-h" || command === "--help") {
     console.log(HELP);
+    return;
+  }
+  if (command === "report") {
+    const dir = rest[0];
+    if (!dir) throw new Error("uso: qa report out/<REF>");
+    console.log(`✓ ${reportCommand(dir)}`);
     return;
   }
   if (command !== "plan") {
