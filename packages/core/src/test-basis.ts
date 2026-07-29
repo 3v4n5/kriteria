@@ -45,6 +45,41 @@ export const LinkedItemSchema = z.object({
 });
 export type LinkedItem = z.infer<typeof LinkedItemSchema>;
 
+/**
+ * Development panel data — the bridge between the work item and its code.
+ * Populated from the tracker's dev-status integration (branches/commits/PRs
+ * linked by the team's own workflow), remote links, or URL discovery in the
+ * item's text. Presence of a PR/repo is what unlocks white-box strategy
+ * signals (codeAccess) and the auto-code execution mode downstream.
+ */
+export const DevelopmentInfoSchema = z.object({
+  branches: z
+    .array(
+      z.object({
+        name: z.string().min(1),
+        repositoryUrl: z.string().optional(),
+      }),
+    )
+    .default([]),
+  pullRequests: z
+    .array(
+      z.object({
+        url: z.string().min(1),
+        status: z.string().optional(),
+        repositoryUrl: z.string().optional(),
+      }),
+    )
+    .default([]),
+  commits: z.array(z.object({ url: z.string().min(1) })).default([]),
+  /** Repo URLs discovered anywhere (dev panel, remote links, text scan). */
+  repositoryUrls: z.array(z.string()).default([]),
+  /** Where each piece of evidence came from, for auditability. */
+  discoveredVia: z
+    .array(z.enum(["dev-panel", "remote-link", "text-scan"]))
+    .default([]),
+});
+export type DevelopmentInfo = z.infer<typeof DevelopmentInfoSchema>;
+
 export const AcceptanceCriterionSchema = z.object({
   /** Stable id within the basis, e.g. "AC-1". Drives traceability to cases. */
   id: z.string().regex(/^AC-\d+$/),
@@ -79,6 +114,13 @@ export const TestBasisSchema = z.object({
   components: z.array(z.string()).default([]),
   attachments: z.array(AttachmentRefSchema).default([]),
   links: z.array(LinkedItemSchema).default([]),
+  development: DevelopmentInfoSchema.default({
+    branches: [],
+    pullRequests: [],
+    commits: [],
+    repositoryUrls: [],
+    discoveredVia: [],
+  }),
   /**
    * Discussion extracted from the source (comment bodies, review notes).
    * SECURITY: everything in here is untrusted third-party text. Agents must

@@ -41,6 +41,10 @@ Judgement guidance:
   specQuality reflects what is actually written, not what you can infer;
   hasStateModel is true only if a lifecycle is documented or clearly implied;
   historicalDefectDensity stays at 0.5 unless context says otherwise.
+- codeAccess: set true ONLY when the Development section shows a concrete
+  branch, PR or repository for this item — that is evidence the code exists
+  and is reachable. An empty Development section means codeAccess false, and
+  it is worth raising as an ambiguity when the item claims to be implemented.
 - Ambiguities are deliverables. A good question with a stated working
   assumption and its risk-if-wrong is worth more than a guessed answer.
 ${SHARED_RULES}`;
@@ -84,6 +88,14 @@ Judgement guidance:
   concrete data, concrete expected results. "Verify it works" is not a step.
 - Cases needing human judgement (visual quality, hardware, third parties) get
   needsHuman:true — do not pretend they are automatable.
+- Propose an executionMode per case: auto-api (pure HTTP checks), auto-web
+  (browser UI flows), auto-code (unit/component tests in the repo — only
+  meaningful when the Development section shows a repo), guided-manual
+  (human checklist), dev-guide (white-box guidance for developers),
+  human-only. A deterministic router downgrades what the tenant cannot run,
+  so propose the most autonomous mode the case genuinely admits.
+- Set mutatesState:true on any case that creates, updates or deletes data
+  when executed — autonomous runs of those require a human gate.
 - What you deliberately leave out goes in exclusions with a reason. Silent
   truncation reads as full coverage when it is not.
 - If a revision request with critic findings is included, address every

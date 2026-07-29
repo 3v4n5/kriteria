@@ -25,6 +25,13 @@ const basis: TestBasis = {
   components: [],
   attachments: [],
   links: [],
+  development: {
+    branches: [],
+    pullRequests: [],
+    commits: [],
+    repositoryUrls: [],
+    discoveredVia: [],
+  },
   discussion: [],
 };
 
@@ -186,6 +193,49 @@ describe("runPlanPipeline", () => {
     expect(result.critique.verdict).toBe("pass");
     expect(result.revisions).toBe(0);
     expect(result.totalUsage).toEqual({ inputTokens: 400, outputTokens: 200 });
+  });
+
+  it("routes execution per case: no capabilities means humans run everything", async () => {
+    const { call } = fakeCaller([
+      analysisFixture,
+      riskFixture,
+      designFixture,
+      passCritique,
+    ]);
+
+    const result = await runPlanPipeline(basis, { call });
+
+    expect(result.executionPlan).toHaveLength(1);
+    expect(result.executionPlan[0]!.routed.mode).toBe("guided-manual");
+  });
+
+  it("honors designer proposals when the tenant has the capability", async () => {
+    const proposingDesign = {
+      cases: [
+        {
+          ...caseFixture("TC-1", "API boundary check"),
+          executionMode: "auto-api",
+          mutatesState: true,
+        },
+      ],
+      exclusions: [],
+    };
+    const { call } = fakeCaller([
+      analysisFixture,
+      riskFixture,
+      proposingDesign,
+      passCritique,
+    ]);
+
+    const result = await runPlanPipeline(basis, {
+      call,
+      capabilities: { apiEnvironment: true },
+    });
+
+    const routed = result.executionPlan[0]!;
+    expect(routed.routed.mode).toBe("auto-api");
+    // Autonomous + state-mutating = human gate required.
+    expect(routed.routed.requiresGate).toBe(true);
   });
 
   it("routes each role to its configured model", async () => {

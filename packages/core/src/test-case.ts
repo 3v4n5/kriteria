@@ -7,7 +7,12 @@
  * without re-interpreting prose.
  */
 
-import { TEST_LEVELS, TEST_TECHNIQUES, TEST_TYPES } from "@kriteria/istqb";
+import {
+  EXECUTION_MODES,
+  TEST_LEVELS,
+  TEST_TECHNIQUES,
+  TEST_TYPES,
+} from "@kriteria/istqb";
 import { z } from "zod/v4";
 
 export const CasePrioritySchema = z.enum(["critical", "high", "medium", "low"]);
@@ -40,6 +45,14 @@ export const DesignedCaseSchema = z.object({
   gherkin: z.string().optional(),
   /** True when a human must run it (visual judgement, hardware, third party). */
   needsHuman: z.boolean(),
+  /**
+   * Execution mode PROPOSED by the designer. The deterministic router
+   * (@kriteria/istqb routeExecution) validates it against the tenant's real
+   * capabilities and may degrade it; the routed result is what ships.
+   */
+  executionMode: z.enum(EXECUTION_MODES).optional(),
+  /** The case creates/updates/deletes data — autonomous runs need a gate. */
+  mutatesState: z.boolean().optional(),
   notes: z.string().optional(),
 });
 export type DesignedCase = z.infer<typeof DesignedCaseSchema>;

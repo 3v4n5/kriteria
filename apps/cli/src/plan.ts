@@ -127,7 +127,30 @@ function writeArtifacts(dir: string, ref: string, result: PlanResult): void {
     }),
   );
 
-  write("testcases.yml", toYaml(result.design));
+  // Cases ship with their ROUTED execution mode attached — the deliverable
+  // states who runs what, honestly degraded to the tenant's capabilities.
+  const routingById = new Map(result.executionPlan.map((e) => [e.caseId, e]));
+  write(
+    "testcases.yml",
+    toYaml({
+      cases: result.design.cases.map((c) => {
+        const routing = routingById.get(c.id);
+        return {
+          ...c,
+          execution: routing
+            ? {
+                mode: routing.routed.mode,
+                proposed: routing.proposed ?? null,
+                degraded: routing.routed.degraded,
+                requiresGate: routing.routed.requiresGate,
+                reason: routing.routed.reason,
+              }
+            : null,
+        };
+      }),
+      exclusions: result.design.exclusions,
+    }),
+  );
 
   write(
     "critic.md",

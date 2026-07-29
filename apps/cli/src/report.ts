@@ -39,6 +39,14 @@ const rounds = [1, 2].map((n) => parseRound(criticMd, n)).filter(Boolean) as { v
 const scope = criticMd.match(/Scope: ([\s\S]*?)\n\n/)?.[1] ?? "";
 
 const SEV_ES: Record<string, string> = { blocker: "Bloqueante", major: "Mayor", advisory: "Sugerencia" };
+const MODE_ES: Record<string, string> = {
+  "auto-api": "⚙ auto API",
+  "auto-web": "⚙ auto web",
+  "auto-code": "⚙ auto código",
+  "guided-manual": "☑ manual guiada",
+  "dev-guide": "☑ guía para dev",
+  "human-only": "👁 solo humano",
+};
 const PRIO_ES: Record<string, string> = { critical: "Crítica", high: "Alta", medium: "Media", low: "Baja" };
 const DEPTH_ES: Record<string, string> = { smoke: "humo", standard: "estándar", thorough: "profunda", exhaustive: "exhaustiva" };
 
@@ -55,6 +63,8 @@ const casesHtml = design.cases
         <span class="badge">${esc(c.level)}</span>
         <span class="badge">${esc(c.type)}</span>
         <span class="badge tech">${esc(c.technique)}</span>
+        ${c.execution ? `<span class="badge mode${c.execution.mode.startsWith("auto") ? " auto" : ""}">${MODE_ES[c.execution.mode] ?? esc(c.execution.mode)}</span>` : ""}
+        ${c.execution?.requiresGate ? '<span class="badge gate">requiere aprobación</span>' : ""}
         ${c.needsHuman ? '<span class="badge human">requiere humano</span>' : ""}
       </span>
     </summary>
@@ -62,6 +72,7 @@ const casesHtml = design.cases
       <p class="trace"><strong>Cubre:</strong> ${esc(c.covers.join(", "))} &nbsp;·&nbsp;
         <strong>Mitiga:</strong> ${esc(c.mitigates.join(", ") || "—")} &nbsp;·&nbsp;
         <strong>Verifica:</strong> ${esc(c.verifies.join(", ") || "—")}</p>
+      ${c.execution ? `<p class="trace"><strong>Ejecución:</strong> ${MODE_ES[c.execution.mode] ?? esc(c.execution.mode)} — ${esc(c.execution.reason)}${c.execution.degraded ? ` <em>(propuesto: ${esc(c.execution.proposed ?? "—")})</em>` : ""}</p>` : ""}
       ${c.preconditions?.length ? `<p><strong>Precondiciones:</strong></p><ul>${c.preconditions.map((p: string) => `<li>${inlineMd(p)}</li>`).join("")}</ul>` : ""}
       ${c.dataRequirements?.length ? `<p><strong>Datos:</strong></p><ul>${c.dataRequirements.map((d: string) => `<li>${inlineMd(d)}</li>`).join("")}</ul>` : ""}
       <table class="steps"><thead><tr><th>#</th><th>Acción</th><th>Resultado esperado</th></tr></thead><tbody>
@@ -108,6 +119,8 @@ const html = `<!doctype html><html lang="es"><head><meta charset="utf-8">
   th { background:#f0f2f8 }
   .badge { display:inline-block; font-size:.75rem; padding:.1rem .5rem; border-radius:99px; background:#eef1f7; color:var(--muted); margin-right:.25rem }
   .badge.tech { background:#e8f0fe; color:#2b579a } .badge.human { background:#fdeed8; color:#9a6b1a }
+  .badge.mode { background:#eef1f7 } .badge.mode.auto { background:#e2f3e8; color:#1e7d46 }
+  .badge.gate { background:#fbe0e3; color:#c62838 }
   .badge.prio-critical { background:#fbe0e3; color:var(--blocker) } .badge.prio-high { background:#fdeed8; color:#9a5800 }
   .badge.prio-medium { background:#e8f0fe; color:#2b579a } .badge.prio-low { background:#e7f3ec; color:var(--ok) }
   .badge.sev-blocker { background:var(--blocker); color:#fff } .badge.sev-major { background:var(--major); color:#fff }

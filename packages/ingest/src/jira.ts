@@ -23,6 +23,11 @@ import {
 import { extractAcceptanceCriteria } from "./acceptance-criteria.js";
 import { adfToText } from "./adf.js";
 import {
+  extractDevelopment,
+  type RawDevStatus,
+  type RawRemoteLink,
+} from "./development.js";
+import {
   mergeReports,
   sanitizeText,
   type RedactionReport,
@@ -57,6 +62,10 @@ export interface RawJiraIssue {
   };
   /** Some MCP tools return comments at the top level. */
   comments?: { body?: unknown }[];
+  /** Jira dev-status payload (branches/commits/PRs), fetched separately. */
+  devStatus?: RawDevStatus;
+  /** Issue remote links, fetched separately. */
+  remoteLinks?: RawRemoteLink[];
 }
 
 export interface JiraIngestResult {
@@ -148,6 +157,14 @@ export function normalizeJiraIssue(
 
   const acceptanceCriteria = extractAcceptanceCriteria(description);
 
+  // Development discovery cascade: dev panel → remote links → text scan.
+  // Runs over SANITIZED text so nothing redacted can resurface via a URL.
+  const development = extractDevelopment({
+    devStatus: raw.devStatus,
+    remoteLinks: raw.remoteLinks,
+    texts: [description, ...discussion],
+  });
+
   const unhashed = {
     source: {
       kind: "jira" as const,
@@ -166,6 +183,7 @@ export function normalizeJiraIssue(
       .filter((n): n is string => Boolean(n)),
     attachments,
     links,
+    development,
     discussion,
   };
 

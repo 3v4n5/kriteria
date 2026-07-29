@@ -12,6 +12,7 @@ export * from "./risk.js";
 export * from "./strategy-matrix.js";
 export * from "./techniques.js";
 export * from "./scope.js";
+export * from "./execution.js";
 
 import {
   assessRisk,

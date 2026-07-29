@@ -104,7 +104,39 @@ Las fases se mantienen, con estos cambios de énfasis:
 
 ---
 
-## 6. Los próximos 90 días (secuencia concreta)
+## 6. Modelo de ejecución: cabeza Y manos, ruteadas por caso
+
+Un QA Lead no solo planea — ejecuta. La respuesta de Kriteria no es elegir
+entre planear y ejecutar sino **decidir por caso quién ejecuta**, con un
+router determinista (implementado en `@kriteria/istqb` `execution.ts`):
+
+| Modo | Ejecuta | Requiere (capacidad del tenant) |
+|---|---|---|
+| `auto-api` | El sistema, directo | Ambiente de pruebas API |
+| `auto-web` | El sistema vía browser agent | Ambiente web + infra Playwright |
+| `auto-code` | El sistema escribe unit tests en el repo | Acceso al repo + framework detectado |
+| `guided-manual` | Humano con checklist interactivo + evidencia | Nada — el piso universal |
+| `dev-guide` | El dev, con guía caja-blanca por función/rama | Nada |
+| `human-only` | Humano con charter (visual, hardware, terceros) | Nada |
+
+Reglas duras: el designer *propone*, el router *valida* contra capacidades
+reales y **degrada honestamente** (nunca "no se pudo"); toda ejecución
+autónoma que mute estado exige gate humano; nunca contra producción sin
+consentimiento por corrida.
+
+**El insumo que conecta historia y código**: el panel *Development* del
+tracker (rama, commits, PR — vinculados por el propio flujo del equipo),
+descubierto en cascada: dev-panel → remote links → escaneo de URLs en el
+texto. Su presencia activa `codeAccess`, las técnicas de caja blanca del
+motor (statement/branch/MC-DC) y el modo `auto-code`; su ausencia degrada a
+`dev-guide` — la guía de unit tests que un dev junior puede seguir.
+
+**El foso**: las ejecuciones manuales guiadas capturan flujos, datos y
+pantallas hacia la memoria del tenant — con eso el router *promueve* casos
+de `guided-manual` a `auto-web` con el tiempo. La empresa sin automatización
+la construye ejecutando manualmente, sin proyecto de automatización.
+
+## 7. Los próximos 90 días (secuencia concreta)
 
 1. **Terminar la validación Fase 0**: 4 tickets más, medir ≥3/5 con tu criterio. Sin esto, nada de lo anterior importa.
 2. **Golden set + evals** (Promptfoo): el instrumento que permite mejorar sin romper.
