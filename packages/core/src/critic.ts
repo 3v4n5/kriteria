@@ -6,7 +6,7 @@
  * (blockers exist) or ship (only advisories remain).
  */
 
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const FindingSeveritySchema = z.enum(["blocker", "major", "advisory"]);
 export type FindingSeverity = z.infer<typeof FindingSeveritySchema>;

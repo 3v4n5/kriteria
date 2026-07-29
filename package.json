@@ -8,12 +8,14 @@
     "node": ">=22"
   },
   "scripts": {
+    "qa": "tsx apps/cli/src/index.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "pnpm -r --if-present run typecheck"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
     "typescript": "^5.7.2",
     "vitest": "^3.0.5"
   }

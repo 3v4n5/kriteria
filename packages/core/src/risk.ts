@@ -5,7 +5,7 @@
  * without a traceable reason is an opinion, and opinions don't set test depth.
  */
 
-import { z } from "zod";
+import { z } from "zod/v4";
 import { EvidenceSchema } from "./analysis.js";
 
 const RiskScaleSchema = z.number().int().min(1).max(5);

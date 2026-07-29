@@ -65,6 +65,11 @@ export interface JiraIngestResult {
   redactions: RedactionReport;
 }
 
+/** Jira emits RFC-822 style offsets ("+0000"); the contract wants "+00:00". */
+function normalizeIsoOffset(timestamp: string): string {
+  return timestamp.replace(/([+-]\d{2})(\d{2})$/, "$1:$2");
+}
+
 const RELATION_MAP: Record<string, LinkedItem["relation"]> = {
   blocks: "blocks",
   "is blocked by": "blocked-by",
@@ -148,7 +153,7 @@ export function normalizeJiraIssue(
       kind: "jira" as const,
       ref: key,
       ...(opts.baseUrl ? { url: `${opts.baseUrl}/browse/${key}` } : {}),
-      ...(fields.updated ? { updatedAt: fields.updated } : {}),
+      ...(fields.updated ? { updatedAt: normalizeIsoOffset(fields.updated) } : {}),
     },
     title,
     description,

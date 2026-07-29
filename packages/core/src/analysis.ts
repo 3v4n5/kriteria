@@ -15,7 +15,7 @@ import {
   CHANGE_TYPES,
   PRESSURE_LEVELS,
 } from "@kriteria/istqb";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /** Every claim an agent makes must cite where in the basis it came from. */
 export const EvidenceSchema = z.object({

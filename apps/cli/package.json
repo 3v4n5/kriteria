@@ -1,0 +1,16 @@
+{
+  "name": "@kriteria/cli",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@kriteria/agents": "workspace:*",
+    "@kriteria/core": "workspace:*",
+    "@kriteria/ingest": "workspace:*",
+    "@kriteria/istqb": "workspace:*",
+    "yaml": "^2.7.0"
+  }
+}

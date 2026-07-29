@@ -8,7 +8,7 @@
  */
 
 import { TEST_LEVELS, TEST_TECHNIQUES, TEST_TYPES } from "@kriteria/istqb";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const CasePrioritySchema = z.enum(["critical", "high", "medium", "low"]);
 export type CasePriority = z.infer<typeof CasePrioritySchema>;

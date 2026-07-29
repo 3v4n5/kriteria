@@ -6,7 +6,7 @@
  * came from. Adding a new input source means writing one adapter, nothing else.
  */
 
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const SourceKindSchema = z.enum([
   "jira",
