@@ -9,6 +9,7 @@
   "dependencies": {
     "@kriteria/agents": "workspace:*",
     "@kriteria/core": "workspace:*",
+    "@kriteria/execution": "workspace:*",
     "@kriteria/ingest": "workspace:*",
     "@kriteria/istqb": "workspace:*",
     "yaml": "^2.7.0"

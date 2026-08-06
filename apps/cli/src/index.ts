@@ -8,11 +8,14 @@
 import { parseArgs } from "node:util";
 import { planCommand } from "./plan.js";
 import { reportCommand } from "./report.js";
+import { runCommand } from "./run.js";
 
 const HELP = `kriteria — agentic QA strategy engine (Fase 0)
 
 Usage:
   qa plan --from <jira:KEY | file:path> [options]
+  qa run <out/REF> --env <nombre> [--url <url>] [--as <nombre>]
+                            Ejecución guiada de los casos para humano (reanudable)
   qa report <out/REF>       Genera informe HTML legible de una corrida
 
 Options:
@@ -31,6 +34,25 @@ async function main(): Promise<void> {
 
   if (!command || command === "-h" || command === "--help") {
     console.log(HELP);
+    return;
+  }
+  if (command === "run") {
+    const dir = rest[0];
+    if (!dir || dir.startsWith("--")) throw new Error("uso: qa run out/<REF> --env <nombre>");
+    const { values } = parseArgs({
+      args: rest.slice(1),
+      options: {
+        env: { type: "string", default: "local" },
+        url: { type: "string" },
+        as: { type: "string" },
+      },
+    });
+    await runCommand({
+      dir,
+      environment: values.env!,
+      ...(values.url ? { environmentUrl: values.url } : {}),
+      ...(values.as ? { executor: values.as } : {}),
+    });
     return;
   }
   if (command === "report") {

@@ -14,6 +14,7 @@ export * from "./test-basis.js";
 export * from "./analysis.js";
 export * from "./risk.js";
 export * from "./test-case.js";
+export * from "./test-run.js";
 export * from "./critic.js";
 
 import type { StrategyInput } from "@kriteria/istqb";

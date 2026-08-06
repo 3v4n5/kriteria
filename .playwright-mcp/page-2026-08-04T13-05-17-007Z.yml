@@ -1,0 +1,2403 @@
+- generic [ref=f2e4]:
+  - complementary [ref=f2e5]:
+    - button "Collapse sidebar" [ref=f2e6] [cursor=pointer]:
+      - generic [ref=f2e7]: ‹
+    - generic [ref=f2e8]:
+      - link [ref=f2e10] [cursor=pointer]:
+        - /url: /
+        - img "Veevart — Home" [ref=f2e11]
+      - navigation [ref=f2e12]:
+        - link "Home" [ref=f2e13] [cursor=pointer]:
+          - /url: /
+      - generic [ref=f2e18]: Taxonomy
+      - navigation [ref=f2e19]:
+        - link "Products 12" [ref=f2e20] [cursor=pointer]:
+          - /url: /products
+          - generic [ref=f2e24]: Products
+          - generic [ref=f2e25]: "12"
+        - link "Product features 65" [ref=f2e26] [cursor=pointer]:
+          - /url: /features
+          - generic [ref=f2e33]: Product features
+          - generic [ref=f2e34]: "65"
+        - link "Jobs to be done 233" [ref=f2e35] [cursor=pointer]:
+          - /url: /jobs
+          - generic [ref=f2e39]: Jobs to be done
+          - generic [ref=f2e40]: "233"
+        - link "Journeys 338" [ref=f2e41] [cursor=pointer]:
+          - /url: /journeys
+          - generic [ref=f2e45]: Journeys
+          - generic [ref=f2e46]: "338"
+      - generic [ref=f2e47]: Planning
+      - navigation [ref=f2e48]:
+        - link "Roadmap" [ref=f2e49] [cursor=pointer]:
+          - /url: /roadmap
+      - generic [ref=f2e54]: Data
+      - navigation [ref=f2e55]:
+        - link "Import" [ref=f2e56] [cursor=pointer]:
+          - /url: /import
+    - generic [ref=f2e61]:
+      - paragraph [ref=f2e62]: Products → Features → Jobs to be Done. Rename once, updates everywhere.
+      - generic [ref=f2e63]:
+        - generic [ref=f2e64]:
+          - generic "Evans Mondragon" [ref=f2e65]:
+            - img "Evans Mondragon" [ref=f2e66]
+          - generic [ref=f2e67]:
+            - generic [ref=f2e68]: Evans Mondragon
+            - generic "evansri.mondragonp@veevart.com" [ref=f2e69]
+        - button "Sign out" [ref=f2e70] [cursor=pointer]
+  - main [ref=f2e74]:
+    - generic [ref=f2e75]:
+      - generic [ref=f2e76]:
+        - generic [ref=f2e77]:
+          - heading "Roadmap" [level=1] [ref=f2e78]
+          - paragraph [ref=f2e79]:
+            - text: Showing
+            - strong [ref=f2e80]: "338"
+            - text: of 338 journeys, by month. Drag a journey bar to reschedule it (snaps to weeks); drag its edges to resize. JTBD bars roll up their journeys and are read-only.
+        - generic [ref=f2e81]:
+          - button "Excel" [ref=f2e82] [cursor=pointer]
+          - button "SVG" [ref=f2e85] [cursor=pointer]
+          - button "Executive PDF" [ref=f2e88] [cursor=pointer]
+      - generic [ref=f2e91]:
+        - textbox "Search journey…" [ref=f2e96]
+        - button "All products" [ref=f2e98] [cursor=pointer]
+        - button "All features" [ref=f2e103] [cursor=pointer]
+        - button "All channels" [ref=f2e108] [cursor=pointer]
+        - button "All quarters" [ref=f2e113] [cursor=pointer]
+        - generic "Active in date range" [ref=f2e117]:
+          - textbox "Active from" [ref=f2e118]
+          - generic [ref=f2e119]: –
+          - textbox "Active to" [ref=f2e120]
+      - generic [ref=f2e121]:
+        - generic [ref=f2e122]:
+          - button "Journeys" [ref=f2e123] [cursor=pointer]
+          - button "JTBDs" [ref=f2e124] [cursor=pointer]
+        - generic [ref=f2e125]:
+          - button "Planned dates" [ref=f2e126] [cursor=pointer]
+          - button "Delivery dates" [ref=f2e127] [cursor=pointer]
+        - generic [ref=f2e128]:
+          - generic [ref=f2e129]: Group by
+          - generic [ref=f2e130]:
+            - button "‹" [disabled] [ref=f2e131]
+            - text: Product
+            - button "›" [ref=f2e132] [cursor=pointer]
+            - button "×" [ref=f2e133] [cursor=pointer]
+          - generic [ref=f2e134]:
+            - button "‹" [ref=f2e135] [cursor=pointer]
+            - text: Feature
+            - button "›" [disabled] [ref=f2e136]
+            - button "×" [ref=f2e137] [cursor=pointer]
+          - button "+ Quarter" [ref=f2e138] [cursor=pointer]
+          - button "+ Channel" [ref=f2e139] [cursor=pointer]
+        - generic [ref=f2e140]:
+          - button "‹ Earlier" [ref=f2e141] [cursor=pointer]
+          - generic [ref=f2e142]: Jul 2026 — Apr 2027
+          - button "Later ›" [ref=f2e143] [cursor=pointer]
+      - generic [ref=f2e145]:
+        - generic [ref=f2e146]:
+          - generic "Drag to resize" [ref=f2e148]
+          - generic [ref=f2e149]:
+            - generic [ref=f2e150]: Jul 2026
+            - generic [ref=f2e151]: Aug
+            - generic [ref=f2e152]: Sep
+            - generic [ref=f2e153]: Oct
+            - generic [ref=f2e154]: Nov
+            - generic [ref=f2e155]: Dec
+            - generic [ref=f2e156]: Jan 2027
+            - generic [ref=f2e157]: Feb
+            - generic [ref=f2e158]: Mar
+            - generic [ref=f2e159]: Apr
+        - button "Accounting 30" [ref=f2e161] [cursor=pointer]:
+          - generic [ref=f2e164]: Accounting
+          - generic [ref=f2e165]: "30"
+        - button "Accounting Dimensions 3" [ref=f2e178] [cursor=pointer]:
+          - generic [ref=f2e181]: Accounting Dimensions
+          - generic [ref=f2e182]: "3"
+        - generic [ref=f2e194]:
+          - button "JRN-0074 Define a dimension type and scope it to modules — Back office" [ref=f2e195] [cursor=pointer]:
+            - generic [ref=f2e196]: JRN-0074
+            - generic "Define a dimension type and scope it to modules — Back office" [ref=f2e197]
+          - generic "JRN-0074 · 2026-07-01 → 2026-09-30" [ref=f2e209]:
+            - generic [ref=f2e211]: Back office
+            - generic [ref=f2e212]: Define a dimension type and scope it to modules — Back office
+            - generic [ref=f2e213]: ✓
+        - generic [ref=f2e215]:
+          - button "JRN-0075 Create the dimension values within a type — Back office" [ref=f2e216] [cursor=pointer]:
+            - generic [ref=f2e217]: JRN-0075
+            - generic "Create the dimension values within a type — Back office" [ref=f2e218]
+          - generic "JRN-0075 · 2026-07-01 → 2026-09-30" [ref=f2e230]:
+            - generic [ref=f2e232]: Back office
+            - generic [ref=f2e233]: Create the dimension values within a type — Back office
+            - generic [ref=f2e234]: ✓
+        - generic [ref=f2e236]:
+          - button "JRN-0076 Tag transactions with dimensions for reporting — Back office" [ref=f2e237] [cursor=pointer]:
+            - generic [ref=f2e238]: JRN-0076
+            - generic "Tag transactions with dimensions for reporting — Back office" [ref=f2e239]
+          - generic "JRN-0076 · 2026-07-01 → 2026-09-30" [ref=f2e251]:
+            - generic [ref=f2e253]: Back office
+            - generic [ref=f2e254]: Tag transactions with dimensions for reporting — Back office
+            - generic [ref=f2e255]: ✓
+        - button "Chargeback 9" [ref=f2e258] [cursor=pointer]:
+          - generic [ref=f2e261]: Chargeback
+          - generic [ref=f2e262]: "9"
+        - button "JRN-0047 Configure chargeback accounts — Back office" [ref=f2e275] [cursor=pointer]:
+          - generic [ref=f2e276]: JRN-0047
+          - generic "Configure chargeback accounts — Back office" [ref=f2e277]
+        - button "JRN-0048 Map dispute statuses to accounting actions — Back office" [ref=f2e290] [cursor=pointer]:
+          - generic [ref=f2e291]: JRN-0048
+          - generic "Map dispute statuses to accounting actions — Back office" [ref=f2e292]
+        - 'button "JRN-0049 Open a dispute: move funds to Clearing Account and expense the fee — Back office" [ref=f2e305] [cursor=pointer]':
+          - generic [ref=f2e306]: JRN-0049
+          - 'generic "Open a dispute: move funds to Clearing Account and expense the fee — Back office" [ref=f2e307]'
+        - button "JRN-0050 Record the defense/reversal entry — Back office" [ref=f2e320] [cursor=pointer]:
+          - generic [ref=f2e321]: JRN-0050
+          - generic "Record the defense/reversal entry — Back office" [ref=f2e322]
+        - button "JRN-0051 Close a won dispute — Back office" [ref=f2e335] [cursor=pointer]:
+          - generic [ref=f2e336]: JRN-0051
+          - generic "Close a won dispute — Back office" [ref=f2e337]
+        - button "JRN-0052 Close a lost or accepted Ticketing dispute — Back office" [ref=f2e350] [cursor=pointer]:
+          - generic [ref=f2e351]: JRN-0052
+          - generic "Close a lost or accepted Ticketing dispute — Back office" [ref=f2e352]
+        - button "JRN-0053 Close a lost or accepted Fundraising dispute — Back office" [ref=f2e365] [cursor=pointer]:
+          - generic [ref=f2e366]: JRN-0053
+          - generic "Close a lost or accepted Fundraising dispute — Back office" [ref=f2e367]
+        - button "JRN-0054 Close a lost or accepted Membership dispute — Back office" [ref=f2e380] [cursor=pointer]:
+          - generic [ref=f2e381]: JRN-0054
+          - generic "Close a lost or accepted Membership dispute — Back office" [ref=f2e382]
+        - button "JRN-0055 Close a lost or accepted Shop dispute — Back office" [ref=f2e395] [cursor=pointer]:
+          - generic [ref=f2e396]: JRN-0055
+          - generic "Close a lost or accepted Shop dispute — Back office" [ref=f2e397]
+        - button "Manage GL Accounts 6" [ref=f2e410] [cursor=pointer]:
+          - generic [ref=f2e413]: Manage GL Accounts
+          - generic [ref=f2e414]: "6"
+        - generic [ref=f2e426]:
+          - button "JRN-0056 Create a GL account with its financial behavior — Back office" [ref=f2e427] [cursor=pointer]:
+            - generic [ref=f2e428]: JRN-0056
+            - generic "Create a GL account with its financial behavior — Back office" [ref=f2e429]
+          - generic "JRN-0056 · 2026-07-01 → 2026-09-30" [ref=f2e441]:
+            - generic [ref=f2e443]: Back office
+            - generic [ref=f2e444]: Create a GL account with its financial behavior — Back office
+            - generic [ref=f2e445]: ✓
+        - generic [ref=f2e447]:
+          - button "JRN-0057 Organize accounts into a parent-child hierarchy — Back office" [ref=f2e448] [cursor=pointer]:
+            - generic [ref=f2e449]: JRN-0057
+            - generic "Organize accounts into a parent-child hierarchy — Back office" [ref=f2e450]
+          - generic "JRN-0057 · 2026-07-01 → 2026-09-30" [ref=f2e462]:
+            - generic [ref=f2e464]: Back office
+            - generic [ref=f2e465]: Organize accounts into a parent-child hierarchy — Back office
+            - generic [ref=f2e466]: ✓
+        - generic [ref=f2e468]:
+          - button "JRN-0058 Retire an account without breaking history — Back office" [ref=f2e469] [cursor=pointer]:
+            - generic [ref=f2e470]: JRN-0058
+            - generic "Retire an account without breaking history — Back office" [ref=f2e471]
+          - generic "JRN-0058 · 2026-07-01 → 2026-09-30" [ref=f2e483]:
+            - generic [ref=f2e485]: Back office
+            - generic [ref=f2e486]: Retire an account without breaking history — Back office
+            - generic [ref=f2e487]: ✓
+        - generic [ref=f2e489]:
+          - button "JRN-0059 Control which accounts accept direct postings — Back office" [ref=f2e490] [cursor=pointer]:
+            - generic [ref=f2e491]: JRN-0059
+            - generic "Control which accounts accept direct postings — Back office" [ref=f2e492]
+          - generic "JRN-0059 · 2026-07-01 → 2026-09-30" [ref=f2e504]:
+            - generic [ref=f2e506]: Back office
+            - generic [ref=f2e507]: Control which accounts accept direct postings — Back office
+            - generic [ref=f2e508]: ✓
+        - generic [ref=f2e510]:
+          - button "JRN-0060 Reuse accounts across products, decoupled from operational objects — Back office" [ref=f2e511] [cursor=pointer]:
+            - generic [ref=f2e512]: JRN-0060
+            - generic "Reuse accounts across products, decoupled from operational objects — Back office" [ref=f2e513]
+          - generic "JRN-0060 · 2026-07-01 → 2026-09-30" [ref=f2e525]:
+            - generic [ref=f2e527]: Back office
+            - generic [ref=f2e528]: Reuse accounts across products, decoupled from operational objects — Back office
+            - generic [ref=f2e529]: ✓
+        - generic [ref=f2e531]:
+          - button "JRN-0061 Audit every change to the chart — Back office" [ref=f2e532] [cursor=pointer]:
+            - generic [ref=f2e533]: JRN-0061
+            - generic "Audit every change to the chart — Back office" [ref=f2e534]
+          - generic "JRN-0061 · 2026-07-01 → 2026-09-30" [ref=f2e546]:
+            - generic [ref=f2e548]: Back office
+            - generic [ref=f2e549]: Audit every change to the chart — Back office
+            - generic [ref=f2e550]: ✓
+        - button "Tax Configuration & Calculation 5" [ref=f2e553] [cursor=pointer]:
+          - generic [ref=f2e556]: Tax Configuration & Calculation
+          - generic [ref=f2e557]: "5"
+        - generic [ref=f2e569]:
+          - button "JRN-0069 Configure a tax rule on a transaction mapping — Back office" [ref=f2e570] [cursor=pointer]:
+            - generic [ref=f2e571]: JRN-0069
+            - generic "Configure a tax rule on a transaction mapping — Back office" [ref=f2e572]
+          - generic "JRN-0069 · 2026-07-01 → 2026-09-30" [ref=f2e584]:
+            - generic [ref=f2e586]: Back office
+            - generic [ref=f2e587]: Configure a tax rule on a transaction mapping — Back office
+            - generic [ref=f2e588]: ✓
+        - generic [ref=f2e590]:
+          - button "JRN-0070 Calculate tax-inclusive amounts correctly — Back office" [ref=f2e591] [cursor=pointer]:
+            - generic [ref=f2e592]: JRN-0070
+            - generic "Calculate tax-inclusive amounts correctly — Back office" [ref=f2e593]
+          - generic "JRN-0070 · 2026-07-01 → 2026-09-30" [ref=f2e605]:
+            - generic [ref=f2e607]: Back office
+            - generic [ref=f2e608]: Calculate tax-inclusive amounts correctly — Back office
+            - generic [ref=f2e609]: ✓
+        - generic [ref=f2e611]:
+          - button "JRN-0071 Calculate tax-on-top amounts correctly — Back office" [ref=f2e612] [cursor=pointer]:
+            - generic [ref=f2e613]: JRN-0071
+            - generic "Calculate tax-on-top amounts correctly — Back office" [ref=f2e614]
+          - generic "JRN-0071 · 2026-07-01 → 2026-09-30" [ref=f2e626]:
+            - generic [ref=f2e628]: Back office
+            - generic [ref=f2e629]: Calculate tax-on-top amounts correctly — Back office
+            - generic [ref=f2e630]: ✓
+        - generic [ref=f2e632]:
+          - button "JRN-0072 Cap the taxable base at Fair Market Value — Back office" [ref=f2e633] [cursor=pointer]:
+            - generic [ref=f2e634]: JRN-0072
+            - generic "Cap the taxable base at Fair Market Value — Back office" [ref=f2e635]
+          - generic "JRN-0072 · 2026-07-01 → 2026-09-30" [ref=f2e647]:
+            - generic [ref=f2e649]: Back office
+            - generic [ref=f2e650]: Cap the taxable base at Fair Market Value — Back office
+            - generic [ref=f2e651]: ✓
+        - generic [ref=f2e653]:
+          - button "JRN-0073 Keep tax-rule changes from corrupting posted history — Back office" [ref=f2e654] [cursor=pointer]:
+            - generic [ref=f2e655]: JRN-0073
+            - generic "Keep tax-rule changes from corrupting posted history — Back office" [ref=f2e656]
+          - generic "JRN-0073 · 2026-07-01 → 2026-09-30" [ref=f2e668]:
+            - generic [ref=f2e670]: Back office
+            - generic [ref=f2e671]: Keep tax-rule changes from corrupting posted history — Back office
+            - generic [ref=f2e672]: ✓
+        - button "Transaction Mappings 7" [ref=f2e675] [cursor=pointer]:
+          - generic [ref=f2e678]: Transaction Mappings
+          - generic [ref=f2e679]: "7"
+        - generic [ref=f2e691]:
+          - button "JRN-0062 Create an accounting template for a product type — Back office" [ref=f2e692] [cursor=pointer]:
+            - generic [ref=f2e693]: JRN-0062
+            - generic "Create an accounting template for a product type — Back office" [ref=f2e694]
+          - generic "JRN-0062 · 2026-07-01 → 2026-09-30" [ref=f2e706]:
+            - generic [ref=f2e708]: Back office
+            - generic [ref=f2e709]: Create an accounting template for a product type — Back office
+            - generic [ref=f2e710]: ✓
+        - generic [ref=f2e712]:
+          - button "JRN-0063 Assign GL accounts to each required posting slot — Back office" [ref=f2e713] [cursor=pointer]:
+            - generic [ref=f2e714]: JRN-0063
+            - generic "Assign GL accounts to each required posting slot — Back office" [ref=f2e715]
+          - generic "JRN-0063 · 2026-07-01 → 2026-09-30" [ref=f2e727]:
+            - generic [ref=f2e729]: Back office
+            - generic [ref=f2e730]: Assign GL accounts to each required posting slot — Back office
+            - generic [ref=f2e731]: ✓
+        - generic [ref=f2e733]:
+          - button "JRN-0064 Configure automatic rounding for the org — Back office" [ref=f2e734] [cursor=pointer]:
+            - generic [ref=f2e735]: JRN-0064
+            - generic "Configure automatic rounding for the org — Back office" [ref=f2e736]
+          - generic "JRN-0064 · 2026-07-01 → 2026-09-30" [ref=f2e748]:
+            - generic [ref=f2e750]: Back office
+            - generic [ref=f2e751]: Configure automatic rounding for the org — Back office
+            - generic [ref=f2e752]: ✓
+        - generic [ref=f2e754]:
+          - button "JRN-0065 Translate an operational event into a balanced journal entry — Back office" [ref=f2e755] [cursor=pointer]:
+            - generic [ref=f2e756]: JRN-0065
+            - generic "Translate an operational event into a balanced journal entry — Back office" [ref=f2e757]
+          - generic "JRN-0065 · 2026-07-01 → 2026-09-30" [ref=f2e769]:
+            - generic [ref=f2e771]: Back office
+            - generic [ref=f2e772]: Translate an operational event into a balanced journal entry — Back office
+            - generic [ref=f2e773]: ✓
+        - generic [ref=f2e775]:
+          - button "JRN-0066 Post state transitions across the transaction lifecycle — Back office" [ref=f2e776] [cursor=pointer]:
+            - generic [ref=f2e777]: JRN-0066
+            - generic "Post state transitions across the transaction lifecycle — Back office" [ref=f2e778]
+          - generic "JRN-0066 · 2026-07-01 → 2026-09-30" [ref=f2e790]:
+            - generic [ref=f2e792]: Back office
+            - generic [ref=f2e793]: Post state transitions across the transaction lifecycle — Back office
+            - generic [ref=f2e794]: ✓
+        - generic [ref=f2e796]:
+          - button "JRN-0067 Version a template without breaking historical postings — Back office" [ref=f2e797] [cursor=pointer]:
+            - generic [ref=f2e798]: JRN-0067
+            - generic "Version a template without breaking historical postings — Back office" [ref=f2e799]
+          - generic "JRN-0067 · 2026-07-01 → 2026-09-30" [ref=f2e811]:
+            - generic [ref=f2e813]: Back office
+            - generic [ref=f2e814]: Version a template without breaking historical postings — Back office
+            - generic [ref=f2e815]: ✓
+        - generic [ref=f2e817]:
+          - button "JRN-0068 Trace every journal back to its source and configuration — Back office" [ref=f2e818] [cursor=pointer]:
+            - generic [ref=f2e819]: JRN-0068
+            - generic "Trace every journal back to its source and configuration — Back office" [ref=f2e820]
+          - generic "JRN-0068 · 2026-07-01 → 2026-09-30" [ref=f2e832]:
+            - generic [ref=f2e834]: Back office
+            - generic [ref=f2e835]: Trace every journal back to its source and configuration — Back office
+            - generic [ref=f2e836]: ✓
+        - button "Accounts & Contacts 24" [ref=f2e839] [cursor=pointer]:
+          - generic [ref=f2e842]: Accounts & Contacts
+          - generic [ref=f2e843]: "24"
+        - button "Constituent Engagement & Communications 2" [ref=f2e856] [cursor=pointer]:
+          - generic [ref=f2e859]: Constituent Engagement & Communications
+          - generic [ref=f2e860]: "2"
+        - generic [ref=f2e872]:
+          - button "JRN-0467 View engagement" [ref=f2e873] [cursor=pointer]:
+            - generic [ref=f2e874]: JRN-0467
+            - generic "View engagement" [ref=f2e875]
+          - generic "JRN-0467 · 2027-01-01 → 2027-03-31" [ref=f2e887]:
+            - generic [ref=f2e889]: Back office
+            - generic [ref=f2e890]: View engagement
+        - generic [ref=f2e892]:
+          - button "JRN-0472 Report on constituents" [ref=f2e893] [cursor=pointer]:
+            - generic [ref=f2e894]: JRN-0472
+            - generic "Report on constituents" [ref=f2e895]
+          - generic "JRN-0472 · 2027-01-01 → 2027-03-31" [ref=f2e907]:
+            - generic [ref=f2e909]: Back office
+            - generic [ref=f2e910]: Report on constituents
+        - button "Constituent Management 14" [ref=f2e913] [cursor=pointer]:
+          - generic [ref=f2e916]: Constituent Management
+          - generic [ref=f2e917]: "14"
+        - generic [ref=f2e929]:
+          - button "JRN-0450 Create a contact" [ref=f2e930] [cursor=pointer]:
+            - generic [ref=f2e931]: JRN-0450
+            - generic "Create a contact" [ref=f2e932]
+          - generic "JRN-0450 · 2026-07-01 → 2026-09-30" [ref=f2e944]:
+            - generic [ref=f2e946]: Back office
+            - generic [ref=f2e947]: Create a contact
+        - generic [ref=f2e949]:
+          - button "JRN-0454 Create an organization" [ref=f2e950] [cursor=pointer]:
+            - generic [ref=f2e951]: JRN-0454
+            - generic "Create an organization" [ref=f2e952]
+          - generic "JRN-0454 · 2026-07-01 → 2026-09-30" [ref=f2e964]:
+            - generic [ref=f2e966]: Back office
+            - generic [ref=f2e967]: Create an organization
+        - generic [ref=f2e969]:
+          - button "JRN-0458 Create a household" [ref=f2e970] [cursor=pointer]:
+            - generic [ref=f2e971]: JRN-0458
+            - generic "Create a household" [ref=f2e972]
+          - generic "JRN-0458 · 2026-07-01 → 2026-09-30" [ref=f2e984]:
+            - generic [ref=f2e986]: Back office
+            - generic [ref=f2e987]: Create a household
+        - generic [ref=f2e989]:
+          - button "JRN-0468 Duplicate records" [ref=f2e990] [cursor=pointer]:
+            - generic [ref=f2e991]: JRN-0468
+            - generic "Duplicate records" [ref=f2e992]
+          - generic "JRN-0468 · 2026-07-01 → 2026-09-30" [ref=f2e1004]:
+            - generic [ref=f2e1006]: Back office
+            - generic [ref=f2e1007]: Duplicate records
+        - generic [ref=f2e1009]:
+          - button "JRN-0469 Manage affiliations" [ref=f2e1010] [cursor=pointer]:
+            - generic [ref=f2e1011]: JRN-0469
+            - generic "Manage affiliations" [ref=f2e1012]
+          - generic "JRN-0469 · 2026-10-01 → 2026-12-31" [ref=f2e1024]:
+            - generic [ref=f2e1026]: Back office
+            - generic [ref=f2e1027]: Manage affiliations
+        - generic [ref=f2e1029]:
+          - button "JRN-0451 View/search contacts" [ref=f2e1030] [cursor=pointer]:
+            - generic [ref=f2e1031]: JRN-0451
+            - generic "View/search contacts" [ref=f2e1032]
+          - generic "JRN-0451 · 2026-10-01 → 2026-12-31" [ref=f2e1044]:
+            - generic [ref=f2e1046]: Back office
+            - generic [ref=f2e1047]: View/search contacts
+        - generic [ref=f2e1049]:
+          - button "JRN-0455 View/search/filter orgs" [ref=f2e1050] [cursor=pointer]:
+            - generic [ref=f2e1051]: JRN-0455
+            - generic "View/search/filter orgs" [ref=f2e1052]
+          - generic "JRN-0455 · 2026-10-01 → 2026-12-31" [ref=f2e1064]:
+            - generic [ref=f2e1066]: Back office
+            - generic [ref=f2e1067]: View/search/filter orgs
+        - generic [ref=f2e1069]:
+          - button "JRN-0459 View/search households" [ref=f2e1070] [cursor=pointer]:
+            - generic [ref=f2e1071]: JRN-0459
+            - generic "View/search households" [ref=f2e1072]
+          - generic "JRN-0459 · 2026-10-01 → 2026-12-31" [ref=f2e1084]:
+            - generic [ref=f2e1086]: Back office
+            - generic [ref=f2e1087]: View/search households
+        - generic [ref=f2e1089]:
+          - button "JRN-0452 Edit a contact" [ref=f2e1090] [cursor=pointer]:
+            - generic [ref=f2e1091]: JRN-0452
+            - generic "Edit a contact" [ref=f2e1092]
+          - generic "JRN-0452 · 2026-07-01 → 2026-09-30" [ref=f2e1104]:
+            - generic [ref=f2e1106]: Back office
+            - generic [ref=f2e1107]: Edit a contact
+        - generic [ref=f2e1109]:
+          - button "JRN-0456 Edit an organization" [ref=f2e1110] [cursor=pointer]:
+            - generic [ref=f2e1111]: JRN-0456
+            - generic "Edit an organization" [ref=f2e1112]
+          - generic "JRN-0456 · 2026-07-01 → 2026-09-30" [ref=f2e1124]:
+            - generic [ref=f2e1126]: Back office
+            - generic [ref=f2e1127]: Edit an organization
+        - generic [ref=f2e1129]:
+          - button "JRN-0460 Edit a household" [ref=f2e1130] [cursor=pointer]:
+            - generic [ref=f2e1131]: JRN-0460
+            - generic "Edit a household" [ref=f2e1132]
+          - generic "JRN-0460 · 2026-07-01 → 2026-09-30" [ref=f2e1144]:
+            - generic [ref=f2e1146]: Back office
+            - generic [ref=f2e1147]: Edit a household
+        - generic [ref=f2e1149]:
+          - button "JRN-0453 Delete a contact" [ref=f2e1150] [cursor=pointer]:
+            - generic [ref=f2e1151]: JRN-0453
+            - generic "Delete a contact" [ref=f2e1152]
+          - generic "JRN-0453 · 2026-07-01 → 2026-09-30" [ref=f2e1164]:
+            - generic [ref=f2e1166]: Back office
+            - generic [ref=f2e1167]: Delete a contact
+        - generic [ref=f2e1169]:
+          - button "JRN-0457 Delete an organization" [ref=f2e1170] [cursor=pointer]:
+            - generic [ref=f2e1171]: JRN-0457
+            - generic "Delete an organization" [ref=f2e1172]
+          - generic "JRN-0457 · 2026-07-01 → 2026-09-30" [ref=f2e1184]:
+            - generic [ref=f2e1186]: Back office
+            - generic [ref=f2e1187]: Delete an organization
+        - generic [ref=f2e1189]:
+          - button "JRN-0461 Delete a household" [ref=f2e1190] [cursor=pointer]:
+            - generic [ref=f2e1191]: JRN-0461
+            - generic "Delete a household" [ref=f2e1192]
+          - generic "JRN-0461 · 2026-07-01 → 2026-09-30" [ref=f2e1204]:
+            - generic [ref=f2e1206]: Back office
+            - generic [ref=f2e1207]: Delete a household
+        - button "Constituent Sync & Integrations 3" [ref=f2e1210] [cursor=pointer]:
+          - generic [ref=f2e1213]: Constituent Sync & Integrations
+          - generic [ref=f2e1214]: "3"
+        - generic [ref=f2e1226]:
+          - button "JRN-0470 Org sync SF↔V2" [ref=f2e1227] [cursor=pointer]:
+            - generic [ref=f2e1228]: JRN-0470
+            - generic "Org sync SF↔V2" [ref=f2e1229]
+          - generic "JRN-0470 · 2026-07-01 → 2026-09-30" [ref=f2e1241]:
+            - generic [ref=f2e1243]: Back office
+            - generic [ref=f2e1244]: Org sync SF↔V2
+        - generic [ref=f2e1246]:
+          - button "JRN-0514 Plan and execute constituent migration" [ref=f2e1247] [cursor=pointer]:
+            - generic [ref=f2e1248]: JRN-0514
+            - generic "Plan and execute constituent migration" [ref=f2e1249]
+          - generic "JRN-0514 · 2026-07-01 → 2026-09-30" [ref=f2e1261]:
+            - generic [ref=f2e1263]: Back office
+            - generic [ref=f2e1264]: Plan and execute constituent migration
+        - generic [ref=f2e1266]:
+          - button "JRN-0471 Household sync SF↔V2" [ref=f2e1267] [cursor=pointer]:
+            - generic [ref=f2e1268]: JRN-0471
+            - generic "Household sync SF↔V2" [ref=f2e1269]
+          - generic "JRN-0471 · 2026-07-01 → 2026-09-30" [ref=f2e1281]:
+            - generic [ref=f2e1283]: Back office
+            - generic [ref=f2e1284]: Household sync SF↔V2
+        - button "Visitor Portal 5" [ref=f2e1287] [cursor=pointer]:
+          - generic [ref=f2e1290]: Visitor Portal
+          - generic [ref=f2e1291]: "5"
+        - generic [ref=f2e1303]:
+          - button "JRN-0462 Log in via OTP" [ref=f2e1304] [cursor=pointer]:
+            - generic [ref=f2e1305]: JRN-0462
+            - generic "Log in via OTP" [ref=f2e1306]
+          - generic "JRN-0462 · 2027-01-01 → 2027-03-31" [ref=f2e1318]:
+            - generic [ref=f2e1320]: Portal
+            - generic [ref=f2e1321]: Log in via OTP
+        - generic [ref=f2e1323]:
+          - button "JRN-0463 View membership + card" [ref=f2e1324] [cursor=pointer]:
+            - generic [ref=f2e1325]: JRN-0463
+            - generic "View membership + card" [ref=f2e1326]
+          - generic "JRN-0463 · 2027-01-01 → 2027-03-31" [ref=f2e1338]:
+            - generic [ref=f2e1340]: Portal
+            - generic [ref=f2e1341]: View membership + card
+        - generic [ref=f2e1343]:
+          - button "JRN-0464 Edit profile" [ref=f2e1344] [cursor=pointer]:
+            - generic [ref=f2e1345]: JRN-0464
+            - generic "Edit profile" [ref=f2e1346]
+          - generic "JRN-0464 · 2027-01-01 → 2027-03-31" [ref=f2e1358]:
+            - generic [ref=f2e1360]: Portal
+            - generic [ref=f2e1361]: Edit profile
+        - generic [ref=f2e1363]:
+          - button "JRN-0465 Manage household" [ref=f2e1364] [cursor=pointer]:
+            - generic [ref=f2e1365]: JRN-0465
+            - generic "Manage household" [ref=f2e1366]
+          - generic "JRN-0465 · 2027-01-01 → 2027-03-31" [ref=f2e1378]:
+            - generic [ref=f2e1380]: Portal
+            - generic [ref=f2e1381]: Manage household
+        - generic [ref=f2e1383]:
+          - button "JRN-0466 Manage recurring payments" [ref=f2e1384] [cursor=pointer]:
+            - generic [ref=f2e1385]: JRN-0466
+            - generic "Manage recurring payments" [ref=f2e1386]
+          - generic "JRN-0466 · 2027-01-01 → 2027-03-31" [ref=f2e1398]:
+            - generic [ref=f2e1400]: Portal
+            - generic [ref=f2e1401]: Manage recurring payments
+        - button "Discount Wizard V2 17" [ref=f2e1404] [cursor=pointer]:
+          - generic [ref=f2e1407]: Discount Wizard V2
+          - generic [ref=f2e1408]: "17"
+        - button "Audience targeting 2" [ref=f2e1421] [cursor=pointer]:
+          - generic [ref=f2e1424]: Audience targeting
+          - generic [ref=f2e1425]: "2"
+        - generic [ref=f2e1437]:
+          - button "JRN-0373 Restrict an online promo to a specific audience — Back office (setup)" [ref=f2e1438] [cursor=pointer]:
+            - generic [ref=f2e1439]: JRN-0373
+            - generic "Restrict an online promo to a specific audience — Back office (setup)" [ref=f2e1440]
+          - generic "JRN-0373 · 2026-07-01 → 2026-09-30" [ref=f2e1452]:
+            - generic [ref=f2e1454]: Back office
+            - generic [ref=f2e1455]: Restrict an online promo to a specific audience — Back office (setup)
+        - generic [ref=f2e1457]:
+          - button "JRN-0374 Restrict an online promo to a specific audience — Online (redemption)" [ref=f2e1458] [cursor=pointer]:
+            - generic [ref=f2e1459]: JRN-0374
+            - generic "Restrict an online promo to a specific audience — Online (redemption)" [ref=f2e1460]
+          - generic "JRN-0374 · 2026-07-01 → 2026-09-30" [ref=f2e1472]:
+            - generic [ref=f2e1474]: Online
+            - generic [ref=f2e1475]: Restrict an online promo to a specific audience — Online (redemption)
+        - button "Automatic member discounts 3" [ref=f2e1478] [cursor=pointer]:
+          - generic [ref=f2e1481]: Automatic member discounts
+          - generic [ref=f2e1482]: "3"
+        - generic [ref=f2e1494]:
+          - button "JRN-0358 Give members a permanent benefit — Back office (Shop)" [ref=f2e1495] [cursor=pointer]:
+            - generic [ref=f2e1496]: JRN-0358
+            - generic "Give members a permanent benefit — Back office (Shop)" [ref=f2e1497]
+          - generic "JRN-0358 · 2026-07-01 → 2026-09-30" [ref=f2e1509]:
+            - generic [ref=f2e1511]: Back office
+            - generic [ref=f2e1512]: Give members a permanent benefit — Back office (Shop)
+        - generic [ref=f2e1514]:
+          - button "JRN-0359 Give members a permanent benefit — Back office (Ticketing preview night)" [ref=f2e1515] [cursor=pointer]:
+            - generic [ref=f2e1516]: JRN-0359
+            - generic "Give members a permanent benefit — Back office (Ticketing preview night)" [ref=f2e1517]
+          - generic "JRN-0359 · 2026-07-01 → 2026-09-30" [ref=f2e1529]:
+            - generic [ref=f2e1531]: Back office
+            - generic [ref=f2e1532]: Give members a permanent benefit — Back office (Ticketing preview night)
+        - button "Unscheduled 1" [ref=f2e1535] [cursor=pointer]:
+          - generic [ref=f2e1538]: Unscheduled
+          - generic [ref=f2e1539]: "1"
+        - button "Live discount management 3" [ref=f2e1552] [cursor=pointer]:
+          - generic [ref=f2e1555]: Live discount management
+          - generic [ref=f2e1556]: "3"
+        - generic [ref=f2e1568]:
+          - button "JRN-0370 Monitor and manage discounts in-flight — Back office (check usage)" [ref=f2e1569] [cursor=pointer]:
+            - generic [ref=f2e1570]: JRN-0370
+            - generic "Monitor and manage discounts in-flight — Back office (check usage)" [ref=f2e1571]
+          - generic "JRN-0370 · 2026-07-01 → 2026-09-30" [ref=f2e1583]:
+            - generic [ref=f2e1585]: Back office
+            - generic [ref=f2e1586]: Monitor and manage discounts in-flight — Back office (check usage)
+        - generic [ref=f2e1588]:
+          - button "JRN-0371 Monitor and manage discounts in-flight — Back office (archive)" [ref=f2e1589] [cursor=pointer]:
+            - generic [ref=f2e1590]: JRN-0371
+            - generic "Monitor and manage discounts in-flight — Back office (archive)" [ref=f2e1591]
+          - generic "JRN-0371 · 2026-07-01 → 2026-09-30" [ref=f2e1603]:
+            - generic [ref=f2e1605]: Back office
+            - generic [ref=f2e1606]: Monitor and manage discounts in-flight — Back office (archive)
+        - generic [ref=f2e1608]:
+          - button "JRN-0372 Monitor and manage discounts in-flight — Back office (duplicate)" [ref=f2e1609] [cursor=pointer]:
+            - generic [ref=f2e1610]: JRN-0372
+            - generic "Monitor and manage discounts in-flight — Back office (duplicate)" [ref=f2e1611]
+          - generic "JRN-0372 · 2026-07-01 → 2026-09-30" [ref=f2e1623]:
+            - generic [ref=f2e1625]: Back office
+            - generic [ref=f2e1626]: Monitor and manage discounts in-flight — Back office (duplicate)
+        - button "Preview before publishing 3" [ref=f2e1629] [cursor=pointer]:
+          - generic [ref=f2e1632]: Preview before publishing
+          - generic [ref=f2e1633]: "3"
+        - generic [ref=f2e1645]:
+          - button "JRN-0367 Review a discount before publishing — Back office (Live Redemption Preview banner)" [ref=f2e1646] [cursor=pointer]:
+            - generic [ref=f2e1647]: JRN-0367
+            - generic "Review a discount before publishing — Back office (Live Redemption Preview banner)" [ref=f2e1648]
+          - generic "JRN-0367 · 2026-07-01 → 2026-09-30" [ref=f2e1660]:
+            - generic [ref=f2e1662]: Back office
+            - generic [ref=f2e1663]: Review a discount before publishing — Back office (Live Redemption Preview banner)
+        - generic [ref=f2e1665]:
+          - button "JRN-0368 Review a discount before publishing — Back office (Cart Simulator)" [ref=f2e1666] [cursor=pointer]:
+            - generic [ref=f2e1667]: JRN-0368
+            - generic "Review a discount before publishing — Back office (Cart Simulator)" [ref=f2e1668]
+          - generic "JRN-0368 · 2026-07-01 → 2026-09-30" [ref=f2e1680]:
+            - generic [ref=f2e1682]: Back office
+            - generic [ref=f2e1683]: Review a discount before publishing — Back office (Cart Simulator)
+        - generic [ref=f2e1685]:
+          - button "JRN-0369 Review a discount before publishing — Back office (Step 4 Review)" [ref=f2e1686] [cursor=pointer]:
+            - generic [ref=f2e1687]: JRN-0369
+            - generic "Review a discount before publishing — Back office (Step 4 Review)" [ref=f2e1688]
+          - generic "JRN-0369 · 2026-07-01 → 2026-09-30" [ref=f2e1700]:
+            - generic [ref=f2e1702]: Back office
+            - generic [ref=f2e1703]: Review a discount before publishing — Back office (Step 4 Review)
+        - button "Scheduled promotions 3" [ref=f2e1706] [cursor=pointer]:
+          - generic [ref=f2e1709]: Scheduled promotions
+          - generic [ref=f2e1710]: "3"
+        - generic [ref=f2e1722]:
+          - button "JRN-0361 Run a limited-time public promo — Back office (Ticketing early-bird)" [ref=f2e1723] [cursor=pointer]:
+            - generic [ref=f2e1724]: JRN-0361
+            - generic "Run a limited-time public promo — Back office (Ticketing early-bird)" [ref=f2e1725]
+          - generic "JRN-0361 · 2026-07-01 → 2026-09-30" [ref=f2e1737]:
+            - generic [ref=f2e1739]: Back office
+            - generic [ref=f2e1740]: Run a limited-time public promo — Back office (Ticketing early-bird)
+        - generic [ref=f2e1742]:
+          - button "JRN-0362 Run a limited-time public promo — Back office (Shop-wide Black Friday)" [ref=f2e1743] [cursor=pointer]:
+            - generic [ref=f2e1744]: JRN-0362
+            - generic "Run a limited-time public promo — Back office (Shop-wide Black Friday)" [ref=f2e1745]
+          - generic "JRN-0362 · 2026-07-01 → 2026-09-30" [ref=f2e1757]:
+            - generic [ref=f2e1759]: Back office
+            - generic [ref=f2e1760]: Run a limited-time public promo — Back office (Shop-wide Black Friday)
+        - generic [ref=f2e1762]:
+          - button "JRN-0363 Run a limited-time public promo — Back office (Category clearance)" [ref=f2e1763] [cursor=pointer]:
+            - generic [ref=f2e1764]: JRN-0363
+            - generic "Run a limited-time public promo — Back office (Category clearance)" [ref=f2e1765]
+          - generic "JRN-0363 · 2026-07-01 → 2026-09-30" [ref=f2e1777]:
+            - generic [ref=f2e1779]: Back office
+            - generic [ref=f2e1780]: Run a limited-time public promo — Back office (Category clearance)
+        - button "Whole-cart promo codes 3" [ref=f2e1783] [cursor=pointer]:
+          - generic [ref=f2e1786]: Whole-cart promo codes
+          - generic [ref=f2e1787]: "3"
+        - generic [ref=f2e1799]:
+          - button "JRN-0364 Issue a code that discounts the entire cart — Back office (public promo)" [ref=f2e1800] [cursor=pointer]:
+            - generic [ref=f2e1801]: JRN-0364
+            - generic "Issue a code that discounts the entire cart — Back office (public promo)" [ref=f2e1802]
+          - generic "JRN-0364 · 2026-07-01 → 2026-09-30" [ref=f2e1814]:
+            - generic [ref=f2e1816]: Back office
+            - generic [ref=f2e1817]: Issue a code that discounts the entire cart — Back office (public promo)
+        - generic [ref=f2e1819]:
+          - button "JRN-0365 Issue a code that discounts the entire cart — Back office (single-use compensation)" [ref=f2e1820] [cursor=pointer]:
+            - generic [ref=f2e1821]: JRN-0365
+            - generic "Issue a code that discounts the entire cart — Back office (single-use compensation)" [ref=f2e1822]
+          - generic "JRN-0365 · 2026-07-01 → 2026-09-30" [ref=f2e1834]:
+            - generic [ref=f2e1836]: Back office
+            - generic [ref=f2e1837]: Issue a code that discounts the entire cart — Back office (single-use compensation)
+        - generic [ref=f2e1839]:
+          - button "JRN-0366 Issue a code that discounts the entire cart — Point of sale (staff entry)" [ref=f2e1840] [cursor=pointer]:
+            - generic [ref=f2e1841]: JRN-0366
+            - generic "Issue a code that discounts the entire cart — Point of sale (staff entry)" [ref=f2e1842]
+          - generic "JRN-0366 · 2026-07-01 → 2026-09-30" [ref=f2e1854]:
+            - generic [ref=f2e1856]: POS
+            - generic [ref=f2e1857]: Issue a code that discounts the entire cart — Point of sale (staff entry)
+        - button "Forms 17" [ref=f2e1860] [cursor=pointer]:
+          - generic [ref=f2e1863]: Forms
+          - generic [ref=f2e1864]: "17"
+        - button "Forms Builder 17" [ref=f2e1877] [cursor=pointer]:
+          - generic [ref=f2e1880]: Forms Builder
+          - generic [ref=f2e1881]: "17"
+        - generic [ref=f2e1893]:
+          - button "JRN-0082 Compose and publish a form in the Form Center" [ref=f2e1894] [cursor=pointer]:
+            - generic [ref=f2e1895]: JRN-0082
+            - generic "Compose and publish a form in the Form Center" [ref=f2e1896]
+          - generic "JRN-0082 · 2026-07-01 → 2026-09-30" [ref=f2e1908]:
+            - generic [ref=f2e1910]: Back office
+            - generic [ref=f2e1911]: Compose and publish a form in the Form Center
+        - generic [ref=f2e1913]:
+          - button "JRN-0086 Answer a program's inline form during checkout" [ref=f2e1914] [cursor=pointer]:
+            - generic [ref=f2e1915]: JRN-0086
+            - generic "Answer a program's inline form during checkout" [ref=f2e1916]
+          - generic "JRN-0086 · 2026-07-01 → 2026-09-30" [ref=f2e1928]:
+            - generic [ref=f2e1930]: Online
+            - generic [ref=f2e1931]: Answer a program's inline form during checkout
+        - generic [ref=f2e1933]:
+          - button "JRN-0089 Map form questions to Salesforce fields and verify routing" [ref=f2e1934] [cursor=pointer]:
+            - generic [ref=f2e1935]: JRN-0089
+            - generic "Map form questions to Salesforce fields and verify routing" [ref=f2e1936]
+          - generic "JRN-0089 · 2026-07-01 → 2026-09-30" [ref=f2e1948]:
+            - generic [ref=f2e1950]: Back office
+            - generic [ref=f2e1951]: Map form questions to Salesforce fields and verify routing
+        - generic [ref=f2e1953]:
+          - button "JRN-0081 Record a check / pay-by-link gift (pay-by-link channel)" [ref=f2e1954] [cursor=pointer]:
+            - generic [ref=f2e1955]: JRN-0081
+            - generic "Record a check / pay-by-link gift (pay-by-link channel)" [ref=f2e1956]
+          - generic "JRN-0081 · 2026-07-01 → 2026-09-30" [ref=f2e1968]:
+            - generic [ref=f2e1970]: Online
+            - generic [ref=f2e1971]: Record a check / pay-by-link gift (pay-by-link channel)
+        - generic [ref=f2e1973]:
+          - button "JRN-0085 Add an appeal (Settings → Appeals → modal)" [ref=f2e1974] [cursor=pointer]:
+            - generic [ref=f2e1975]: JRN-0085
+            - generic "Add an appeal (Settings → Appeals → modal)" [ref=f2e1976]
+          - generic "JRN-0085 · 2026-07-01 → 2026-09-30" [ref=f2e1988]:
+            - generic [ref=f2e1990]: Back office
+            - generic [ref=f2e1991]: Add an appeal (Settings → Appeals → modal)
+        - generic [ref=f2e1993]:
+          - button "JRN-0087 Set access and general-page listing" [ref=f2e1994] [cursor=pointer]:
+            - generic [ref=f2e1995]: JRN-0087
+            - generic "Set access and general-page listing" [ref=f2e1996]
+          - generic "JRN-0087 · 2026-07-01 → 2026-09-30" [ref=f2e2008]:
+            - generic [ref=f2e2010]: Back office
+            - generic [ref=f2e2011]: Set access and general-page listing
+        - generic [ref=f2e2013]:
+          - button "JRN-0092 Configure service fee and global staff notifications (Settings → Organization)" [ref=f2e2014] [cursor=pointer]:
+            - generic [ref=f2e2015]: JRN-0092
+            - generic "Configure service fee and global staff notifications (Settings → Organization)" [ref=f2e2016]
+          - generic "JRN-0092 · 2026-07-01 → 2026-09-30" [ref=f2e2028]:
+            - generic [ref=f2e2030]: Back office
+            - generic [ref=f2e2031]: Configure service fee and global staff notifications (Settings → Organization)
+        - generic [ref=f2e2033]:
+          - button "JRN-0207 Route a submitted form's answers into mapped Salesforce records" [ref=f2e2034] [cursor=pointer]:
+            - generic [ref=f2e2035]: JRN-0207
+            - generic "Route a submitted form's answers into mapped Salesforce records" [ref=f2e2036]
+          - generic "JRN-0207 · 2026-07-01 → 2026-09-30" [ref=f2e2048]:
+            - generic [ref=f2e2050]: Online
+            - generic [ref=f2e2051]: Route a submitted form's answers into mapped Salesforce records
+        - generic [ref=f2e2053]:
+          - button "JRN-0110 Link a donation to a pledge — inherit attribution" [ref=f2e2054] [cursor=pointer]:
+            - generic [ref=f2e2055]: JRN-0110
+            - generic "Link a donation to a pledge — inherit attribution" [ref=f2e2056]
+          - generic "JRN-0110 · 2026-07-01 → 2026-09-30" [ref=f2e2068]:
+            - generic [ref=f2e2070]: Back office
+            - generic [ref=f2e2071]: Link a donation to a pledge — inherit attribution
+        - button "Unscheduled 8" [ref=f2e2074] [cursor=pointer]:
+          - generic [ref=f2e2077]: Unscheduled
+          - generic [ref=f2e2078]: "8"
+        - button "Fundraising 29" [ref=f2e2091] [cursor=pointer]:
+          - generic [ref=f2e2094]: Fundraising
+          - generic [ref=f2e2095]: "29"
+        - button "Contribution Management 14" [ref=f2e2108] [cursor=pointer]:
+          - generic [ref=f2e2111]: Contribution Management
+          - generic [ref=f2e2112]: "14"
+        - generic [ref=f2e2124]:
+          - button "JRN-0473 Record a donation (wizard)" [ref=f2e2125] [cursor=pointer]:
+            - generic [ref=f2e2126]: JRN-0473
+            - generic "Record a donation (wizard)" [ref=f2e2127]
+          - generic "JRN-0473 · 2026-07-01 → 2026-09-30" [ref=f2e2139]:
+            - generic [ref=f2e2141]: Back office
+            - generic [ref=f2e2142]: Record a donation (wizard)
+        - generic [ref=f2e2144]:
+          - button "JRN-0475 Create pledge with schedule" [ref=f2e2145] [cursor=pointer]:
+            - generic [ref=f2e2146]: JRN-0475
+            - generic "Create pledge with schedule" [ref=f2e2147]
+          - generic "JRN-0475 · 2026-07-01 → 2026-09-30" [ref=f2e2159]:
+            - generic [ref=f2e2161]: Back office
+            - generic [ref=f2e2162]: Create pledge with schedule
+        - generic [ref=f2e2164]:
+          - button "JRN-0482 Capture donation (tap-to-pay)" [ref=f2e2165] [cursor=pointer]:
+            - generic [ref=f2e2166]: JRN-0482
+            - generic "Capture donation (tap-to-pay)" [ref=f2e2167]
+          - generic "JRN-0482 · 2026-07-01 → 2026-09-30" [ref=f2e2179]:
+            - generic [ref=f2e2181]: POS
+            - generic [ref=f2e2182]: Capture donation (tap-to-pay)
+        - generic [ref=f2e2184]:
+          - button "JRN-0485 Convert transaction to donation" [ref=f2e2185] [cursor=pointer]:
+            - generic [ref=f2e2186]: JRN-0485
+            - generic "Convert transaction to donation" [ref=f2e2187]
+          - generic "JRN-0485 · 2027-01-01 → 2027-03-31" [ref=f2e2199]:
+            - generic [ref=f2e2201]: Back office
+            - generic [ref=f2e2202]: Convert transaction to donation
+        - generic [ref=f2e2204]:
+          - button "JRN-0486 Manage post-sale ops" [ref=f2e2205] [cursor=pointer]:
+            - generic [ref=f2e2206]: JRN-0486
+            - generic "Manage post-sale ops" [ref=f2e2207]
+          - generic "JRN-0486 · 2027-01-01 → 2027-03-31" [ref=f2e2219]:
+            - generic [ref=f2e2221]: Back office
+            - generic [ref=f2e2222]: Manage post-sale ops
+        - generic [ref=f2e2224]:
+          - button "JRN-0487 Refund donation" [ref=f2e2225] [cursor=pointer]:
+            - generic [ref=f2e2226]: JRN-0487
+            - generic "Refund donation" [ref=f2e2227]
+          - generic "JRN-0487 · 2026-07-01 → 2026-09-30" [ref=f2e2239]:
+            - generic [ref=f2e2241]: Back office
+            - generic [ref=f2e2242]: Refund donation
+        - generic [ref=f2e2244]:
+          - button "JRN-0498 Create recurring donation" [ref=f2e2245] [cursor=pointer]:
+            - generic [ref=f2e2246]: JRN-0498
+            - generic "Create recurring donation" [ref=f2e2247]
+          - generic "JRN-0498 · 2026-07-01 → 2026-09-30" [ref=f2e2259]:
+            - generic [ref=f2e2261]: Back office
+            - generic [ref=f2e2262]: Create recurring donation
+        - generic [ref=f2e2264]:
+          - button "JRN-0474 Record check/PBL (draft)" [ref=f2e2265] [cursor=pointer]:
+            - generic [ref=f2e2266]: JRN-0474
+            - generic "Record check/PBL (draft)" [ref=f2e2267]
+          - generic "JRN-0474 · 2026-07-01 → 2026-09-30" [ref=f2e2279]:
+            - generic [ref=f2e2281]: Back office
+            - generic [ref=f2e2282]: Record check/PBL (draft)
+        - generic [ref=f2e2284]:
+          - button "JRN-0476 Merge contribution to pledge" [ref=f2e2285] [cursor=pointer]:
+            - generic [ref=f2e2286]: JRN-0476
+            - generic "Merge contribution to pledge" [ref=f2e2287]
+          - generic "JRN-0476 · 2026-07-01 → 2026-09-30" [ref=f2e2299]:
+            - generic [ref=f2e2301]: Back office
+            - generic [ref=f2e2302]: Merge contribution to pledge
+        - generic [ref=f2e2304]:
+          - button "JRN-0483 Capture donation for constituent" [ref=f2e2305] [cursor=pointer]:
+            - generic [ref=f2e2306]: JRN-0483
+            - generic "Capture donation for constituent" [ref=f2e2307]
+          - generic "JRN-0483 · 2026-07-01 → 2026-09-30" [ref=f2e2319]:
+            - generic [ref=f2e2321]: Back office
+            - generic [ref=f2e2322]: Capture donation for constituent
+        - generic [ref=f2e2324]:
+          - button "JRN-0488 Process disputes" [ref=f2e2325] [cursor=pointer]:
+            - generic [ref=f2e2326]: JRN-0488
+            - generic "Process disputes" [ref=f2e2327]
+          - generic "JRN-0488 · 2027-01-01 → 2027-03-31" [ref=f2e2339]:
+            - generic [ref=f2e2341]: Back office
+            - generic [ref=f2e2342]: Process disputes
+        - generic [ref=f2e2344]:
+          - button "JRN-0499 Create recurring pledge" [ref=f2e2345] [cursor=pointer]:
+            - generic [ref=f2e2346]: JRN-0499
+            - generic "Create recurring pledge" [ref=f2e2347]
+          - generic "JRN-0499 · 2026-07-01 → 2026-09-30" [ref=f2e2359]:
+            - generic [ref=f2e2361]: Back office
+            - generic [ref=f2e2362]: Create recurring pledge
+        - generic [ref=f2e2364]:
+          - button "JRN-0477 Collect installment + manage plan" [ref=f2e2365] [cursor=pointer]:
+            - generic [ref=f2e2366]: JRN-0477
+            - generic "Collect installment + manage plan" [ref=f2e2367]
+          - generic "JRN-0477 · 2026-07-01 → 2026-09-30" [ref=f2e2379]:
+            - generic [ref=f2e2381]: Back office
+            - generic [ref=f2e2382]: Collect installment + manage plan
+        - generic [ref=f2e2384]:
+          - button "JRN-0500 Manage recurring lifecycle" [ref=f2e2385] [cursor=pointer]:
+            - generic [ref=f2e2386]: JRN-0500
+            - generic "Manage recurring lifecycle" [ref=f2e2387]
+          - generic "JRN-0500 · 2026-10-01 → 2026-12-31" [ref=f2e2399]:
+            - generic [ref=f2e2401]: Back office
+            - generic [ref=f2e2402]: Manage recurring lifecycle
+        - button "Donation Campaigns 1" [ref=f2e2405] [cursor=pointer]:
+          - generic [ref=f2e2408]: Donation Campaigns
+          - generic [ref=f2e2409]: "1"
+        - generic [ref=f2e2421]:
+          - button "JRN-0480 Create donation campaign" [ref=f2e2422] [cursor=pointer]:
+            - generic [ref=f2e2423]: JRN-0480
+            - generic "Create donation campaign" [ref=f2e2424]
+          - generic "JRN-0480 · 2026-07-01 → 2026-09-30" [ref=f2e2436]:
+            - generic [ref=f2e2438]: Back office
+            - generic [ref=f2e2439]: Create donation campaign
+        - button "Fundraising Communications 3" [ref=f2e2442] [cursor=pointer]:
+          - generic [ref=f2e2445]: Fundraising Communications
+          - generic [ref=f2e2446]: "3"
+        - generic [ref=f2e2458]:
+          - button "JRN-0489 Send tax receipts" [ref=f2e2459] [cursor=pointer]:
+            - generic [ref=f2e2460]: JRN-0489
+            - generic "Send tax receipts" [ref=f2e2461]
+          - generic "JRN-0489 · 2026-07-01 → 2026-09-30" [ref=f2e2473]:
+            - generic [ref=f2e2475]: Back office
+            - generic [ref=f2e2476]: Send tax receipts
+        - generic [ref=f2e2478]:
+          - button "JRN-0490 Print POS receipt" [ref=f2e2479] [cursor=pointer]:
+            - generic [ref=f2e2480]: JRN-0490
+            - generic "Print POS receipt" [ref=f2e2481]
+          - generic "JRN-0490 · 2026-07-01 → 2026-09-30" [ref=f2e2493]:
+            - generic [ref=f2e2495]: POS
+            - generic [ref=f2e2496]: Print POS receipt
+        - generic [ref=f2e2498]:
+          - button "JRN-0491 Send acknowledgements" [ref=f2e2499] [cursor=pointer]:
+            - generic [ref=f2e2500]: JRN-0491
+            - generic "Send acknowledgements" [ref=f2e2501]
+          - generic "JRN-0491 · 2026-07-01 → 2026-09-30" [ref=f2e2513]:
+            - generic [ref=f2e2515]: Back office
+            - generic [ref=f2e2516]: Send acknowledgements
+        - button "Fundraising Reporting & Analytics 2" [ref=f2e2519] [cursor=pointer]:
+          - generic [ref=f2e2522]: Fundraising Reporting & Analytics
+          - generic [ref=f2e2523]: "2"
+        - generic [ref=f2e2535]:
+          - button "JRN-0492 Configure analytics" [ref=f2e2536] [cursor=pointer]:
+            - generic [ref=f2e2537]: JRN-0492
+            - generic "Configure analytics" [ref=f2e2538]
+          - generic "JRN-0492 · 2026-10-01 → 2026-12-31" [ref=f2e2550]:
+            - generic [ref=f2e2552]: Back office
+            - generic [ref=f2e2553]: Configure analytics
+        - generic [ref=f2e2555]:
+          - button "JRN-0493 Report on fundraising" [ref=f2e2556] [cursor=pointer]:
+            - generic [ref=f2e2557]: JRN-0493
+            - generic "Report on fundraising" [ref=f2e2558]
+          - generic "JRN-0493 · 2027-01-01 → 2027-03-31" [ref=f2e2570]:
+            - generic [ref=f2e2572]: Back office
+            - generic [ref=f2e2573]: Report on fundraising
+        - button "Fundraising Settings & Configuration 4" [ref=f2e2576] [cursor=pointer]:
+          - generic [ref=f2e2579]: Fundraising Settings & Configuration
+          - generic [ref=f2e2580]: "4"
+        - generic [ref=f2e2592]:
+          - button "JRN-0478 Create a designation" [ref=f2e2593] [cursor=pointer]:
+            - generic [ref=f2e2594]: JRN-0478
+            - generic "Create a designation" [ref=f2e2595]
+          - generic "JRN-0478 · 2026-07-01 → 2026-09-30" [ref=f2e2607]:
+            - generic [ref=f2e2609]: Back office
+            - generic [ref=f2e2610]: Create a designation
+        - generic [ref=f2e2612]:
+          - button "JRN-0481 Configure fundraising settings" [ref=f2e2613] [cursor=pointer]:
+            - generic [ref=f2e2614]: JRN-0481
+            - generic "Configure fundraising settings" [ref=f2e2615]
+          - generic "JRN-0481 · 2026-07-01 → 2026-09-30" [ref=f2e2627]:
+            - generic [ref=f2e2629]: Back office
+            - generic [ref=f2e2630]: Configure fundraising settings
+        - generic [ref=f2e2632]:
+          - button "JRN-0515 Plan and execute fundraising migration" [ref=f2e2633] [cursor=pointer]:
+            - generic [ref=f2e2634]: JRN-0515
+            - generic "Plan and execute fundraising migration" [ref=f2e2635]
+          - generic "JRN-0515 · 2026-07-01 → 2026-09-30" [ref=f2e2647]:
+            - generic [ref=f2e2649]: Back office
+            - generic [ref=f2e2650]: Plan and execute fundraising migration
+        - generic [ref=f2e2652]:
+          - button "JRN-0479 Add an appeal" [ref=f2e2653] [cursor=pointer]:
+            - generic [ref=f2e2654]: JRN-0479
+            - generic "Add an appeal" [ref=f2e2655]
+          - generic "JRN-0479 · 2026-07-01 → 2026-09-30" [ref=f2e2667]:
+            - generic [ref=f2e2669]: Back office
+            - generic [ref=f2e2670]: Add an appeal
+        - button "Specialized Gift Types 5" [ref=f2e2673] [cursor=pointer]:
+          - generic [ref=f2e2676]: Specialized Gift Types
+          - generic [ref=f2e2677]: "5"
+        - generic [ref=f2e2689]:
+          - button "JRN-0484 Record a sponsorship" [ref=f2e2690] [cursor=pointer]:
+            - generic [ref=f2e2691]: JRN-0484
+            - generic "Record a sponsorship" [ref=f2e2692]
+          - generic "JRN-0484 · 2026-07-01 → 2026-09-30" [ref=f2e2704]:
+            - generic [ref=f2e2706]: Back office
+            - generic [ref=f2e2707]: Record a sponsorship
+        - generic [ref=f2e2709]:
+          - button "JRN-0494 Manage grants" [ref=f2e2710] [cursor=pointer]:
+            - generic [ref=f2e2711]: JRN-0494
+            - generic "Manage grants" [ref=f2e2712]
+          - generic "JRN-0494 · 2026-07-01 → 2026-09-30" [ref=f2e2724]:
+            - generic [ref=f2e2726]: Back office
+            - generic [ref=f2e2727]: Manage grants
+        - generic [ref=f2e2729]:
+          - button "JRN-0495 Record in-kind" [ref=f2e2730] [cursor=pointer]:
+            - generic [ref=f2e2731]: JRN-0495
+            - generic "Record in-kind" [ref=f2e2732]
+          - generic "JRN-0495 · 2026-07-01 → 2026-09-30" [ref=f2e2744]:
+            - generic [ref=f2e2746]: Back office
+            - generic [ref=f2e2747]: Record in-kind
+        - generic [ref=f2e2749]:
+          - button "JRN-0496 Manage major gifts" [ref=f2e2750] [cursor=pointer]:
+            - generic [ref=f2e2751]: JRN-0496
+            - generic "Manage major gifts" [ref=f2e2752]
+          - generic "JRN-0496 · 2026-07-01 → 2026-09-30" [ref=f2e2764]:
+            - generic [ref=f2e2766]: Back office
+            - generic [ref=f2e2767]: Manage major gifts
+        - generic [ref=f2e2769]:
+          - button "JRN-0497 Process matching gifts" [ref=f2e2770] [cursor=pointer]:
+            - generic [ref=f2e2771]: JRN-0497
+            - generic "Process matching gifts" [ref=f2e2772]
+          - generic "JRN-0497 · 2026-07-01 → 2026-09-30" [ref=f2e2784]:
+            - generic [ref=f2e2786]: Back office
+            - generic [ref=f2e2787]: Process matching gifts
+        - button "Membership 14" [ref=f2e2790] [cursor=pointer]:
+          - generic [ref=f2e2793]: Membership
+          - generic [ref=f2e2794]: "14"
+        - button "Membership Campaigns 1" [ref=f2e2807] [cursor=pointer]:
+          - generic [ref=f2e2810]: Membership Campaigns
+          - generic [ref=f2e2811]: "1"
+        - generic [ref=f2e2823]:
+          - button "JRN-0506 Create membership campaign" [ref=f2e2824] [cursor=pointer]:
+            - generic [ref=f2e2825]: JRN-0506
+            - generic "Create membership campaign" [ref=f2e2826]
+          - generic "JRN-0506 · 2026-07-01 → 2026-09-30" [ref=f2e2838]:
+            - generic [ref=f2e2840]: Back office
+            - generic [ref=f2e2841]: Create membership campaign
+        - button "Membership Sales 8" [ref=f2e2844] [cursor=pointer]:
+          - generic [ref=f2e2847]: Membership Sales
+          - generic [ref=f2e2848]: "8"
+        - generic [ref=f2e2860]:
+          - button "JRN-0501 Sell membership" [ref=f2e2861] [cursor=pointer]:
+            - generic [ref=f2e2862]: JRN-0501
+            - generic "Sell membership" [ref=f2e2863]
+          - generic "JRN-0501 · 2026-07-01 → 2026-09-30" [ref=f2e2875]:
+            - generic [ref=f2e2877]: POS
+            - generic [ref=f2e2878]: Sell membership
+        - generic [ref=f2e2880]:
+          - button "JRN-0503 Register gift membership" [ref=f2e2881] [cursor=pointer]:
+            - generic [ref=f2e2882]: JRN-0503
+            - generic "Register gift membership" [ref=f2e2883]
+          - generic "JRN-0503 · 2026-07-01 → 2026-09-30" [ref=f2e2895]:
+            - generic [ref=f2e2897]: Back office
+            - generic [ref=f2e2898]: Register gift membership
+        - generic [ref=f2e2900]:
+          - button "JRN-0507 Manage discounts" [ref=f2e2901] [cursor=pointer]:
+            - generic [ref=f2e2902]: JRN-0507
+            - generic "Manage discounts" [ref=f2e2903]
+          - generic "JRN-0507 · 2026-07-01 → 2026-09-30" [ref=f2e2915]:
+            - generic [ref=f2e2917]: Back office
+            - generic [ref=f2e2918]: Manage discounts
+        - generic [ref=f2e2920]:
+          - button "JRN-0508 Upgrade membership" [ref=f2e2921] [cursor=pointer]:
+            - generic [ref=f2e2922]: JRN-0508
+            - generic "Upgrade membership" [ref=f2e2923]
+          - generic "JRN-0508 · 2026-07-01 → 2026-09-30" [ref=f2e2935]:
+            - generic [ref=f2e2937]: Back office
+            - generic [ref=f2e2938]: Upgrade membership
+        - generic [ref=f2e2940]:
+          - button "JRN-0510 Upgrade ticket to membership" [ref=f2e2941] [cursor=pointer]:
+            - generic [ref=f2e2942]: JRN-0510
+            - generic "Upgrade ticket to membership" [ref=f2e2943]
+          - generic "JRN-0510 · 2026-07-01 → 2026-09-30" [ref=f2e2955]:
+            - generic [ref=f2e2957]: POS
+            - generic [ref=f2e2958]: Upgrade ticket to membership
+        - generic [ref=f2e2960]:
+          - button "JRN-0512 Convert donation to membership" [ref=f2e2961] [cursor=pointer]:
+            - generic [ref=f2e2962]: JRN-0512
+            - generic "Convert donation to membership" [ref=f2e2963]
+          - generic "JRN-0512 · 2026-10-01 → 2026-12-31" [ref=f2e2975]:
+            - generic [ref=f2e2977]: Back office
+            - generic [ref=f2e2978]: Convert donation to membership
+        - generic [ref=f2e2980]:
+          - button "JRN-0502 Register subscription" [ref=f2e2981] [cursor=pointer]:
+            - generic [ref=f2e2982]: JRN-0502
+            - generic "Register subscription" [ref=f2e2983]
+          - generic "JRN-0502 · 2026-07-01 → 2026-09-30" [ref=f2e2995]:
+            - generic [ref=f2e2997]: Back office
+            - generic [ref=f2e2998]: Register subscription
+        - generic [ref=f2e3000]:
+          - button "JRN-0509 Upgrade membership" [ref=f2e3001] [cursor=pointer]:
+            - generic [ref=f2e3002]: JRN-0509
+            - generic "Upgrade membership" [ref=f2e3003]
+          - generic "JRN-0509 · 2026-07-01 → 2026-09-30" [ref=f2e3015]:
+            - generic [ref=f2e3017]: POS
+            - generic [ref=f2e3018]: Upgrade membership
+        - button "Membership Setup & Configuration 5" [ref=f2e3021] [cursor=pointer]:
+          - generic [ref=f2e3024]: Membership Setup & Configuration
+          - generic [ref=f2e3025]: "5"
+        - generic [ref=f2e3037]:
+          - button "JRN-0504 Create program (wizard)" [ref=f2e3038] [cursor=pointer]:
+            - generic [ref=f2e3039]: JRN-0504
+            - generic "Create program (wizard)" [ref=f2e3040]
+          - generic "JRN-0504 · 2026-07-01 → 2026-09-30" [ref=f2e3052]:
+            - generic [ref=f2e3054]: Back office
+            - generic [ref=f2e3055]: Create program (wizard)
+        - generic [ref=f2e3057]:
+          - button "JRN-0505 Configure settings" [ref=f2e3058] [cursor=pointer]:
+            - generic [ref=f2e3059]: JRN-0505
+            - generic "Configure settings" [ref=f2e3060]
+          - generic "JRN-0505 · 2026-07-01 → 2026-09-30" [ref=f2e3072]:
+            - generic [ref=f2e3074]: Back office
+            - generic [ref=f2e3075]: Configure settings
+        - generic [ref=f2e3077]:
+          - button "JRN-0511 Configure auto-assignment" [ref=f2e3078] [cursor=pointer]:
+            - generic [ref=f2e3079]: JRN-0511
+            - generic "Configure auto-assignment" [ref=f2e3080]
+          - generic "JRN-0511 · 2026-07-01 → 2026-09-30" [ref=f2e3092]:
+            - generic [ref=f2e3094]: Back office
+            - generic [ref=f2e3095]: Configure auto-assignment
+        - button "JRN-0513 Report on memberships" [ref=f2e3098] [cursor=pointer]:
+          - generic [ref=f2e3099]: JRN-0513
+          - generic "Report on memberships" [ref=f2e3100]
+        - generic [ref=f2e3112]:
+          - button "JRN-0516 Plan and execute membership migration" [ref=f2e3113] [cursor=pointer]:
+            - generic [ref=f2e3114]: JRN-0516
+            - generic "Plan and execute membership migration" [ref=f2e3115]
+          - generic "JRN-0516 · 2026-07-01 → 2026-09-30" [ref=f2e3127]:
+            - generic [ref=f2e3129]: Back office
+            - generic [ref=f2e3130]: Plan and execute membership migration
+        - button "Payments 49" [ref=f2e3133] [cursor=pointer]:
+          - generic [ref=f2e3136]: Payments
+          - generic [ref=f2e3137]: "49"
+        - button "Payouts & Deposits 3" [ref=f2e3150] [cursor=pointer]:
+          - generic [ref=f2e3153]: Payouts & Deposits
+          - generic [ref=f2e3154]: "3"
+        - generic [ref=f2e3166]:
+          - button "JRN-0077 See what a scheduled payout is made of — Back office" [ref=f2e3167] [cursor=pointer]:
+            - generic [ref=f2e3168]: JRN-0077
+            - generic "See what a scheduled payout is made of — Back office" [ref=f2e3169]
+          - generic "JRN-0077 · 2026-07-01 → 2026-09-30" [ref=f2e3181]:
+            - generic [ref=f2e3183]: Back office
+            - generic [ref=f2e3184]: See what a scheduled payout is made of — Back office
+            - generic [ref=f2e3185]: ✓
+        - generic [ref=f2e3187]:
+          - button "JRN-0078 Reconcile Adyen withholdings across consecutive deposits — Back office" [ref=f2e3188] [cursor=pointer]:
+            - generic [ref=f2e3189]: JRN-0078
+            - generic "Reconcile Adyen withholdings across consecutive deposits — Back office" [ref=f2e3190]
+          - generic "JRN-0078 · 2026-07-01 → 2026-09-30" [ref=f2e3202]:
+            - generic [ref=f2e3204]: Back office
+            - generic [ref=f2e3205]: Reconcile Adyen withholdings across consecutive deposits — Back office
+            - generic [ref=f2e3206]: ✓
+        - generic [ref=f2e3208]:
+          - button "JRN-0079 Payout multiple balance accounts — Back office" [ref=f2e3209] [cursor=pointer]:
+            - generic [ref=f2e3210]: JRN-0079
+            - generic "Payout multiple balance accounts — Back office" [ref=f2e3211]
+          - generic "JRN-0079 · 2026-07-01 → 2026-09-30" [ref=f2e3223]:
+            - generic [ref=f2e3225]: Back office
+            - generic [ref=f2e3226]: Payout multiple balance accounts — Back office
+            - generic [ref=f2e3227]: ✓
+        - button "Refund 25" [ref=f2e3230] [cursor=pointer]:
+          - generic [ref=f2e3233]: Refund
+          - generic [ref=f2e3234]: "25"
+        - generic [ref=f2e3246]:
+          - button "JRN-0001 Refund selected item(s), full or partial per item — Point of sale" [ref=f2e3247] [cursor=pointer]:
+            - generic [ref=f2e3248]: JRN-0001
+            - generic "Refund selected item(s), full or partial per item — Point of sale" [ref=f2e3249]
+          - generic "JRN-0001 · 2026-07-01 → 2026-09-30" [ref=f2e3261]:
+            - generic [ref=f2e3263]: POS
+            - generic [ref=f2e3264]: Refund selected item(s), full or partial per item — Point of sale
+            - generic [ref=f2e3265]: ✓
+        - generic [ref=f2e3267]:
+          - button "JRN-0002 Refund selected item(s), full or partial per item — Online" [ref=f2e3268] [cursor=pointer]:
+            - generic [ref=f2e3269]: JRN-0002
+            - generic "Refund selected item(s), full or partial per item — Online" [ref=f2e3270]
+          - generic "JRN-0002 · 2026-07-01 → 2026-09-30" [ref=f2e3282]:
+            - generic [ref=f2e3284]: Online
+            - generic [ref=f2e3285]: Refund selected item(s), full or partial per item — Online
+            - generic [ref=f2e3286]: ✓
+        - generic [ref=f2e3288]:
+          - button "JRN-0003 Refund an amount without returning an item — Point of sale" [ref=f2e3289] [cursor=pointer]:
+            - generic [ref=f2e3290]: JRN-0003
+            - generic "Refund an amount without returning an item — Point of sale" [ref=f2e3291]
+          - generic "JRN-0003 · 2026-07-01 → 2026-09-30" [ref=f2e3303]:
+            - generic [ref=f2e3305]: POS
+            - generic [ref=f2e3306]: Refund an amount without returning an item — Point of sale
+            - generic [ref=f2e3307]: ✓
+        - generic [ref=f2e3309]:
+          - button "JRN-0004 Refund an amount without returning an item — Online" [ref=f2e3310] [cursor=pointer]:
+            - generic [ref=f2e3311]: JRN-0004
+            - generic "Refund an amount without returning an item — Online" [ref=f2e3312]
+          - generic "JRN-0004 · 2026-07-01 → 2026-09-30" [ref=f2e3324]:
+            - generic [ref=f2e3326]: Online
+            - generic [ref=f2e3327]: Refund an amount without returning an item — Online
+            - generic [ref=f2e3328]: ✓
+        - generic [ref=f2e3330]:
+          - button "JRN-0005 Restock returned items to a chosen location (optional) — Point of sale" [ref=f2e3331] [cursor=pointer]:
+            - generic [ref=f2e3332]: JRN-0005
+            - generic "Restock returned items to a chosen location (optional) — Point of sale" [ref=f2e3333]
+          - generic "JRN-0005 · 2026-07-01 → 2026-09-30" [ref=f2e3345]:
+            - generic [ref=f2e3347]: POS
+            - generic [ref=f2e3348]: Restock returned items to a chosen location (optional) — Point of sale
+            - generic [ref=f2e3349]: ✓
+        - generic [ref=f2e3351]:
+          - button "JRN-0006 Restock returned items to a chosen location (optional) — Online" [ref=f2e3352] [cursor=pointer]:
+            - generic [ref=f2e3353]: JRN-0006
+            - generic "Restock returned items to a chosen location (optional) — Online" [ref=f2e3354]
+          - generic "JRN-0006 · 2026-07-01 → 2026-09-30" [ref=f2e3366]:
+            - generic [ref=f2e3368]: Online
+            - generic [ref=f2e3369]: Restock returned items to a chosen location (optional) — Online
+            - generic [ref=f2e3370]: ✓
+        - generic [ref=f2e3372]:
+          - button "JRN-0007 Refund to the original payment method — Point of sale" [ref=f2e3373] [cursor=pointer]:
+            - generic [ref=f2e3374]: JRN-0007
+            - generic "Refund to the original payment method — Point of sale" [ref=f2e3375]
+          - generic "JRN-0007 · 2026-07-01 → 2026-09-30" [ref=f2e3387]:
+            - generic [ref=f2e3389]: POS
+            - generic [ref=f2e3390]: Refund to the original payment method — Point of sale
+            - generic [ref=f2e3391]: ✓
+        - generic [ref=f2e3393]:
+          - button "JRN-0008 Refund to the original payment method — Online" [ref=f2e3394] [cursor=pointer]:
+            - generic [ref=f2e3395]: JRN-0008
+            - generic "Refund to the original payment method — Online" [ref=f2e3396]
+          - generic "JRN-0008 · 2026-07-01 → 2026-09-30" [ref=f2e3408]:
+            - generic [ref=f2e3410]: Online
+            - generic [ref=f2e3411]: Refund to the original payment method — Online
+            - generic [ref=f2e3412]: ✓
+        - generic [ref=f2e3414]:
+          - button "JRN-0009 Split a refund across multiple payment methods — Point of sale" [ref=f2e3415] [cursor=pointer]:
+            - generic [ref=f2e3416]: JRN-0009
+            - generic "Split a refund across multiple payment methods — Point of sale" [ref=f2e3417]
+          - generic "JRN-0009 · 2026-07-01 → 2026-09-30" [ref=f2e3429]:
+            - generic [ref=f2e3431]: POS
+            - generic [ref=f2e3432]: Split a refund across multiple payment methods — Point of sale
+            - generic [ref=f2e3433]: ✓
+        - generic [ref=f2e3435]:
+          - button "JRN-0010 Split a refund across multiple payment methods — Online" [ref=f2e3436] [cursor=pointer]:
+            - generic [ref=f2e3437]: JRN-0010
+            - generic "Split a refund across multiple payment methods — Online" [ref=f2e3438]
+          - generic "JRN-0010 · 2026-07-01 → 2026-09-30" [ref=f2e3450]:
+            - generic [ref=f2e3452]: Online
+            - generic [ref=f2e3453]: Split a refund across multiple payment methods — Online
+            - generic [ref=f2e3454]: ✓
+        - generic [ref=f2e3456]:
+          - button "JRN-0011 Refund as store credit — Point of sale" [ref=f2e3457] [cursor=pointer]:
+            - generic [ref=f2e3458]: JRN-0011
+            - generic "Refund as store credit — Point of sale" [ref=f2e3459]
+          - generic "JRN-0011 · 2026-07-01 → 2026-09-30" [ref=f2e3471]:
+            - generic [ref=f2e3473]: POS
+            - generic [ref=f2e3474]: Refund as store credit — Point of sale
+            - generic [ref=f2e3475]: ✓
+        - generic [ref=f2e3477]:
+          - button "JRN-0012 Refund as store credit — Online" [ref=f2e3478] [cursor=pointer]:
+            - generic [ref=f2e3479]: JRN-0012
+            - generic "Refund as store credit — Online" [ref=f2e3480]
+          - generic "JRN-0012 · 2026-07-01 → 2026-09-30" [ref=f2e3492]:
+            - generic [ref=f2e3494]: Online
+            - generic [ref=f2e3495]: Refund as store credit — Online
+            - generic [ref=f2e3496]: ✓
+        - generic [ref=f2e3498]:
+          - button "JRN-0013 Record refund reason and notes — Point of sale" [ref=f2e3499] [cursor=pointer]:
+            - generic [ref=f2e3500]: JRN-0013
+            - generic "Record refund reason and notes — Point of sale" [ref=f2e3501]
+          - generic "JRN-0013 · 2026-07-01 → 2026-09-30" [ref=f2e3513]:
+            - generic [ref=f2e3515]: POS
+            - generic [ref=f2e3516]: Record refund reason and notes — Point of sale
+            - generic [ref=f2e3517]: ✓
+        - generic [ref=f2e3519]:
+          - button "JRN-0014 Record refund reason and notes — Online" [ref=f2e3520] [cursor=pointer]:
+            - generic [ref=f2e3521]: JRN-0014
+            - generic "Record refund reason and notes — Online" [ref=f2e3522]
+          - generic "JRN-0014 · 2026-07-01 → 2026-09-30" [ref=f2e3534]:
+            - generic [ref=f2e3536]: Online
+            - generic [ref=f2e3537]: Record refund reason and notes — Online
+            - generic [ref=f2e3538]: ✓
+        - generic [ref=f2e3540]:
+          - button "JRN-0015 Authorize a refund with audit of who authorized — Point of sale" [ref=f2e3541] [cursor=pointer]:
+            - generic [ref=f2e3542]: JRN-0015
+            - generic "Authorize a refund with audit of who authorized — Point of sale" [ref=f2e3543]
+          - generic "JRN-0015 · 2026-07-01 → 2026-09-30" [ref=f2e3555]:
+            - generic [ref=f2e3557]: POS
+            - generic [ref=f2e3558]: Authorize a refund with audit of who authorized — Point of sale
+            - generic [ref=f2e3559]: ✓
+        - generic [ref=f2e3561]:
+          - button "JRN-0016 Authorize a refund with audit of who authorized — Online" [ref=f2e3562] [cursor=pointer]:
+            - generic [ref=f2e3563]: JRN-0016
+            - generic "Authorize a refund with audit of who authorized — Online" [ref=f2e3564]
+          - generic "JRN-0016 · 2026-07-01 → 2026-09-30" [ref=f2e3576]:
+            - generic [ref=f2e3578]: Online
+            - generic [ref=f2e3579]: Authorize a refund with audit of who authorized — Online
+            - generic [ref=f2e3580]: ✓
+        - generic [ref=f2e3582]:
+          - button "JRN-0017 Enforce refund guardrails — Point of sale" [ref=f2e3583] [cursor=pointer]:
+            - generic [ref=f2e3584]: JRN-0017
+            - generic "Enforce refund guardrails — Point of sale" [ref=f2e3585]
+          - generic "JRN-0017 · 2026-07-01 → 2026-09-30" [ref=f2e3597]:
+            - generic [ref=f2e3599]: POS
+            - generic [ref=f2e3600]: Enforce refund guardrails — Point of sale
+            - generic [ref=f2e3601]: ✓
+        - generic [ref=f2e3603]:
+          - button "JRN-0018 Enforce refund guardrails — Online" [ref=f2e3604] [cursor=pointer]:
+            - generic [ref=f2e3605]: JRN-0018
+            - generic "Enforce refund guardrails — Online" [ref=f2e3606]
+          - generic "JRN-0018 · 2026-07-01 → 2026-09-30" [ref=f2e3618]:
+            - generic [ref=f2e3620]: Online
+            - generic [ref=f2e3621]: Enforce refund guardrails — Online
+            - generic [ref=f2e3622]: ✓
+        - generic [ref=f2e3624]:
+          - button "JRN-0019 Track refund status from Veevart — Point of sale" [ref=f2e3625] [cursor=pointer]:
+            - generic [ref=f2e3626]: JRN-0019
+            - generic "Track refund status from Veevart — Point of sale" [ref=f2e3627]
+          - generic "JRN-0019 · 2026-07-01 → 2026-09-30" [ref=f2e3639]:
+            - generic [ref=f2e3641]: POS
+            - generic [ref=f2e3642]: Track refund status from Veevart — Point of sale
+            - generic [ref=f2e3643]: ✓
+        - generic [ref=f2e3645]:
+          - button "JRN-0020 Track refund status from Veevart — Online" [ref=f2e3646] [cursor=pointer]:
+            - generic [ref=f2e3647]: JRN-0020
+            - generic "Track refund status from Veevart — Online" [ref=f2e3648]
+          - generic "JRN-0020 · 2026-07-01 → 2026-09-30" [ref=f2e3660]:
+            - generic [ref=f2e3662]: Online
+            - generic [ref=f2e3663]: Track refund status from Veevart — Online
+            - generic [ref=f2e3664]: ✓
+        - generic [ref=f2e3666]:
+          - button "JRN-0021 Notify the customer of the refund — Point of sale" [ref=f2e3667] [cursor=pointer]:
+            - generic [ref=f2e3668]: JRN-0021
+            - generic "Notify the customer of the refund — Point of sale" [ref=f2e3669]
+          - generic "JRN-0021 · 2026-07-01 → 2026-09-30" [ref=f2e3681]:
+            - generic [ref=f2e3683]: POS
+            - generic [ref=f2e3684]: Notify the customer of the refund — Point of sale
+            - generic [ref=f2e3685]: ✓
+        - generic [ref=f2e3687]:
+          - button "JRN-0022 Notify the customer of the refund — Online" [ref=f2e3688] [cursor=pointer]:
+            - generic [ref=f2e3689]: JRN-0022
+            - generic "Notify the customer of the refund — Online" [ref=f2e3690]
+          - generic "JRN-0022 · 2026-07-01 → 2026-09-30" [ref=f2e3702]:
+            - generic [ref=f2e3704]: Online
+            - generic [ref=f2e3705]: Notify the customer of the refund — Online
+            - generic [ref=f2e3706]: ✓
+        - generic [ref=f2e3708]:
+          - button "JRN-0023 Post correct refund accounting (per-transaction reversal) — Point of sale" [ref=f2e3709] [cursor=pointer]:
+            - generic [ref=f2e3710]: JRN-0023
+            - generic "Post correct refund accounting (per-transaction reversal) — Point of sale" [ref=f2e3711]
+          - generic "JRN-0023 · 2026-07-01 → 2026-09-30" [ref=f2e3723]:
+            - generic [ref=f2e3725]: POS
+            - generic [ref=f2e3726]: Post correct refund accounting (per-transaction reversal) — Point of sale
+            - generic [ref=f2e3727]: ✓
+        - generic [ref=f2e3729]:
+          - button "JRN-0024 Post correct refund accounting (per-transaction reversal) — Online" [ref=f2e3730] [cursor=pointer]:
+            - generic [ref=f2e3731]: JRN-0024
+            - generic "Post correct refund accounting (per-transaction reversal) — Online" [ref=f2e3732]
+          - generic "JRN-0024 · 2026-07-01 → 2026-09-30" [ref=f2e3744]:
+            - generic [ref=f2e3746]: Online
+            - generic [ref=f2e3747]: Post correct refund accounting (per-transaction reversal) — Online
+            - generic [ref=f2e3748]: ✓
+        - button "Unscheduled 1" [ref=f2e3751] [cursor=pointer]:
+          - generic [ref=f2e3754]: Unscheduled
+          - generic [ref=f2e3755]: "1"
+        - button "Store credit 21" [ref=f2e3768] [cursor=pointer]:
+          - generic [ref=f2e3771]: Store credit
+          - generic [ref=f2e3772]: "21"
+        - generic [ref=f2e3784]:
+          - button "JRN-0026 Enable and configure store credit — Back office" [ref=f2e3785] [cursor=pointer]:
+            - generic [ref=f2e3786]: JRN-0026
+            - generic "Enable and configure store credit — Back office" [ref=f2e3787]
+          - generic "JRN-0026 · 2026-07-01 → 2026-09-30" [ref=f2e3799]:
+            - generic [ref=f2e3801]: Back office
+            - generic [ref=f2e3802]: Enable and configure store credit — Back office
+            - generic [ref=f2e3803]: ✓
+        - generic [ref=f2e3805]:
+          - button "JRN-0027 Map the store-credit liability GL account — Back office" [ref=f2e3806] [cursor=pointer]:
+            - generic [ref=f2e3807]: JRN-0027
+            - generic "Map the store-credit liability GL account — Back office" [ref=f2e3808]
+          - generic "JRN-0027 · 2026-07-01 → 2026-09-30" [ref=f2e3820]:
+            - generic [ref=f2e3822]: Back office
+            - generic [ref=f2e3823]: Map the store-credit liability GL account — Back office
+            - generic [ref=f2e3824]: ✓
+        - generic [ref=f2e3826]:
+          - button "JRN-0028 Issue store credit from a refund — Point of sale" [ref=f2e3827] [cursor=pointer]:
+            - generic [ref=f2e3828]: JRN-0028
+            - generic "Issue store credit from a refund — Point of sale" [ref=f2e3829]
+          - generic "JRN-0028 · 2026-07-01 → 2026-09-30" [ref=f2e3841]:
+            - generic [ref=f2e3843]: POS
+            - generic [ref=f2e3844]: Issue store credit from a refund — Point of sale
+            - generic [ref=f2e3845]: ✓
+        - generic [ref=f2e3847]:
+          - button "JRN-0029 Issue store credit from a refund — Online" [ref=f2e3848] [cursor=pointer]:
+            - generic [ref=f2e3849]: JRN-0029
+            - generic "Issue store credit from a refund — Online" [ref=f2e3850]
+          - generic "JRN-0029 · 2026-07-01 → 2026-09-30" [ref=f2e3862]:
+            - generic [ref=f2e3864]: Online
+            - generic [ref=f2e3865]: Issue store credit from a refund — Online
+            - generic [ref=f2e3866]: ✓
+        - generic [ref=f2e3868]:
+          - button "JRN-0030 Issue store credit from a gift card purchase or activation — Point of sale" [ref=f2e3869] [cursor=pointer]:
+            - generic [ref=f2e3870]: JRN-0030
+            - generic "Issue store credit from a gift card purchase or activation — Point of sale" [ref=f2e3871]
+          - generic "JRN-0030 · 2026-07-01 → 2026-09-30" [ref=f2e3883]:
+            - generic [ref=f2e3885]: POS
+            - generic [ref=f2e3886]: Issue store credit from a gift card purchase or activation — Point of sale
+            - generic [ref=f2e3887]: ✓
+        - generic [ref=f2e3889]:
+          - button "JRN-0031 Issue store credit from a gift card purchase or activation — Online" [ref=f2e3890] [cursor=pointer]:
+            - generic [ref=f2e3891]: JRN-0031
+            - generic "Issue store credit from a gift card purchase or activation — Online" [ref=f2e3892]
+          - generic "JRN-0031 · 2026-07-01 → 2026-09-30" [ref=f2e3904]:
+            - generic [ref=f2e3906]: Online
+            - generic [ref=f2e3907]: Issue store credit from a gift card purchase or activation — Online
+            - generic [ref=f2e3908]: ✓
+        - generic [ref=f2e3910]:
+          - button "JRN-0032 Issue store credit manually (goodwill or adjustment) — Point of sale" [ref=f2e3911] [cursor=pointer]:
+            - generic [ref=f2e3912]: JRN-0032
+            - generic "Issue store credit manually (goodwill or adjustment) — Point of sale" [ref=f2e3913]
+          - generic "JRN-0032 · 2026-07-01 → 2026-09-30" [ref=f2e3925]:
+            - generic [ref=f2e3927]: POS
+            - generic [ref=f2e3928]: Issue store credit manually (goodwill or adjustment) — Point of sale
+            - generic [ref=f2e3929]: ✓
+        - generic [ref=f2e3931]:
+          - button "JRN-0033 Issue store credit manually (goodwill or adjustment) — Online" [ref=f2e3932] [cursor=pointer]:
+            - generic [ref=f2e3933]: JRN-0033
+            - generic "Issue store credit manually (goodwill or adjustment) — Online" [ref=f2e3934]
+          - generic "JRN-0033 · 2026-07-01 → 2026-09-30" [ref=f2e3946]:
+            - generic [ref=f2e3948]: Online
+            - generic [ref=f2e3949]: Issue store credit manually (goodwill or adjustment) — Online
+            - generic [ref=f2e3950]: ✓
+        - generic [ref=f2e3952]:
+          - button "JRN-0034 Redeem store credit as tender at any checkout — Point of sale" [ref=f2e3953] [cursor=pointer]:
+            - generic [ref=f2e3954]: JRN-0034
+            - generic "Redeem store credit as tender at any checkout — Point of sale" [ref=f2e3955]
+          - generic "JRN-0034 · 2026-07-01 → 2026-09-30" [ref=f2e3967]:
+            - generic [ref=f2e3969]: POS
+            - generic [ref=f2e3970]: Redeem store credit as tender at any checkout — Point of sale
+            - generic [ref=f2e3971]: ✓
+        - generic [ref=f2e3973]:
+          - button "JRN-0035 Redeem store credit as tender at any checkout — Online" [ref=f2e3974] [cursor=pointer]:
+            - generic [ref=f2e3975]: JRN-0035
+            - generic "Redeem store credit as tender at any checkout — Online" [ref=f2e3976]
+          - generic "JRN-0035 · 2026-07-01 → 2026-09-30" [ref=f2e3988]:
+            - generic [ref=f2e3990]: Online
+            - generic [ref=f2e3991]: Redeem store credit as tender at any checkout — Online
+            - generic [ref=f2e3992]: ✓
+        - generic [ref=f2e3994]:
+          - button "JRN-0036 Redeem store credit within a split payment — Point of sale" [ref=f2e3995] [cursor=pointer]:
+            - generic [ref=f2e3996]: JRN-0036
+            - generic "Redeem store credit within a split payment — Point of sale" [ref=f2e3997]
+          - generic "JRN-0036 · 2026-07-01 → 2026-09-30" [ref=f2e4009]:
+            - generic [ref=f2e4011]: POS
+            - generic [ref=f2e4012]: Redeem store credit within a split payment — Point of sale
+            - generic [ref=f2e4013]: ✓
+        - generic [ref=f2e4015]:
+          - button "JRN-0037 Redeem store credit within a split payment — Online" [ref=f2e4016] [cursor=pointer]:
+            - generic [ref=f2e4017]: JRN-0037
+            - generic "Redeem store credit within a split payment — Online" [ref=f2e4018]
+          - generic "JRN-0037 · 2026-07-01 → 2026-09-30" [ref=f2e4030]:
+            - generic [ref=f2e4032]: Online
+            - generic [ref=f2e4033]: Redeem store credit within a split payment — Online
+            - generic [ref=f2e4034]: ✓
+        - generic [ref=f2e4036]:
+          - button "JRN-0038 Convert store credit into a donation — Point of sale" [ref=f2e4037] [cursor=pointer]:
+            - generic [ref=f2e4038]: JRN-0038
+            - generic "Convert store credit into a donation — Point of sale" [ref=f2e4039]
+          - generic "JRN-0038 · 2026-07-01 → 2026-09-30" [ref=f2e4051]:
+            - generic [ref=f2e4053]: POS
+            - generic [ref=f2e4054]: Convert store credit into a donation — Point of sale
+            - generic [ref=f2e4055]: ✓
+        - generic [ref=f2e4057]:
+          - button "JRN-0039 Convert store credit into a donation — Online" [ref=f2e4058] [cursor=pointer]:
+            - generic [ref=f2e4059]: JRN-0039
+            - generic "Convert store credit into a donation — Online" [ref=f2e4060]
+          - generic "JRN-0039 · 2026-07-01 → 2026-09-30" [ref=f2e4072]:
+            - generic [ref=f2e4074]: Online
+            - generic [ref=f2e4075]: Convert store credit into a donation — Online
+            - generic [ref=f2e4076]: ✓
+        - generic [ref=f2e4078]:
+          - button "JRN-0040 Look up a customer's store-credit balance — Point of sale" [ref=f2e4079] [cursor=pointer]:
+            - generic [ref=f2e4080]: JRN-0040
+            - generic "Look up a customer's store-credit balance — Point of sale" [ref=f2e4081]
+          - generic "JRN-0040 · 2026-07-01 → 2026-09-30" [ref=f2e4093]:
+            - generic [ref=f2e4095]: POS
+            - generic [ref=f2e4096]: Look up a customer's store-credit balance — Point of sale
+            - generic [ref=f2e4097]: ✓
+        - generic [ref=f2e4099]:
+          - button "JRN-0041 Look up a customer's store-credit balance — Online" [ref=f2e4100] [cursor=pointer]:
+            - generic [ref=f2e4101]: JRN-0041
+            - generic "Look up a customer's store-credit balance — Online" [ref=f2e4102]
+          - generic "JRN-0041 · 2026-07-01 → 2026-09-30" [ref=f2e4114]:
+            - generic [ref=f2e4116]: Online
+            - generic [ref=f2e4117]: Look up a customer's store-credit balance — Online
+            - generic [ref=f2e4118]: ✓
+        - generic [ref=f2e4120]:
+          - button "JRN-0042 Review a customer's store-credit ledger — Point of sale" [ref=f2e4121] [cursor=pointer]:
+            - generic [ref=f2e4122]: JRN-0042
+            - generic "Review a customer's store-credit ledger — Point of sale" [ref=f2e4123]
+          - generic "JRN-0042 · 2026-07-01 → 2026-09-30" [ref=f2e4135]:
+            - generic [ref=f2e4137]: POS
+            - generic [ref=f2e4138]: Review a customer's store-credit ledger — Point of sale
+            - generic [ref=f2e4139]: ✓
+        - generic [ref=f2e4141]:
+          - button "JRN-0043 Review a customer's store-credit ledger — Online" [ref=f2e4142] [cursor=pointer]:
+            - generic [ref=f2e4143]: JRN-0043
+            - generic "Review a customer's store-credit ledger — Online" [ref=f2e4144]
+          - generic "JRN-0043 · 2026-07-01 → 2026-09-30" [ref=f2e4156]:
+            - generic [ref=f2e4158]: Online
+            - generic [ref=f2e4159]: Review a customer's store-credit ledger — Online
+            - generic [ref=f2e4160]: ✓
+        - generic [ref=f2e4162]:
+          - button "JRN-0044 Expire unused credit per policy — Back office" [ref=f2e4163] [cursor=pointer]:
+            - generic [ref=f2e4164]: JRN-0044
+            - generic "Expire unused credit per policy — Back office" [ref=f2e4165]
+          - generic "JRN-0044 · 2026-07-01 → 2026-09-30" [ref=f2e4177]:
+            - generic [ref=f2e4179]: Back office
+            - generic [ref=f2e4180]: Expire unused credit per policy — Back office
+            - generic [ref=f2e4181]: ✓
+        - generic [ref=f2e4183]:
+          - button "JRN-0045 Reconcile the store-credit liability account — Back office" [ref=f2e4184] [cursor=pointer]:
+            - generic [ref=f2e4185]: JRN-0045
+            - generic "Reconcile the store-credit liability account — Back office" [ref=f2e4186]
+          - generic "JRN-0045 · 2026-07-01 → 2026-09-30" [ref=f2e4198]:
+            - generic [ref=f2e4200]: Back office
+            - generic [ref=f2e4201]: Reconcile the store-credit liability account — Back office
+            - generic [ref=f2e4202]: ✓
+        - generic [ref=f2e4204]:
+          - button "JRN-0046 Recognize breakage when credit expires — Back office" [ref=f2e4205] [cursor=pointer]:
+            - generic [ref=f2e4206]: JRN-0046
+            - generic "Recognize breakage when credit expires — Back office" [ref=f2e4207]
+          - generic "JRN-0046 · 2026-07-01 → 2026-09-30" [ref=f2e4219]:
+            - generic [ref=f2e4221]: Back office
+            - generic [ref=f2e4222]: Recognize breakage when credit expires — Back office
+            - generic [ref=f2e4223]: ✓
+        - button "Rentals & Groups 29" [ref=f2e4226] [cursor=pointer]:
+          - generic [ref=f2e4229]: Rentals & Groups
+          - generic [ref=f2e4230]: "29"
+        - button "Group Check-in & Attendance 1" [ref=f2e4243] [cursor=pointer]:
+          - generic [ref=f2e4246]: Group Check-in & Attendance
+          - generic [ref=f2e4247]: "1"
+        - button "Unscheduled 1" [ref=f2e4260] [cursor=pointer]:
+          - generic [ref=f2e4263]: Unscheduled
+          - generic [ref=f2e4264]: "1"
+        - button "Group Event Management 3" [ref=f2e4277] [cursor=pointer]:
+          - generic [ref=f2e4280]: Group Event Management
+          - generic [ref=f2e4281]: "3"
+        - generic [ref=f2e4293]:
+          - button "JRN-0183 Cancel a rental or group booking" [ref=f2e4294] [cursor=pointer]:
+            - generic [ref=f2e4295]: JRN-0183
+            - generic "Cancel a rental or group booking" [ref=f2e4296]
+          - generic "JRN-0183 · 2026-07-01 → 2026-09-30" [ref=f2e4308]:
+            - generic [ref=f2e4310]: Back office
+            - generic [ref=f2e4311]: Cancel a rental or group booking
+        - button "Unscheduled 2" [ref=f2e4314] [cursor=pointer]:
+          - generic [ref=f2e4317]: Unscheduled
+          - generic [ref=f2e4318]: "2"
+        - button "Group Ticketing Online Settings 2" [ref=f2e4331] [cursor=pointer]:
+          - generic [ref=f2e4334]: Group Ticketing Online Settings
+          - generic [ref=f2e4335]: "2"
+        - button "Unscheduled 2" [ref=f2e4348] [cursor=pointer]:
+          - generic [ref=f2e4351]: Unscheduled
+          - generic [ref=f2e4352]: "2"
+        - button "Group Tickets Management 3" [ref=f2e4365] [cursor=pointer]:
+          - generic [ref=f2e4368]: Group Tickets Management
+          - generic [ref=f2e4369]: "3"
+        - generic [ref=f2e4381]:
+          - button "JRN-0198 Edit or cancel individual group tickets on an existing reservation" [ref=f2e4382] [cursor=pointer]:
+            - generic [ref=f2e4383]: JRN-0198
+            - generic "Edit or cancel individual group tickets on an existing reservation" [ref=f2e4384]
+          - generic "JRN-0198 · 2026-07-01 → 2026-09-30" [ref=f2e4396]:
+            - generic [ref=f2e4398]: POS
+            - generic [ref=f2e4399]: Edit or cancel individual group tickets on an existing reservation
+        - button "Unscheduled 2" [ref=f2e4402] [cursor=pointer]:
+          - generic [ref=f2e4405]: Unscheduled
+          - generic [ref=f2e4406]: "2"
+        - button "Rent Facilities Online 1" [ref=f2e4419] [cursor=pointer]:
+          - generic [ref=f2e4422]: Rent Facilities Online
+          - generic [ref=f2e4423]: "1"
+        - generic [ref=f2e4435]:
+          - button "JRN-0193 Select a facility, book and pay for a rental online" [ref=f2e4436] [cursor=pointer]:
+            - generic [ref=f2e4437]: JRN-0193
+            - generic "Select a facility, book and pay for a rental online" [ref=f2e4438]
+          - generic "JRN-0193 · 2026-07-01 → 2026-09-30" [ref=f2e4450]:
+            - generic [ref=f2e4452]: Online
+            - generic [ref=f2e4453]: Select a facility, book and pay for a rental online
+        - button "Rentals & Groups Calendar & Integrations 1" [ref=f2e4456] [cursor=pointer]:
+          - generic [ref=f2e4459]: Rentals & Groups Calendar & Integrations
+          - generic [ref=f2e4460]: "1"
+        - button "Unscheduled 1" [ref=f2e4473] [cursor=pointer]:
+          - generic [ref=f2e4476]: Unscheduled
+          - generic [ref=f2e4477]: "1"
+        - button "Rentals & Groups Discounts 3" [ref=f2e4490] [cursor=pointer]:
+          - generic [ref=f2e4493]: Rentals & Groups Discounts
+          - generic [ref=f2e4494]: "3"
+        - button "Unscheduled 3" [ref=f2e4507] [cursor=pointer]:
+          - generic [ref=f2e4510]: Unscheduled
+          - generic [ref=f2e4511]: "3"
+        - button "Rentals & Groups Reporting 1" [ref=f2e4524] [cursor=pointer]:
+          - generic [ref=f2e4527]: Rentals & Groups Reporting
+          - generic [ref=f2e4528]: "1"
+        - button "Unscheduled 1" [ref=f2e4541] [cursor=pointer]:
+          - generic [ref=f2e4544]: Unscheduled
+          - generic [ref=f2e4545]: "1"
+        - button "Rentals & Groups Setup 4" [ref=f2e4558] [cursor=pointer]:
+          - generic [ref=f2e4561]: Rentals & Groups Setup
+          - generic [ref=f2e4562]: "4"
+        - generic [ref=f2e4574]:
+          - button "JRN-0195 Define bookable Locations & Resources and validate availability on a rental" [ref=f2e4575] [cursor=pointer]:
+            - generic [ref=f2e4576]: JRN-0195
+            - generic "Define bookable Locations & Resources and validate availability on a rental" [ref=f2e4577]
+          - generic "JRN-0195 · 2026-07-01 → 2026-09-30" [ref=f2e4589]:
+            - generic [ref=f2e4591]: Back office
+            - generic [ref=f2e4592]: Define bookable Locations & Resources and validate availability on a rental
+        - generic [ref=f2e4594]:
+          - button "JRN-0200 Deep-clone a Rental Event with its resources and payment schedule" [ref=f2e4595] [cursor=pointer]:
+            - generic [ref=f2e4596]: JRN-0200
+            - generic "Deep-clone a Rental Event with its resources and payment schedule" [ref=f2e4597]
+          - generic "JRN-0200 · 2026-07-01 → 2026-09-30" [ref=f2e4609]:
+            - generic [ref=f2e4611]: Back office
+            - generic [ref=f2e4612]: Deep-clone a Rental Event with its resources and payment schedule
+        - button "Unscheduled 2" [ref=f2e4615] [cursor=pointer]:
+          - generic [ref=f2e4618]: Unscheduled
+          - generic [ref=f2e4619]: "2"
+        - button "Rentals Accounting 2" [ref=f2e4632] [cursor=pointer]:
+          - generic [ref=f2e4635]: Rentals Accounting
+          - generic [ref=f2e4636]: "2"
+        - generic [ref=f2e4648]:
+          - button "JRN-0194 GL-code rental/group charges and post to transaction journals" [ref=f2e4649] [cursor=pointer]:
+            - generic [ref=f2e4650]: JRN-0194
+            - generic "GL-code rental/group charges and post to transaction journals" [ref=f2e4651]
+          - generic "JRN-0194 · 2026-07-01 → 2026-09-30" [ref=f2e4663]:
+            - generic [ref=f2e4665]: Back office
+            - generic [ref=f2e4666]: GL-code rental/group charges and post to transaction journals
+        - button "Unscheduled 1" [ref=f2e4669] [cursor=pointer]:
+          - generic [ref=f2e4672]: Unscheduled
+          - generic [ref=f2e4673]: "1"
+        - button "Rentals Payment Management 5" [ref=f2e4686] [cursor=pointer]:
+          - generic [ref=f2e4689]: Rentals Payment Management
+          - generic [ref=f2e4690]: "5"
+        - generic [ref=f2e4702]:
+          - button "JRN-0185 Schedule and collect a rental balance with the Rental Payments Wizard" [ref=f2e4703] [cursor=pointer]:
+            - generic [ref=f2e4704]: JRN-0185
+            - generic "Schedule and collect a rental balance with the Rental Payments Wizard" [ref=f2e4705]
+          - generic "JRN-0185 · 2026-07-01 → 2026-09-30" [ref=f2e4717]:
+            - generic [ref=f2e4719]: Back office
+            - generic [ref=f2e4720]: Schedule and collect a rental balance with the Rental Payments Wizard
+        - generic [ref=f2e4722]:
+          - button "JRN-0192 Refund a collected rental/group payment from the Rental Event" [ref=f2e4723] [cursor=pointer]:
+            - generic [ref=f2e4724]: JRN-0192
+            - generic "Refund a collected rental/group payment from the Rental Event" [ref=f2e4725]
+          - generic "JRN-0192 · 2026-07-01 → 2026-09-30" [ref=f2e4737]:
+            - generic [ref=f2e4739]: Back office
+            - generic [ref=f2e4740]: Refund a collected rental/group payment from the Rental Event
+        - generic [ref=f2e4742]:
+          - button "JRN-0204 Add, collect and settle a rental security deposit" [ref=f2e4743] [cursor=pointer]:
+            - generic [ref=f2e4744]: JRN-0204
+            - generic "Add, collect and settle a rental security deposit" [ref=f2e4745]
+          - generic "JRN-0204 · 2026-07-01 → 2026-09-30" [ref=f2e4757]:
+            - generic [ref=f2e4759]: Back office
+            - generic [ref=f2e4760]: Add, collect and settle a rental security deposit
+        - generic [ref=f2e4762]:
+          - button "JRN-0186 Client pays a rental/group installment via an e-payment link" [ref=f2e4763] [cursor=pointer]:
+            - generic [ref=f2e4764]: JRN-0186
+            - generic "Client pays a rental/group installment via an e-payment link" [ref=f2e4765]
+          - generic "JRN-0186 · 2026-07-01 → 2026-09-30" [ref=f2e4777]:
+            - generic [ref=f2e4779]: Online
+            - generic [ref=f2e4780]: Client pays a rental/group installment via an e-payment link
+        - generic [ref=f2e4782]:
+          - button "JRN-0187 Take a rental/group payment at the front desk" [ref=f2e4783] [cursor=pointer]:
+            - generic [ref=f2e4784]: JRN-0187
+            - generic "Take a rental/group payment at the front desk" [ref=f2e4785]
+          - generic "JRN-0187 · 2026-07-01 → 2026-09-30" [ref=f2e4797]:
+            - generic [ref=f2e4799]: POS
+            - generic [ref=f2e4800]: Take a rental/group payment at the front desk
+        - button "Rentals Proposals & Invoices 3" [ref=f2e4803] [cursor=pointer]:
+          - generic [ref=f2e4806]: Rentals Proposals & Invoices
+          - generic [ref=f2e4807]: "3"
+        - generic [ref=f2e4819]:
+          - button "JRN-0178 Auto-alert staff and email the client on rental/group save" [ref=f2e4820] [cursor=pointer]:
+            - generic [ref=f2e4821]: JRN-0178
+            - generic "Auto-alert staff and email the client on rental/group save" [ref=f2e4822]
+          - generic "JRN-0178 · 2026-07-01 → 2026-09-30" [ref=f2e4834]:
+            - generic [ref=f2e4836]: Back office
+            - generic [ref=f2e4837]: Auto-alert staff and email the client on rental/group save
+        - button "Unscheduled 2" [ref=f2e4840] [cursor=pointer]:
+          - generic [ref=f2e4843]: Unscheduled
+          - generic [ref=f2e4844]: "2"
+        - button "Shop 64" [ref=f2e4857] [cursor=pointer]:
+          - generic [ref=f2e4860]: Shop
+          - generic [ref=f2e4861]: "64"
+        - button "Consignment 5" [ref=f2e4874] [cursor=pointer]:
+          - generic [ref=f2e4877]: Consignment
+          - generic [ref=f2e4878]: "5"
+        - generic [ref=f2e4890]:
+          - button "JRN-0255 Receive merchandise on consignment — Back office" [ref=f2e4891] [cursor=pointer]:
+            - generic [ref=f2e4892]: JRN-0255
+            - generic "Receive merchandise on consignment — Back office" [ref=f2e4893]
+          - generic "JRN-0255 · 2026-10-01 → 2026-12-31" [ref=f2e4905]:
+            - generic [ref=f2e4907]: Back office
+            - generic [ref=f2e4908]: Receive merchandise on consignment — Back office
+            - generic [ref=f2e4909]: ✓
+        - generic [ref=f2e4911]:
+          - button "JRN-0256 Sell a consigned item and track what I owe — Point of sale" [ref=f2e4912] [cursor=pointer]:
+            - generic [ref=f2e4913]: JRN-0256
+            - generic "Sell a consigned item and track what I owe — Point of sale" [ref=f2e4914]
+          - generic "JRN-0256 · 2026-10-01 → 2026-12-31" [ref=f2e4926]:
+            - generic [ref=f2e4928]: POS
+            - generic [ref=f2e4929]: Sell a consigned item and track what I owe — Point of sale
+            - generic [ref=f2e4930]: ✓
+        - generic [ref=f2e4932]:
+          - button "JRN-0258 Settle with the consignor — Back office" [ref=f2e4933] [cursor=pointer]:
+            - generic [ref=f2e4934]: JRN-0258
+            - generic "Settle with the consignor — Back office" [ref=f2e4935]
+          - generic "JRN-0258 · 2026-10-01 → 2026-12-31" [ref=f2e4947]:
+            - generic [ref=f2e4949]: Back office
+            - generic [ref=f2e4950]: Settle with the consignor — Back office
+            - generic [ref=f2e4951]: ✓
+        - generic [ref=f2e4953]:
+          - button "JRN-0259 Return unsold consignment — Back office" [ref=f2e4954] [cursor=pointer]:
+            - generic [ref=f2e4955]: JRN-0259
+            - generic "Return unsold consignment — Back office" [ref=f2e4956]
+          - generic "JRN-0259 · 2026-10-01 → 2026-12-31" [ref=f2e4968]:
+            - generic [ref=f2e4970]: Back office
+            - generic [ref=f2e4971]: Return unsold consignment — Back office
+            - generic [ref=f2e4972]: ✓
+        - generic [ref=f2e4974]:
+          - button "JRN-0257 Sell a consigned item and track what I owe — Online" [ref=f2e4975] [cursor=pointer]:
+            - generic [ref=f2e4976]: JRN-0257
+            - generic "Sell a consigned item and track what I owe — Online" [ref=f2e4977]
+          - generic "JRN-0257 · 2026-10-01 → 2026-12-31" [ref=f2e4989]:
+            - generic [ref=f2e4991]: Online
+            - generic [ref=f2e4992]: Sell a consigned item and track what I owe — Online
+            - generic [ref=f2e4993]: ✓
+        - button "Costing 4" [ref=f2e4996] [cursor=pointer]:
+          - generic [ref=f2e4999]: Costing
+          - generic [ref=f2e5000]: "4"
+        - generic [ref=f2e5012]:
+          - button "JRN-0236 Keep the average cost right on every movement — Back office" [ref=f2e5013] [cursor=pointer]:
+            - generic [ref=f2e5014]: JRN-0236
+            - generic "Keep the average cost right on every movement — Back office" [ref=f2e5015]
+          - generic "JRN-0236 · 2027-01-01 → 2027-03-31" [ref=f2e5027]:
+            - generic [ref=f2e5029]: Back office
+            - generic [ref=f2e5030]: Keep the average cost right on every movement — Back office
+            - generic [ref=f2e5031]: ✓
+        - generic [ref=f2e5033]:
+          - button "JRN-0239 Recalculate cost when something looks wrong — Back office" [ref=f2e5034] [cursor=pointer]:
+            - generic [ref=f2e5035]: JRN-0239
+            - generic "Recalculate cost when something looks wrong — Back office" [ref=f2e5036]
+          - generic "JRN-0239 · 2027-01-01 → 2027-03-31" [ref=f2e5048]:
+            - generic [ref=f2e5050]: Back office
+            - generic [ref=f2e5051]: Recalculate cost when something looks wrong — Back office
+            - generic [ref=f2e5052]: ✓
+        - generic [ref=f2e5054]:
+          - button "JRN-0237 Keep the average cost right on every movement — Point of sale" [ref=f2e5055] [cursor=pointer]:
+            - generic [ref=f2e5056]: JRN-0237
+            - generic "Keep the average cost right on every movement — Point of sale" [ref=f2e5057]
+          - generic "JRN-0237 · 2027-01-01 → 2027-03-31" [ref=f2e5069]:
+            - generic [ref=f2e5071]: POS
+            - generic [ref=f2e5072]: Keep the average cost right on every movement — Point of sale
+            - generic [ref=f2e5073]: ✓
+        - generic [ref=f2e5075]:
+          - button "JRN-0238 Keep the average cost right on every movement — Online" [ref=f2e5076] [cursor=pointer]:
+            - generic [ref=f2e5077]: JRN-0238
+            - generic "Keep the average cost right on every movement — Online" [ref=f2e5078]
+          - generic "JRN-0238 · 2027-01-01 → 2027-03-31" [ref=f2e5090]:
+            - generic [ref=f2e5092]: Online
+            - generic [ref=f2e5093]: Keep the average cost right on every movement — Online
+            - generic [ref=f2e5094]: ✓
+        - button "Discounts 2" [ref=f2e5097] [cursor=pointer]:
+          - generic [ref=f2e5100]: Discounts
+          - generic [ref=f2e5101]: "2"
+        - button "Unscheduled 2" [ref=f2e5114] [cursor=pointer]:
+          - generic [ref=f2e5117]: Unscheduled
+          - generic [ref=f2e5118]: "2"
+        - button "Gift Cards 2" [ref=f2e5131] [cursor=pointer]:
+          - generic [ref=f2e5134]: Gift Cards
+          - generic [ref=f2e5135]: "2"
+        - generic [ref=f2e5147]:
+          - button "JRN-0265 Sell and redeem a gift card — Point of sale" [ref=f2e5148] [cursor=pointer]:
+            - generic [ref=f2e5149]: JRN-0265
+            - generic "Sell and redeem a gift card — Point of sale" [ref=f2e5150]
+          - generic "JRN-0265 · 2027-01-01 → 2027-03-31" [ref=f2e5162]:
+            - generic [ref=f2e5164]: POS
+            - generic [ref=f2e5165]: Sell and redeem a gift card — Point of sale
+            - generic [ref=f2e5166]: ✓
+        - generic [ref=f2e5168]:
+          - button "JRN-0266 Sell and redeem a gift card — Online" [ref=f2e5169] [cursor=pointer]:
+            - generic [ref=f2e5170]: JRN-0266
+            - generic "Sell and redeem a gift card — Online" [ref=f2e5171]
+          - generic "JRN-0266 · 2027-01-01 → 2027-03-31" [ref=f2e5183]:
+            - generic [ref=f2e5185]: Online
+            - generic [ref=f2e5186]: Sell and redeem a gift card — Online
+            - generic [ref=f2e5187]: ✓
+        - button "Inventory / Cardex 14" [ref=f2e5190] [cursor=pointer]:
+          - generic [ref=f2e5193]: Inventory / Cardex
+          - generic [ref=f2e5194]: "14"
+        - generic [ref=f2e5206]:
+          - button "JRN-0228 Correct the stock of a product — Back office" [ref=f2e5207] [cursor=pointer]:
+            - generic [ref=f2e5208]: JRN-0228
+            - generic "Correct the stock of a product — Back office" [ref=f2e5209]
+          - generic "JRN-0228 · 2026-10-01 → 2026-12-31" [ref=f2e5221]:
+            - generic [ref=f2e5223]: Back office
+            - generic [ref=f2e5224]: Correct the stock of a product — Back office
+            - generic [ref=f2e5225]: ✓
+        - generic [ref=f2e5227]:
+          - button "JRN-0229 Count physical inventory and reconcile — Back office" [ref=f2e5228] [cursor=pointer]:
+            - generic [ref=f2e5229]: JRN-0229
+            - generic "Count physical inventory and reconcile — Back office" [ref=f2e5230]
+          - generic "JRN-0229 · 2026-10-01 → 2026-12-31" [ref=f2e5242]:
+            - generic [ref=f2e5244]: Back office
+            - generic [ref=f2e5245]: Count physical inventory and reconcile — Back office
+            - generic [ref=f2e5246]: ✓
+        - generic [ref=f2e5248]:
+          - button "JRN-0230 Return merchandise to a supplier — Back office" [ref=f2e5249] [cursor=pointer]:
+            - generic [ref=f2e5250]: JRN-0230
+            - generic "Return merchandise to a supplier — Back office" [ref=f2e5251]
+          - generic "JRN-0230 · 2026-10-01 → 2026-12-31" [ref=f2e5263]:
+            - generic [ref=f2e5265]: Back office
+            - generic [ref=f2e5266]: Return merchandise to a supplier — Back office
+            - generic [ref=f2e5267]: ✓
+        - generic [ref=f2e5269]:
+          - button "JRN-0231 Move stock between locations — Back office" [ref=f2e5270] [cursor=pointer]:
+            - generic [ref=f2e5271]: JRN-0231
+            - generic "Move stock between locations — Back office" [ref=f2e5272]
+          - generic "JRN-0231 · 2026-10-01 → 2026-12-31" [ref=f2e5284]:
+            - generic [ref=f2e5286]: Back office
+            - generic [ref=f2e5287]: Move stock between locations — Back office
+            - generic [ref=f2e5288]: ✓
+        - generic [ref=f2e5290]:
+          - button "JRN-0232 Review a product's movement history — Back office" [ref=f2e5291] [cursor=pointer]:
+            - generic [ref=f2e5292]: JRN-0232
+            - generic "Review a product's movement history — Back office" [ref=f2e5293]
+          - generic "JRN-0232 · 2026-10-01 → 2026-12-31" [ref=f2e5305]:
+            - generic [ref=f2e5307]: Back office
+            - generic [ref=f2e5308]: Review a product's movement history — Back office
+            - generic [ref=f2e5309]: ✓
+        - generic [ref=f2e5311]:
+          - button "JRN-0233 Sell without stock and resolve the negative — Point of sale" [ref=f2e5312] [cursor=pointer]:
+            - generic [ref=f2e5313]: JRN-0233
+            - generic "Sell without stock and resolve the negative — Point of sale" [ref=f2e5314]
+          - generic "JRN-0233 · 2026-10-01 → 2026-12-31" [ref=f2e5326]:
+            - generic [ref=f2e5328]: POS
+            - generic [ref=f2e5329]: Sell without stock and resolve the negative — Point of sale
+            - generic [ref=f2e5330]: ✓
+        - generic [ref=f2e5332]:
+          - button "JRN-0517 Sell a product and have inventory follow — Point of sale" [ref=f2e5333] [cursor=pointer]:
+            - generic [ref=f2e5334]: JRN-0517
+            - generic "Sell a product and have inventory follow — Point of sale" [ref=f2e5335]
+          - generic "JRN-0517 · 2026-10-01 → 2026-12-31" [ref=f2e5347]:
+            - generic [ref=f2e5349]: POS
+            - generic [ref=f2e5350]: Sell a product and have inventory follow — Point of sale
+            - generic [ref=f2e5351]: ✓
+        - generic [ref=f2e5353]:
+          - button "JRN-0520 Refund a sale and restore stock — Point of sale" [ref=f2e5354] [cursor=pointer]:
+            - generic [ref=f2e5355]: JRN-0520
+            - generic "Refund a sale and restore stock — Point of sale" [ref=f2e5356]
+          - generic "JRN-0520 · 2026-10-01 → 2026-12-31" [ref=f2e5368]:
+            - generic [ref=f2e5370]: POS
+            - generic [ref=f2e5371]: Refund a sale and restore stock — Point of sale
+            - generic [ref=f2e5372]: ✓
+        - generic [ref=f2e5374]:
+          - button "JRN-0234 Sell without stock and resolve the negative — Online" [ref=f2e5375] [cursor=pointer]:
+            - generic [ref=f2e5376]: JRN-0234
+            - generic "Sell without stock and resolve the negative — Online" [ref=f2e5377]
+          - generic "JRN-0234 · 2026-10-01 → 2026-12-31" [ref=f2e5389]:
+            - generic [ref=f2e5391]: Online
+            - generic [ref=f2e5392]: Sell without stock and resolve the negative — Online
+            - generic [ref=f2e5393]: ✓
+        - generic [ref=f2e5395]:
+          - button "JRN-0518 Sell a product and have inventory follow — Online" [ref=f2e5396] [cursor=pointer]:
+            - generic [ref=f2e5397]: JRN-0518
+            - generic "Sell a product and have inventory follow — Online" [ref=f2e5398]
+          - generic "JRN-0518 · 2026-10-01 → 2026-12-31" [ref=f2e5410]:
+            - generic [ref=f2e5412]: Online
+            - generic [ref=f2e5413]: Sell a product and have inventory follow — Online
+            - generic [ref=f2e5414]: ✓
+        - generic [ref=f2e5416]:
+          - button "JRN-0521 Refund a sale and restore stock — Online" [ref=f2e5417] [cursor=pointer]:
+            - generic [ref=f2e5418]: JRN-0521
+            - generic "Refund a sale and restore stock — Online" [ref=f2e5419]
+          - generic "JRN-0521 · 2026-10-01 → 2026-12-31" [ref=f2e5431]:
+            - generic [ref=f2e5433]: Online
+            - generic [ref=f2e5434]: Refund a sale and restore stock — Online
+            - generic [ref=f2e5435]: ✓
+        - generic [ref=f2e5437]:
+          - button "JRN-0235 Sell without stock and resolve the negative — Back office" [ref=f2e5438] [cursor=pointer]:
+            - generic [ref=f2e5439]: JRN-0235
+            - generic "Sell without stock and resolve the negative — Back office" [ref=f2e5440]
+          - generic "JRN-0235 · 2026-10-01 → 2026-12-31" [ref=f2e5452]:
+            - generic [ref=f2e5454]: Back office
+            - generic [ref=f2e5455]: Sell without stock and resolve the negative — Back office
+            - generic [ref=f2e5456]: ✓
+        - generic [ref=f2e5458]:
+          - button "JRN-0519 Sell a product and have inventory follow — Back office" [ref=f2e5459] [cursor=pointer]:
+            - generic [ref=f2e5460]: JRN-0519
+            - generic "Sell a product and have inventory follow — Back office" [ref=f2e5461]
+          - generic "JRN-0519 · 2026-10-01 → 2026-12-31" [ref=f2e5473]:
+            - generic [ref=f2e5475]: Back office
+            - generic [ref=f2e5476]: Sell a product and have inventory follow — Back office
+            - generic [ref=f2e5477]: ✓
+        - generic [ref=f2e5479]:
+          - button "JRN-0522 Refund a sale and restore stock — Back office" [ref=f2e5480] [cursor=pointer]:
+            - generic [ref=f2e5481]: JRN-0522
+            - generic "Refund a sale and restore stock — Back office" [ref=f2e5482]
+          - generic "JRN-0522 · 2026-10-01 → 2026-12-31" [ref=f2e5494]:
+            - generic [ref=f2e5496]: Back office
+            - generic [ref=f2e5497]: Refund a sale and restore stock — Back office
+            - generic [ref=f2e5498]: ✓
+        - button "Kits / Combos 2" [ref=f2e5501] [cursor=pointer]:
+          - generic [ref=f2e5504]: Kits / Combos
+          - generic [ref=f2e5505]: "2"
+        - button "Unscheduled 2" [ref=f2e5518] [cursor=pointer]:
+          - generic [ref=f2e5521]: Unscheduled
+          - generic [ref=f2e5522]: "2"
+        - button "Locations 2" [ref=f2e5535] [cursor=pointer]:
+          - generic [ref=f2e5538]: Locations
+          - generic [ref=f2e5539]: "2"
+        - generic [ref=f2e5551]:
+          - button "JRN-0222 Set up where I hold stock — Back office" [ref=f2e5552] [cursor=pointer]:
+            - generic [ref=f2e5553]: JRN-0222
+            - generic "Set up where I hold stock — Back office" [ref=f2e5554]
+          - generic "JRN-0222 · 2026-07-01 → 2026-09-30" [ref=f2e5566]:
+            - generic [ref=f2e5568]: Back office
+            - generic [ref=f2e5569]: Set up where I hold stock — Back office
+            - generic [ref=f2e5570]: ✓
+        - generic [ref=f2e5572]:
+          - button "JRN-0223 Check stock across locations — Back office" [ref=f2e5573] [cursor=pointer]:
+            - generic [ref=f2e5574]: JRN-0223
+            - generic "Check stock across locations — Back office" [ref=f2e5575]
+          - generic "JRN-0223 · 2026-07-01 → 2026-09-30" [ref=f2e5587]:
+            - generic [ref=f2e5589]: Back office
+            - generic [ref=f2e5590]: Check stock across locations — Back office
+            - generic [ref=f2e5591]: ✓
+        - button "Migration 2" [ref=f2e5594] [cursor=pointer]:
+          - generic [ref=f2e5597]: Migration
+          - generic [ref=f2e5598]: "2"
+        - generic [ref=f2e5610]:
+          - button "JRN-0246 Migrate a shop's data into Shop 2.0 — Back office" [ref=f2e5611] [cursor=pointer]:
+            - generic [ref=f2e5612]: JRN-0246
+            - generic "Migrate a shop's data into Shop 2.0 — Back office" [ref=f2e5613]
+          - generic "JRN-0246 · 2027-04-01 → 2027-06-30" [ref=f2e5625]:
+            - generic [ref=f2e5627]: Back office
+            - generic [ref=f2e5628]: Migrate a shop's data into Shop 2.0 — Back office
+            - generic [ref=f2e5629]: ✓
+        - generic [ref=f2e5631]:
+          - button "JRN-0247 Validate and cut over safely — Back office" [ref=f2e5632] [cursor=pointer]:
+            - generic [ref=f2e5633]: JRN-0247
+            - generic "Validate and cut over safely — Back office" [ref=f2e5634]
+          - generic "JRN-0247 · 2027-04-01 → 2027-06-30" [ref=f2e5646]:
+            - generic [ref=f2e5648]: Back office
+            - generic [ref=f2e5649]: Validate and cut over safely — Back office
+            - generic [ref=f2e5650]: ✓
+        - button "Products & Variants 9" [ref=f2e5653] [cursor=pointer]:
+          - generic [ref=f2e5656]: Products & Variants
+          - generic [ref=f2e5657]: "9"
+        - generic [ref=f2e5669]:
+          - button "JRN-0209 Create a product ready to sell — Back office" [ref=f2e5670] [cursor=pointer]:
+            - generic [ref=f2e5671]: JRN-0209
+            - generic "Create a product ready to sell — Back office" [ref=f2e5672]
+          - generic "JRN-0209 · 2026-07-01 → 2026-09-30" [ref=f2e5684]:
+            - generic [ref=f2e5686]: Back office
+            - generic [ref=f2e5687]: Create a product ready to sell — Back office
+            - generic [ref=f2e5688]: ✓
+        - generic [ref=f2e5690]:
+          - button "JRN-0210 Add images to a product and its variants — Back office" [ref=f2e5691] [cursor=pointer]:
+            - generic [ref=f2e5692]: JRN-0210
+            - generic "Add images to a product and its variants — Back office" [ref=f2e5693]
+          - generic "JRN-0210 · 2026-07-01 → 2026-09-30" [ref=f2e5705]:
+            - generic [ref=f2e5707]: Back office
+            - generic [ref=f2e5708]: Add images to a product and its variants — Back office
+            - generic [ref=f2e5709]: ✓
+        - generic [ref=f2e5711]:
+          - button "JRN-0211 Find a product in the catalog — Back office" [ref=f2e5712] [cursor=pointer]:
+            - generic [ref=f2e5713]: JRN-0211
+            - generic "Find a product in the catalog — Back office" [ref=f2e5714]
+          - generic "JRN-0211 · 2026-07-01 → 2026-09-30" [ref=f2e5726]:
+            - generic [ref=f2e5728]: Back office
+            - generic [ref=f2e5729]: Find a product in the catalog — Back office
+            - generic [ref=f2e5730]: ✓
+        - generic [ref=f2e5732]:
+          - button "JRN-0213 Review a product's current state — Back office" [ref=f2e5733] [cursor=pointer]:
+            - generic [ref=f2e5734]: JRN-0213
+            - generic "Review a product's current state — Back office" [ref=f2e5735]
+          - generic "JRN-0213 · 2026-07-01 → 2026-09-30" [ref=f2e5747]:
+            - generic [ref=f2e5749]: Back office
+            - generic [ref=f2e5750]: Review a product's current state — Back office
+            - generic [ref=f2e5751]: ✓
+        - generic [ref=f2e5753]:
+          - button "JRN-0214 Update a product's catalog information — Back office" [ref=f2e5754] [cursor=pointer]:
+            - generic [ref=f2e5755]: JRN-0214
+            - generic "Update a product's catalog information — Back office" [ref=f2e5756]
+          - generic "JRN-0214 · 2026-07-01 → 2026-09-30" [ref=f2e5768]:
+            - generic [ref=f2e5770]: Back office
+            - generic [ref=f2e5771]: Update a product's catalog information — Back office
+            - generic [ref=f2e5772]: ✓
+        - generic [ref=f2e5774]:
+          - button "JRN-0215 Take a product out of circulation — Back office" [ref=f2e5775] [cursor=pointer]:
+            - generic [ref=f2e5776]: JRN-0215
+            - generic "Take a product out of circulation — Back office" [ref=f2e5777]
+          - generic "JRN-0215 · 2026-07-01 → 2026-09-30" [ref=f2e5789]:
+            - generic [ref=f2e5791]: Back office
+            - generic [ref=f2e5792]: Take a product out of circulation — Back office
+            - generic [ref=f2e5793]: ✓
+        - generic [ref=f2e5795]:
+          - button "JRN-0216 Sell a one-off item with an open price — Point of sale" [ref=f2e5796] [cursor=pointer]:
+            - generic [ref=f2e5797]: JRN-0216
+            - generic "Sell a one-off item with an open price — Point of sale" [ref=f2e5798]
+          - generic "JRN-0216 · 2026-07-01 → 2026-09-30" [ref=f2e5810]:
+            - generic [ref=f2e5812]: POS
+            - generic [ref=f2e5813]: Sell a one-off item with an open price — Point of sale
+            - generic [ref=f2e5814]: ✓
+        - generic [ref=f2e5816]:
+          - button "JRN-0217 Print product labels — Back office" [ref=f2e5817] [cursor=pointer]:
+            - generic [ref=f2e5818]: JRN-0217
+            - generic "Print product labels — Back office" [ref=f2e5819]
+          - generic "JRN-0217 · 2026-07-01 → 2026-09-30" [ref=f2e5831]:
+            - generic [ref=f2e5833]: Back office
+            - generic [ref=f2e5834]: Print product labels — Back office
+            - generic [ref=f2e5835]: ✓
+        - generic [ref=f2e5837]:
+          - button "JRN-0212 Find a product in the catalog — Point of sale" [ref=f2e5838] [cursor=pointer]:
+            - generic [ref=f2e5839]: JRN-0212
+            - generic "Find a product in the catalog — Point of sale" [ref=f2e5840]
+          - generic "JRN-0212 · 2026-07-01 → 2026-09-30" [ref=f2e5852]:
+            - generic [ref=f2e5854]: POS
+            - generic [ref=f2e5855]: Find a product in the catalog — Point of sale
+            - generic [ref=f2e5856]: ✓
+        - button "Purchase Orders 4" [ref=f2e5859] [cursor=pointer]:
+          - generic [ref=f2e5862]: Purchase Orders
+          - generic [ref=f2e5863]: "4"
+        - generic [ref=f2e5875]:
+          - button "JRN-0224 Place a purchase order with a supplier — Back office" [ref=f2e5876] [cursor=pointer]:
+            - generic [ref=f2e5877]: JRN-0224
+            - generic "Place a purchase order with a supplier — Back office" [ref=f2e5878]
+          - generic "JRN-0224 · 2026-10-01 → 2026-12-31" [ref=f2e5890]:
+            - generic [ref=f2e5892]: Back office
+            - generic [ref=f2e5893]: Place a purchase order with a supplier — Back office
+            - generic [ref=f2e5894]: ✓
+        - generic [ref=f2e5896]:
+          - button "JRN-0225 Receive the goods from a purchase order — Back office" [ref=f2e5897] [cursor=pointer]:
+            - generic [ref=f2e5898]: JRN-0225
+            - generic "Receive the goods from a purchase order — Back office" [ref=f2e5899]
+          - generic "JRN-0225 · 2026-10-01 → 2026-12-31" [ref=f2e5911]:
+            - generic [ref=f2e5913]: Back office
+            - generic [ref=f2e5914]: Receive the goods from a purchase order — Back office
+            - generic [ref=f2e5915]: ✓
+        - generic [ref=f2e5917]:
+          - button "JRN-0226 Cancel a purchase order — Back office" [ref=f2e5918] [cursor=pointer]:
+            - generic [ref=f2e5919]: JRN-0226
+            - generic "Cancel a purchase order — Back office" [ref=f2e5920]
+          - generic "JRN-0226 · 2026-10-01 → 2026-12-31" [ref=f2e5932]:
+            - generic [ref=f2e5934]: Back office
+            - generic [ref=f2e5935]: Cancel a purchase order — Back office
+            - generic [ref=f2e5936]: ✓
+        - generic [ref=f2e5938]:
+          - button "JRN-0227 Produce the purchase order document — Back office" [ref=f2e5939] [cursor=pointer]:
+            - generic [ref=f2e5940]: JRN-0227
+            - generic "Produce the purchase order document — Back office" [ref=f2e5941]
+          - generic "JRN-0227 · 2026-10-01 → 2026-12-31" [ref=f2e5953]:
+            - generic [ref=f2e5955]: Back office
+            - generic [ref=f2e5956]: Produce the purchase order document — Back office
+            - generic [ref=f2e5957]: ✓
+        - button "Reports 6" [ref=f2e5960] [cursor=pointer]:
+          - generic [ref=f2e5963]: Reports
+          - generic [ref=f2e5964]: "6"
+        - generic [ref=f2e5976]:
+          - button "JRN-0240 See stock by location — Back office" [ref=f2e5977] [cursor=pointer]:
+            - generic [ref=f2e5978]: JRN-0240
+            - generic "See stock by location — Back office" [ref=f2e5979]
+          - generic "JRN-0240 · 2027-01-01 → 2027-03-31" [ref=f2e5991]:
+            - generic [ref=f2e5993]: Back office
+            - generic [ref=f2e5994]: See stock by location — Back office
+            - generic [ref=f2e5995]: ✓
+        - generic [ref=f2e5997]:
+          - button "JRN-0241 Know the inventory value at a date — Back office" [ref=f2e5998] [cursor=pointer]:
+            - generic [ref=f2e5999]: JRN-0241
+            - generic "Know the inventory value at a date — Back office" [ref=f2e6000]
+          - generic "JRN-0241 · 2027-01-01 → 2027-03-31" [ref=f2e6012]:
+            - generic [ref=f2e6014]: Back office
+            - generic [ref=f2e6015]: Know the inventory value at a date — Back office
+            - generic [ref=f2e6016]: ✓
+        - generic [ref=f2e6018]:
+          - button "JRN-0242 Audit the inventory snapshot of a cut-off date — Back office" [ref=f2e6019] [cursor=pointer]:
+            - generic [ref=f2e6020]: JRN-0242
+            - generic "Audit the inventory snapshot of a cut-off date — Back office" [ref=f2e6021]
+          - generic "JRN-0242 · 2027-01-01 → 2027-03-31" [ref=f2e6033]:
+            - generic [ref=f2e6035]: Back office
+            - generic [ref=f2e6036]: Audit the inventory snapshot of a cut-off date — Back office
+            - generic [ref=f2e6037]: ✓
+        - generic [ref=f2e6039]:
+          - button "JRN-0243 Know the cost of what I sold — Back office" [ref=f2e6040] [cursor=pointer]:
+            - generic [ref=f2e6041]: JRN-0243
+            - generic "Know the cost of what I sold — Back office" [ref=f2e6042]
+          - generic "JRN-0243 · 2027-01-01 → 2027-03-31" [ref=f2e6054]:
+            - generic [ref=f2e6056]: Back office
+            - generic [ref=f2e6057]: Know the cost of what I sold — Back office
+            - generic [ref=f2e6058]: ✓
+        - generic [ref=f2e6060]:
+          - button "JRN-0244 See what merchandise is selling — Back office" [ref=f2e6061] [cursor=pointer]:
+            - generic [ref=f2e6062]: JRN-0244
+            - generic "See what merchandise is selling — Back office" [ref=f2e6063]
+          - generic "JRN-0244 · 2027-01-01 → 2027-03-31" [ref=f2e6075]:
+            - generic [ref=f2e6077]: Back office
+            - generic [ref=f2e6078]: See what merchandise is selling — Back office
+            - generic [ref=f2e6079]: ✓
+        - generic [ref=f2e6081]:
+          - button "JRN-0245 Know what to reorder — Back office" [ref=f2e6082] [cursor=pointer]:
+            - generic [ref=f2e6083]: JRN-0245
+            - generic "Know what to reorder — Back office" [ref=f2e6084]
+          - generic "JRN-0245 · 2027-01-01 → 2027-03-31" [ref=f2e6096]:
+            - generic [ref=f2e6098]: Back office
+            - generic [ref=f2e6099]: Know what to reorder — Back office
+            - generic [ref=f2e6100]: ✓
+        - button "Salesforce Embed 1" [ref=f2e6103] [cursor=pointer]:
+          - generic [ref=f2e6106]: Salesforce Embed
+          - generic [ref=f2e6107]: "1"
+        - button "Unscheduled 1" [ref=f2e6120] [cursor=pointer]:
+          - generic [ref=f2e6123]: Unscheduled
+          - generic [ref=f2e6124]: "1"
+        - button "Settings 4" [ref=f2e6137] [cursor=pointer]:
+          - generic [ref=f2e6140]: Settings
+          - generic [ref=f2e6141]: "4"
+        - generic [ref=f2e6153]:
+          - button "JRN-0248 Configure how my shop behaves — Back office" [ref=f2e6154] [cursor=pointer]:
+            - generic [ref=f2e6155]: JRN-0248
+            - generic "Configure how my shop behaves — Back office" [ref=f2e6156]
+          - generic "JRN-0248 · 2026-07-01 → 2026-09-30" [ref=f2e6168]:
+            - generic [ref=f2e6170]: Back office
+            - generic [ref=f2e6171]: Configure how my shop behaves — Back office
+            - generic [ref=f2e6172]: ✓
+        - generic [ref=f2e6174]:
+          - button "JRN-0249 Define the variants my shop uses — Back office" [ref=f2e6175] [cursor=pointer]:
+            - generic [ref=f2e6176]: JRN-0249
+            - generic "Define the variants my shop uses — Back office" [ref=f2e6177]
+          - generic "JRN-0249 · 2026-07-01 → 2026-09-30" [ref=f2e6189]:
+            - generic [ref=f2e6191]: Back office
+            - generic [ref=f2e6192]: Define the variants my shop uses — Back office
+            - generic [ref=f2e6193]: ✓
+        - generic [ref=f2e6195]:
+          - button "JRN-0250 Choose when the inventory snapshot is taken — Back office" [ref=f2e6196] [cursor=pointer]:
+            - generic [ref=f2e6197]: JRN-0250
+            - generic "Choose when the inventory snapshot is taken — Back office" [ref=f2e6198]
+          - generic "JRN-0250 · 2026-07-01 → 2026-09-30" [ref=f2e6210]:
+            - generic [ref=f2e6212]: Back office
+            - generic [ref=f2e6213]: Choose when the inventory snapshot is taken — Back office
+            - generic [ref=f2e6214]: ✓
+        - generic [ref=f2e6216]:
+          - button "JRN-0251 Close an accounting period — Back office" [ref=f2e6217] [cursor=pointer]:
+            - generic [ref=f2e6218]: JRN-0251
+            - generic "Close an accounting period — Back office" [ref=f2e6219]
+          - generic "JRN-0251 · 2026-07-01 → 2026-09-30" [ref=f2e6231]:
+            - generic [ref=f2e6233]: Back office
+            - generic [ref=f2e6234]: Close an accounting period — Back office
+            - generic [ref=f2e6235]: ✓
+        - button "Shopify Sync 3" [ref=f2e6238] [cursor=pointer]:
+          - generic [ref=f2e6241]: Shopify Sync
+          - generic [ref=f2e6242]: "3"
+        - generic [ref=f2e6254]:
+          - button "JRN-0260 Connect my Shopify store — Back office" [ref=f2e6255] [cursor=pointer]:
+            - generic [ref=f2e6256]: JRN-0260
+            - generic "Connect my Shopify store — Back office" [ref=f2e6257]
+          - generic "JRN-0260 · 2026-10-01 → 2026-12-31" [ref=f2e6269]:
+            - generic [ref=f2e6271]: Back office
+            - generic [ref=f2e6272]: Connect my Shopify store — Back office
+            - generic [ref=f2e6273]: ✓
+        - generic [ref=f2e6275]:
+          - button "JRN-0261 Keep catalog and stock in sync with Shopify — Back office" [ref=f2e6276] [cursor=pointer]:
+            - generic [ref=f2e6277]: JRN-0261
+            - generic "Keep catalog and stock in sync with Shopify — Back office" [ref=f2e6278]
+          - generic "JRN-0261 · 2026-10-01 → 2026-12-31" [ref=f2e6290]:
+            - generic [ref=f2e6292]: Back office
+            - generic [ref=f2e6293]: Keep catalog and stock in sync with Shopify — Back office
+            - generic [ref=f2e6294]: ✓
+        - generic [ref=f2e6296]:
+          - button "JRN-0262 Bring Shopify orders and refunds into inventory — Online" [ref=f2e6297] [cursor=pointer]:
+            - generic [ref=f2e6298]: JRN-0262
+            - generic "Bring Shopify orders and refunds into inventory — Online" [ref=f2e6299]
+          - generic "JRN-0262 · 2026-10-01 → 2026-12-31" [ref=f2e6311]:
+            - generic [ref=f2e6313]: Online
+            - generic [ref=f2e6314]: Bring Shopify orders and refunds into inventory — Online
+            - generic [ref=f2e6315]: ✓
+        - button "Taxes 4" [ref=f2e6318] [cursor=pointer]:
+          - generic [ref=f2e6321]: Taxes
+          - generic [ref=f2e6322]: "4"
+        - generic [ref=f2e6334]:
+          - button "JRN-0218 Configure the taxes that apply to products — Back office" [ref=f2e6335] [cursor=pointer]:
+            - generic [ref=f2e6336]: JRN-0218
+            - generic "Configure the taxes that apply to products — Back office" [ref=f2e6337]
+          - generic "JRN-0218 · 2026-10-01 → 2026-12-31" [ref=f2e6349]:
+            - generic [ref=f2e6351]: Back office
+            - generic [ref=f2e6352]: Configure the taxes that apply to products — Back office
+            - generic [ref=f2e6353]: ✓
+        - generic [ref=f2e6355]:
+          - button "JRN-0219 Charge the right tax on a sale — Back office" [ref=f2e6356] [cursor=pointer]:
+            - generic [ref=f2e6357]: JRN-0219
+            - generic "Charge the right tax on a sale — Back office" [ref=f2e6358]
+          - generic "JRN-0219 · 2026-10-01 → 2026-12-31" [ref=f2e6370]:
+            - generic [ref=f2e6372]: Back office
+            - generic [ref=f2e6373]: Charge the right tax on a sale — Back office
+            - generic [ref=f2e6374]: ✓
+        - generic [ref=f2e6376]:
+          - button "JRN-0220 Charge the right tax on a sale — Point of sale" [ref=f2e6377] [cursor=pointer]:
+            - generic [ref=f2e6378]: JRN-0220
+            - generic "Charge the right tax on a sale — Point of sale" [ref=f2e6379]
+          - generic "JRN-0220 · 2026-10-01 → 2026-12-31" [ref=f2e6391]:
+            - generic [ref=f2e6393]: POS
+            - generic [ref=f2e6394]: Charge the right tax on a sale — Point of sale
+            - generic [ref=f2e6395]: ✓
+        - generic [ref=f2e6397]:
+          - button "JRN-0221 Charge the right tax on a sale — Online" [ref=f2e6398] [cursor=pointer]:
+            - generic [ref=f2e6399]: JRN-0221
+            - generic "Charge the right tax on a sale — Online" [ref=f2e6400]
+          - generic "JRN-0221 · 2026-10-01 → 2026-12-31" [ref=f2e6412]:
+            - generic [ref=f2e6414]: Online
+            - generic [ref=f2e6415]: Charge the right tax on a sale — Online
+            - generic [ref=f2e6416]: ✓
+        - button "Ticketing 65" [ref=f2e6419] [cursor=pointer]:
+          - generic [ref=f2e6422]: Ticketing
+          - generic [ref=f2e6423]: "65"
+        - button "Analytics & Interactions Tracking 4" [ref=f2e6436] [cursor=pointer]:
+          - generic [ref=f2e6439]: Analytics & Interactions Tracking
+          - generic [ref=f2e6440]: "4"
+        - generic [ref=f2e6452]:
+          - button "JRN-0112 Fire analytics tags from the ticketing store into GA4 / GTM / Pixel" [ref=f2e6453] [cursor=pointer]:
+            - generic [ref=f2e6454]: JRN-0112
+            - generic "Fire analytics tags from the ticketing store into GA4 / GTM / Pixel" [ref=f2e6455]
+          - generic "JRN-0112 · 2026-07-01 → 2026-09-30" [ref=f2e6467]:
+            - generic [ref=f2e6469]: Online
+            - generic [ref=f2e6470]: Fire analytics tags from the ticketing store into GA4 / GTM / Pixel
+        - generic [ref=f2e6472]:
+          - button "JRN-0123 Push cart-to-purchase funnel events to the client's GTM dataLayer" [ref=f2e6473] [cursor=pointer]:
+            - generic [ref=f2e6474]: JRN-0123
+            - generic "Push cart-to-purchase funnel events to the client's GTM dataLayer" [ref=f2e6475]
+          - generic "JRN-0123 · 2026-07-01 → 2026-09-30" [ref=f2e6487]:
+            - generic [ref=f2e6489]: Online
+            - generic [ref=f2e6490]: Push cart-to-purchase funnel events to the client's GTM dataLayer
+        - generic [ref=f2e6492]:
+          - button "JRN-0145 Check-in creates an interaction on the visitor's contact" [ref=f2e6493] [cursor=pointer]:
+            - generic [ref=f2e6494]: JRN-0145
+            - generic "Check-in creates an interaction on the visitor's contact" [ref=f2e6495]
+          - generic "JRN-0145 · 2026-07-01 → 2026-09-30" [ref=f2e6507]:
+            - generic [ref=f2e6509]: POS
+            - generic [ref=f2e6510]: Check-in creates an interaction on the visitor's contact
+        - generic [ref=f2e6512]:
+          - button "JRN-0146 Nightly rollup recalculates contact visit counts" [ref=f2e6513] [cursor=pointer]:
+            - generic [ref=f2e6514]: JRN-0146
+            - generic "Nightly rollup recalculates contact visit counts" [ref=f2e6515]
+          - generic "JRN-0146 · 2026-10-01 → 2026-12-31" [ref=f2e6527]:
+            - generic [ref=f2e6529]: Back office
+            - generic [ref=f2e6530]: Nightly rollup recalculates contact visit counts
+        - button "Discount Codes for Ticketing 4" [ref=f2e6533] [cursor=pointer]:
+          - generic [ref=f2e6536]: Discount Codes for Ticketing
+          - generic [ref=f2e6537]: "4"
+        - generic [ref=f2e6549]:
+          - button "JRN-0173 Create and configure a discount code" [ref=f2e6550] [cursor=pointer]:
+            - generic [ref=f2e6551]: JRN-0173
+            - generic "Create and configure a discount code" [ref=f2e6552]
+          - generic "JRN-0173 · 2026-07-01 → 2026-09-30" [ref=f2e6564]:
+            - generic [ref=f2e6566]: Back office
+            - generic [ref=f2e6567]: Create and configure a discount code
+        - generic [ref=f2e6569]:
+          - button "JRN-0174 Redeem a discount code at online checkout" [ref=f2e6570] [cursor=pointer]:
+            - generic [ref=f2e6571]: JRN-0174
+            - generic "Redeem a discount code at online checkout" [ref=f2e6572]
+          - generic "JRN-0174 · 2026-07-01 → 2026-09-30" [ref=f2e6584]:
+            - generic [ref=f2e6586]: Online
+            - generic [ref=f2e6587]: Redeem a discount code at online checkout
+        - generic [ref=f2e6589]:
+          - button "JRN-0175 Apply a discount code when selling at the front desk" [ref=f2e6590] [cursor=pointer]:
+            - generic [ref=f2e6591]: JRN-0175
+            - generic "Apply a discount code when selling at the front desk" [ref=f2e6592]
+          - generic "JRN-0175 · 2026-07-01 → 2026-09-30" [ref=f2e6604]:
+            - generic [ref=f2e6606]: POS
+            - generic [ref=f2e6607]: Apply a discount code when selling at the front desk
+        - button "Unscheduled 1" [ref=f2e6610] [cursor=pointer]:
+          - generic [ref=f2e6613]: Unscheduled
+          - generic [ref=f2e6614]: "1"
+        - button "Event Check-in & Attendance Tracking 3" [ref=f2e6627] [cursor=pointer]:
+          - generic [ref=f2e6630]: Event Check-in & Attendance Tracking
+          - generic [ref=f2e6631]: "3"
+        - generic [ref=f2e6643]:
+          - button "JRN-0115 Pull up the attendee roster and mark attendance on the iPad" [ref=f2e6644] [cursor=pointer]:
+            - generic [ref=f2e6645]: JRN-0115
+            - generic "Pull up the attendee roster and mark attendance on the iPad" [ref=f2e6646]
+          - generic "JRN-0115 · 2026-07-01 → 2026-09-30" [ref=f2e6658]:
+            - generic [ref=f2e6660]: POS
+            - generic [ref=f2e6661]: Pull up the attendee roster and mark attendance on the iPad
+        - generic [ref=f2e6663]:
+          - button "JRN-0122 Scan and admit a visitor at the door" [ref=f2e6664] [cursor=pointer]:
+            - generic [ref=f2e6665]: JRN-0122
+            - generic "Scan and admit a visitor at the door" [ref=f2e6666]
+          - generic "JRN-0122 · 2026-07-01 → 2026-09-30" [ref=f2e6678]:
+            - generic [ref=f2e6680]: POS
+            - generic [ref=f2e6681]: Scan and admit a visitor at the door
+        - generic [ref=f2e6683]:
+          - button "JRN-0116 View and export the event roster and record attendance in Salesforce" [ref=f2e6684] [cursor=pointer]:
+            - generic [ref=f2e6685]: JRN-0116
+            - generic "View and export the event roster and record attendance in Salesforce" [ref=f2e6686]
+          - generic "JRN-0116 · 2026-10-01 → 2026-12-31" [ref=f2e6698]:
+            - generic [ref=f2e6700]: Back office
+            - generic [ref=f2e6701]: View and export the event roster and record attendance in Salesforce
+        - button "Event Tickets Sales Online and Onsite 12" [ref=f2e6704] [cursor=pointer]:
+          - generic [ref=f2e6707]: Event Tickets Sales Online and Onsite
+          - generic [ref=f2e6708]: "12"
+        - generic [ref=f2e6720]:
+          - button "JRN-0130 Sell an event ticket at the front desk" [ref=f2e6721] [cursor=pointer]:
+            - generic [ref=f2e6722]: JRN-0130
+            - generic "Sell an event ticket at the front desk" [ref=f2e6723]
+          - generic "JRN-0130 · 2026-07-01 → 2026-09-30" [ref=f2e6735]:
+            - generic [ref=f2e6737]: POS
+            - generic [ref=f2e6738]: Sell an event ticket at the front desk
+        - generic [ref=f2e6740]:
+          - button "JRN-0134 Configure the online tickets app settings in the wizard" [ref=f2e6741] [cursor=pointer]:
+            - generic [ref=f2e6742]: JRN-0134
+            - generic "Configure the online tickets app settings in the wizard" [ref=f2e6743]
+          - generic "JRN-0134 · 2026-10-01 → 2026-12-31" [ref=f2e6755]:
+            - generic [ref=f2e6757]: Back office
+            - generic [ref=f2e6758]: Configure the online tickets app settings in the wizard
+        - generic [ref=f2e6760]:
+          - button "JRN-0138 Add a donation, membership or audio guide to the ticket cart" [ref=f2e6761] [cursor=pointer]:
+            - generic [ref=f2e6762]: JRN-0138
+            - generic "Add a donation, membership or audio guide to the ticket cart" [ref=f2e6763]
+          - generic "JRN-0138 · 2026-07-01 → 2026-09-30" [ref=f2e6775]:
+            - generic [ref=f2e6777]: Online
+            - generic [ref=f2e6778]: Add a donation, membership or audio guide to the ticket cart
+        - generic [ref=f2e6780]:
+          - button "JRN-0149 Reserve tickets at the desk without taking payment" [ref=f2e6781] [cursor=pointer]:
+            - generic [ref=f2e6782]: JRN-0149
+            - generic "Reserve tickets at the desk without taking payment" [ref=f2e6783]
+          - generic "JRN-0149 · 2026-07-01 → 2026-09-30" [ref=f2e6795]:
+            - generic [ref=f2e6797]: POS
+            - generic [ref=f2e6798]: Reserve tickets at the desk without taking payment
+        - generic [ref=f2e6800]:
+          - button "JRN-0165 Hold selected slot spots with a countdown during checkout" [ref=f2e6801] [cursor=pointer]:
+            - generic [ref=f2e6802]: JRN-0165
+            - generic "Hold selected slot spots with a countdown during checkout" [ref=f2e6803]
+          - generic "JRN-0165 · 2026-07-01 → 2026-09-30" [ref=f2e6815]:
+            - generic [ref=f2e6817]: Online
+            - generic [ref=f2e6818]: Hold selected slot spots with a countdown during checkout
+        - button "JRN-0131 Buy a timed ticket from the public ticketing app" [ref=f2e6821] [cursor=pointer]:
+          - generic [ref=f2e6822]: JRN-0131
+          - generic "Buy a timed ticket from the public ticketing app" [ref=f2e6823]
+        - generic [ref=f2e6835]:
+          - button "JRN-0150 Create a reserved/unpaid booking" [ref=f2e6836] [cursor=pointer]:
+            - generic [ref=f2e6837]: JRN-0150
+            - generic "Create a reserved/unpaid booking" [ref=f2e6838]
+          - generic "JRN-0150 · 2026-07-01 → 2026-09-30" [ref=f2e6850]:
+            - generic [ref=f2e6852]: Back office
+            - generic [ref=f2e6853]: Create a reserved/unpaid booking
+        - generic [ref=f2e6855]:
+          - button "JRN-0132 Book a ticket for a guest" [ref=f2e6856] [cursor=pointer]:
+            - generic [ref=f2e6857]: JRN-0132
+            - generic "Book a ticket for a guest" [ref=f2e6858]
+          - generic "JRN-0132 · 2026-07-01 → 2026-09-30" [ref=f2e6870]:
+            - generic [ref=f2e6872]: Back office
+            - generic [ref=f2e6873]: Book a ticket for a guest
+        - generic [ref=f2e6875]:
+          - button "JRN-0151 Complete a $0 online order that reserves tickets without payment" [ref=f2e6876] [cursor=pointer]:
+            - generic [ref=f2e6877]: JRN-0151
+            - generic "Complete a $0 online order that reserves tickets without payment" [ref=f2e6878]
+          - generic "JRN-0151 · 2026-07-01 → 2026-09-30" [ref=f2e6890]:
+            - generic [ref=f2e6892]: Online
+            - generic [ref=f2e6893]: Complete a $0 online order that reserves tickets without payment
+        - button "Unscheduled 3" [ref=f2e6896] [cursor=pointer]:
+          - generic [ref=f2e6899]: Unscheduled
+          - generic [ref=f2e6900]: "3"
+        - button "Events Management 17" [ref=f2e6913] [cursor=pointer]:
+          - generic [ref=f2e6916]: Events Management
+          - generic [ref=f2e6917]: "17"
+        - button "JRN-0113 Define ticket types and prices on an event's offers" [ref=f2e6930] [cursor=pointer]:
+          - generic [ref=f2e6931]: JRN-0113
+          - generic "Define ticket types and prices on an event's offers" [ref=f2e6932]
+        - button "JRN-0117 Define time slots and per-slot capacity for a timed event" [ref=f2e6945] [cursor=pointer]:
+          - generic [ref=f2e6946]: JRN-0117
+          - generic "Define time slots and per-slot capacity for a timed event" [ref=f2e6947]
+        - button "JRN-0127 Configure the sales window and member presale" [ref=f2e6960] [cursor=pointer]:
+          - generic [ref=f2e6961]: JRN-0127
+          - generic "Configure the sales window and member presale" [ref=f2e6962]
+        - generic [ref=f2e6974]:
+          - button "JRN-0139 Assign a fund/GL code to ticket types and have sales book to it" [ref=f2e6975] [cursor=pointer]:
+            - generic [ref=f2e6976]: JRN-0139
+            - generic "Assign a fund/GL code to ticket types and have sales book to it" [ref=f2e6977]
+          - generic "JRN-0139 · 2026-07-01 → 2026-09-30" [ref=f2e6989]:
+            - generic [ref=f2e6991]: Back office
+            - generic [ref=f2e6992]: Assign a fund/GL code to ticket types and have sales book to it
+        - button "JRN-0114 Visitor sees and is charged the configured ticket-type price" [ref=f2e6995] [cursor=pointer]:
+          - generic [ref=f2e6996]: JRN-0114
+          - generic "Visitor sees and is charged the configured ticket-type price" [ref=f2e6997]
+        - button "JRN-0118 Visitor books only slots that exist and still have room" [ref=f2e7010] [cursor=pointer]:
+          - generic [ref=f2e7011]: JRN-0118
+          - generic "Visitor books only slots that exist and still have room" [ref=f2e7012]
+        - button "JRN-0128 Online store honors the sales window and member presale" [ref=f2e7025] [cursor=pointer]:
+          - generic [ref=f2e7026]: JRN-0128
+          - generic "Online store honors the sales window and member presale" [ref=f2e7027]
+        - button "Unscheduled 10" [ref=f2e7040] [cursor=pointer]:
+          - generic [ref=f2e7043]: Unscheduled
+          - generic [ref=f2e7044]: "10"
+        - button "Fundraising Event Management 7" [ref=f2e7057] [cursor=pointer]:
+          - generic [ref=f2e7060]: Fundraising Event Management
+          - generic [ref=f2e7061]: "7"
+        - button "Unscheduled 7" [ref=f2e7074] [cursor=pointer]:
+          - generic [ref=f2e7077]: Unscheduled
+          - generic [ref=f2e7078]: "7"
+        - button "Manage Event Tickets 11" [ref=f2e7091] [cursor=pointer]:
+          - generic [ref=f2e7094]: Manage Event Tickets
+          - generic [ref=f2e7095]: "11"
+        - generic [ref=f2e7107]:
+          - button "JRN-0124 Refund a ticket at the front desk" [ref=f2e7108] [cursor=pointer]:
+            - generic [ref=f2e7109]: JRN-0124
+            - generic "Refund a ticket at the front desk" [ref=f2e7110]
+          - generic "JRN-0124 · 2026-07-01 → 2026-09-30" [ref=f2e7122]:
+            - generic [ref=f2e7124]: POS
+            - generic [ref=f2e7125]: Refund a ticket at the front desk
+        - generic [ref=f2e7127]:
+          - button "JRN-0133 Clone an event with its offers and sessions" [ref=f2e7128] [cursor=pointer]:
+            - generic [ref=f2e7129]: JRN-0133
+            - generic "Clone an event with its offers and sessions" [ref=f2e7130]
+          - generic "JRN-0133 · 2026-07-01 → 2026-09-30" [ref=f2e7142]:
+            - generic [ref=f2e7144]: Back office
+            - generic [ref=f2e7145]: Clone an event with its offers and sessions
+        - generic [ref=f2e7147]:
+          - button "JRN-0135 Cancel a ticket from the Order record" [ref=f2e7148] [cursor=pointer]:
+            - generic [ref=f2e7149]: JRN-0135
+            - generic "Cancel a ticket from the Order record" [ref=f2e7150]
+          - generic "JRN-0135 · 2026-07-01 → 2026-09-30" [ref=f2e7162]:
+            - generic [ref=f2e7164]: POS
+            - generic [ref=f2e7165]: Cancel a ticket from the Order record
+        - generic [ref=f2e7167]:
+          - button "JRN-0137 Bulk-refund every ticket for a cancelled event or date" [ref=f2e7168] [cursor=pointer]:
+            - generic [ref=f2e7169]: JRN-0137
+            - generic "Bulk-refund every ticket for a cancelled event or date" [ref=f2e7170]
+          - generic "JRN-0137 · 2026-07-01 → 2026-09-30" [ref=f2e7182]:
+            - generic [ref=f2e7184]: Back office
+            - generic [ref=f2e7185]: Bulk-refund every ticket for a cancelled event or date
+        - generic [ref=f2e7187]:
+          - button "JRN-0152 Deliver a scannable e-ticket to the online buyer" [ref=f2e7188] [cursor=pointer]:
+            - generic [ref=f2e7189]: JRN-0152
+            - generic "Deliver a scannable e-ticket to the online buyer" [ref=f2e7190]
+          - generic "JRN-0152 · 2026-07-01 → 2026-09-30" [ref=f2e7202]:
+            - generic [ref=f2e7204]: Online
+            - generic [ref=f2e7205]: Deliver a scannable e-ticket to the online buyer
+        - generic [ref=f2e7207]:
+          - button "JRN-0162 Change a visitor's ticket at the front desk" [ref=f2e7208] [cursor=pointer]:
+            - generic [ref=f2e7209]: JRN-0162
+            - generic "Change a visitor's ticket at the front desk" [ref=f2e7210]
+          - generic "JRN-0162 · 2026-07-01 → 2026-09-30" [ref=f2e7222]:
+            - generic [ref=f2e7224]: POS
+            - generic [ref=f2e7225]: Change a visitor's ticket at the front desk
+        - generic [ref=f2e7227]:
+          - button "JRN-0125 Refund a ticket from the Reservation / POS Purchase in Salesforce" [ref=f2e7228] [cursor=pointer]:
+            - generic [ref=f2e7229]: JRN-0125
+            - generic "Refund a ticket from the Reservation / POS Purchase in Salesforce" [ref=f2e7230]
+          - generic "JRN-0125 · 2026-10-01 → 2026-12-31" [ref=f2e7242]:
+            - generic [ref=f2e7244]: Back office
+            - generic [ref=f2e7245]: Refund a ticket from the Reservation / POS Purchase in Salesforce
+        - generic [ref=f2e7247]:
+          - button "JRN-0136 Cancel a ticket on the Reservation / POS" [ref=f2e7248] [cursor=pointer]:
+            - generic [ref=f2e7249]: JRN-0136
+            - generic "Cancel a ticket on the Reservation / POS" [ref=f2e7250]
+          - generic "JRN-0136 · 2026-07-01 → 2026-09-30" [ref=f2e7262]:
+            - generic [ref=f2e7264]: Back office
+            - generic [ref=f2e7265]: Cancel a ticket on the Reservation / POS
+        - generic [ref=f2e7267]:
+          - button "JRN-0153 Produce or resend a usable ticket from CRM" [ref=f2e7268] [cursor=pointer]:
+            - generic [ref=f2e7269]: JRN-0153
+            - generic "Produce or resend a usable ticket from CRM" [ref=f2e7270]
+          - generic "JRN-0153 · 2026-10-01 → 2026-12-31" [ref=f2e7282]:
+            - generic [ref=f2e7284]: Back office
+            - generic [ref=f2e7285]: Produce or resend a usable ticket from CRM
+        - button "Unscheduled 2" [ref=f2e7288] [cursor=pointer]:
+          - generic [ref=f2e7291]: Unscheduled
+          - generic [ref=f2e7292]: "2"
+        - button "Ticketing Notifications & Communication 2" [ref=f2e7305] [cursor=pointer]:
+          - generic [ref=f2e7308]: Ticketing Notifications & Communication
+          - generic [ref=f2e7309]: "2"
+        - generic [ref=f2e7321]:
+          - button "JRN-0168 Configure, schedule and mass-send ticket-buyer emails" [ref=f2e7322] [cursor=pointer]:
+            - generic [ref=f2e7323]: JRN-0168
+            - generic "Configure, schedule and mass-send ticket-buyer emails" [ref=f2e7324]
+          - generic "JRN-0168 · 2026-10-01 → 2026-12-31" [ref=f2e7336]:
+            - generic [ref=f2e7338]: Back office
+            - generic [ref=f2e7339]: Configure, schedule and mass-send ticket-buyer emails
+        - generic [ref=f2e7341]:
+          - button "JRN-0176 Visitor completes a post-visit survey linked to their ticket" [ref=f2e7342] [cursor=pointer]:
+            - generic [ref=f2e7343]: JRN-0176
+            - generic "Visitor completes a post-visit survey linked to their ticket" [ref=f2e7344]
+          - generic "JRN-0176 · 2026-10-01 → 2026-12-31" [ref=f2e7356]:
+            - generic [ref=f2e7358]: Online
+            - generic [ref=f2e7359]: Visitor completes a post-visit survey linked to their ticket
+        - button "Ticketing Reporting 5" [ref=f2e7362] [cursor=pointer]:
+          - generic [ref=f2e7365]: Ticketing Reporting
+          - generic [ref=f2e7366]: "5"
+        - button "Unscheduled 5" [ref=f2e7379] [cursor=pointer]:
+          - generic [ref=f2e7382]: Unscheduled
+          - generic [ref=f2e7383]: "5"

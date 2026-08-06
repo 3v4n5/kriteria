@@ -29,6 +29,9 @@ importers:
       '@kriteria/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@kriteria/execution':
+        specifier: workspace:*
+        version: link:../../packages/execution
       '@kriteria/ingest':
         specifier: workspace:*
         version: link:../../packages/ingest
@@ -62,6 +65,15 @@ importers:
       zod:
         specifier: ^3.24.1
         version: 3.25.76
+
+  packages/execution:
+    dependencies:
+      '@kriteria/core':
+        specifier: workspace:*
+        version: link:../core
+      '@kriteria/istqb':
+        specifier: workspace:*
+        version: link:../istqb
 
   packages/ingest:
     dependencies:
