@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@kriteria/core": "workspace:*",
+    "@kriteria/ingest": "workspace:*",
     "@kriteria/istqb": "workspace:*"
   }
 }

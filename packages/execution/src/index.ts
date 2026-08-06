@@ -10,3 +10,6 @@
 export * from "./select.js";
 export * from "./summary.js";
 export * from "./exit-criteria.js";
+export * from "./json-path.js";
+export * from "./api-runner.js";
+export * from "./http.js";

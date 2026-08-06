@@ -96,6 +96,16 @@ Judgement guidance:
   so propose the most autonomous mode the case genuinely admits.
 - Set mutatesState:true on any case that creates, updates or deletes data
   when executed — autonomous runs of those require a human gate.
+- When you propose auto-api, EVERY step must also carry its executable "api"
+  spec alongside the prose: method, path (relative — the base URL is the
+  tenant's configuration, never yours to choose), optional query/headers/body,
+  and at least one assertion. Assertions are deterministic only: status,
+  json-path (equals/contains/exists/absent/matches/gt/lt), header, and
+  response-time. Chain steps with "extract" (variable name → json path) and
+  reference captured values as \${name}. Never put credentials, tokens or
+  absolute URLs in a step: authentication is injected by the runner. If a step
+  needs judgement that these assertions cannot express, the case is not
+  auto-api — propose guided-manual instead.
 - What you deliberately leave out goes in exclusions with a reason. Silent
   truncation reads as full coverage when it is not.
 - If a revision request with critic findings is included, address every

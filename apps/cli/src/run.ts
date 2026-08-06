@@ -11,7 +11,7 @@
  */
 
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { createInterface } from "node:readline/promises";
 import {
@@ -25,10 +25,16 @@ import {
   type TestRun,
 } from "@kriteria/core";
 import {
+  MutationNotApprovedError,
+  createFetchClient,
   evaluateExitCriteria,
+  runApiCase,
+  selectAutonomousCases,
   selectGuidedCases,
   summarize,
   verdictFor,
+  type ApiRunContext,
+  type HttpClient,
   type RunnableCase,
 } from "@kriteria/execution";
 import type { ExecutionMode } from "@kriteria/istqb";
@@ -84,8 +90,16 @@ export interface RunCommandOptions {
   environment: string;
   environmentUrl?: string;
   executor?: string;
+  /** Base URL of the API test environment — unlocks the auto-api phase. */
+  apiBaseUrl?: string;
+  /** Bearer token for the API environment. Never persisted to artifacts. */
+  apiToken?: string;
+  /** Approve state-mutating autonomous requests without prompting (CI). */
+  autoApprove?: boolean;
   /** Injectable for tests and scripted runs; defaults to stdin. */
   ask?: Ask;
+  /** Injectable for tests; defaults to fetch. */
+  http?: HttpClient;
 }
 
 export async function runCommand(options: RunCommandOptions): Promise<void> {
@@ -105,6 +119,7 @@ export async function runCommand(options: RunCommandOptions): Promise<void> {
     ]),
   );
   const runnable = selectGuidedCases(cases, modeByCaseId);
+  const autonomous = selectAutonomousCases(cases, modeByCaseId);
 
   // Resume: keep results already recorded, run only what is missing.
   const previous: TestRun | undefined = existsSync(runPath)
@@ -125,6 +140,36 @@ export async function runCommand(options: RunCommandOptions): Promise<void> {
     `  ${runnable.length} caso(s) para humano de ${cases.length} totales` +
       (doneIds.size > 0 ? ` · ${doneIds.size} ya ejecutado(s), se retoman los restantes` : ""),
   );
+  // --- Phase 1: autonomous API cases --------------------------------------
+  if (autonomous.length > 0) {
+    if (!options.apiBaseUrl) {
+      console.log(
+        `  ⚠ ${autonomous.length} caso(s) auto-api sin ambiente configurado — use --api-base-url`,
+      );
+      for (const c of autonomous) {
+        results.push({
+          caseId: c.designed.id,
+          status: "not-run",
+          executionMode: c.mode,
+          reason: "sin ambiente de API configurado (--api-base-url)",
+          steps: [],
+          evidence: [],
+        });
+      }
+    } else {
+      console.log(`\n▸ Fase autónoma: ${autonomous.length} caso(s) auto-api contra ${options.apiBaseUrl}`);
+      const http = options.http ?? createFetchClient();
+      for (const c of autonomous) {
+        if (doneIds.has(c.designed.id)) continue;
+        const result = await runAutonomousCase(c, options, http, ask, dir);
+        results.push(result);
+        console.log(`  ${result.status === "pass" ? "✓" : result.status === "fail" ? "✗" : "◻"} ${c.designed.id} ${c.designed.title}`);
+        persist();
+      }
+    }
+  }
+
+  // --- Phase 2: guided human cases ----------------------------------------
   console.log(`  Atajos: [p] pasó · [f] falló · [b] bloqueado · [s] omitir · [q] guardar y salir\n`);
 
   let quit = false;
@@ -208,7 +253,7 @@ export async function runCommand(options: RunCommandOptions): Promise<void> {
         name: options.environment,
         ...(options.environmentUrl ? { url: options.environmentUrl } : {}),
       },
-      executor: { kind: "human", ...(options.executor ? { name: options.executor } : {}) },
+      executor: { kind: autonomous.length > 0 && runnable.length > 0 ? "mixed" : autonomous.length > 0 ? "system" : "human", ...(options.executor ? { name: options.executor } : {}) },
       results,
       defects,
       summary,
@@ -229,6 +274,94 @@ const startedAt = new Date().toISOString();
 function TestRumSafeParse(raw: string): TestRun | undefined {
   const parsed = TestRunSchema.safeParse(fromYaml(raw));
   return parsed.success ? parsed.data : undefined;
+}
+
+// ---------------------------------------------------------------------------
+// Autonomous execution of one auto-api case
+// ---------------------------------------------------------------------------
+
+async function runAutonomousCase(
+  runnable: RunnableCase,
+  options: RunCommandOptions,
+  http: HttpClient,
+  ask: Ask,
+  dir: string,
+): Promise<CaseResult> {
+  const c = runnable.designed;
+  const mutating = c.steps.some(
+    (s) => s.api && ["POST", "PUT", "PATCH", "DELETE"].includes(s.api.method),
+  );
+
+  // State-mutating autonomous requests need explicit human approval.
+  let approved = options.autoApprove ?? false;
+  if (mutating && !approved) {
+    const methods = [...new Set(c.steps.filter((s) => s.api).map((s) => s.api!.method))];
+    console.log(`\n  ⚠ ${c.id} altera estado (${methods.join(", ")}) contra ${options.apiBaseUrl}`);
+    const answer = (await ask("  ¿Ejecutar? [s/N] ")).trim().toLowerCase();
+    approved = answer === "s" || answer === "si" || answer === "y";
+    if (!approved) {
+      return {
+        caseId: c.id,
+        status: "skipped",
+        executionMode: runnable.mode,
+        reason: "el operador no aprobó la ejecución de peticiones que alteran estado",
+        steps: [],
+        evidence: [],
+      };
+    }
+  }
+
+  const ctx: ApiRunContext = {
+    baseUrl: options.apiBaseUrl!,
+    ...(options.apiToken ? { headers: { authorization: `Bearer ${options.apiToken}` } } : {}),
+    mutationApproved: approved,
+  };
+
+  const startedAtIso = new Date().toISOString();
+  try {
+    const outcome = await runApiCase(c, ctx, http);
+    const evidence: EvidenceRef[] = [];
+    if (outcome.transcript) {
+      evidence.push(writeTranscript(dir, c.id, outcome.transcript));
+    }
+    const failed = outcome.steps.some((s) => s.status === "fail");
+    const executedAny = outcome.steps.some((s) => s.status !== "skipped");
+    return CaseResultSchema.parse({
+      caseId: c.id,
+      status: failed ? "fail" : executedAny ? "pass" : "skipped",
+      executionMode: runnable.mode,
+      reason: !executedAny ? "ningún paso tenía especificación ejecutable" : undefined,
+      startedAt: startedAtIso,
+      finishedAt: new Date().toISOString(),
+      durationMs: outcome.durationMs,
+      steps: outcome.steps,
+      evidence,
+    });
+  } catch (error) {
+    if (!(error instanceof MutationNotApprovedError)) throw error;
+    return {
+      caseId: c.id,
+      status: "skipped",
+      executionMode: runnable.mode,
+      reason: error.message,
+      steps: [],
+      evidence: [],
+    };
+  }
+}
+
+/** Transcripts are written as evidence files and digested like any other. */
+function writeTranscript(dir: string, caseId: string, transcript: string): EvidenceRef {
+  const evidenceDir = join(dir, "evidence");
+  mkdirSync(evidenceDir, { recursive: true });
+  const relative = join("evidence", `${caseId}.http.md`);
+  writeFileSync(join(dir, relative), transcript, "utf8");
+  return {
+    kind: "log",
+    description: `transcripción HTTP de ${caseId}`,
+    path: relative,
+    sha256: createHash("sha256").update(transcript).digest("hex"),
+  };
 }
 
 // ---------------------------------------------------------------------------

@@ -86,16 +86,101 @@ describe("runCommand", () => {
     expect(readFileSync(join(dir, "closure.md"), "utf8")).toContain("DEMO-1");
   });
 
-  it("skips cases the router assigned to autonomous modes", async () => {
+  it("does not prompt a human for cases the router assigned to autonomous modes", async () => {
     writeFixture([
       testCase("TC-1"),
       testCase("TC-2", { execution: { mode: "auto-api" } }),
     ]);
 
+    // The scripted asker allows exactly one guided case; if TC-2 were routed
+    // to the human loop this would throw "more questions than scripted".
     await runCommand({ dir, environment: "staging", ask: scriptedAsk(["p", ""]) });
 
-    // Only the human-mode case appears — TC-2 belongs to the autonomous runner.
-    expect(readRun().results.map((r) => r.caseId)).toEqual(["TC-1"]);
+    const results = readRun().results;
+    expect(results.find((r) => r.caseId === "TC-1")!.status).toBe("pass");
+    // Without an API environment configured, the autonomous case is honestly
+    // recorded as not-run with the reason — never silently dropped.
+    const auto = results.find((r) => r.caseId === "TC-2")!;
+    expect(auto.status).toBe("not-run");
+    expect(auto.reason).toContain("ambiente de API");
+  });
+
+  it("executes auto-api cases autonomously when an environment is configured", async () => {
+    writeFixture([
+      testCase("TC-1", {
+        execution: { mode: "auto-api" },
+        steps: [
+          {
+            action: "consultar el descuento",
+            expected: "10% para total 100",
+            api: {
+              method: "GET",
+              path: "/discount",
+              query: { total: "100" },
+              assertions: [
+                { type: "status", equals: 200 },
+                { type: "json-path", path: "rate", operator: "equals", value: 0.1 },
+              ],
+            },
+          },
+        ],
+      }),
+    ]);
+
+    const requests: { url: string }[] = [];
+    await runCommand({
+      dir,
+      environment: "staging",
+      apiBaseUrl: "https://staging.example.com/api",
+      ask: scriptedAsk([]), // no human interaction expected
+      http: async (req) => {
+        requests.push({ url: req.url });
+        return { status: 200, headers: {}, body: '{"rate":0.1}' };
+      },
+    });
+
+    const result = readRun().results[0]!;
+    expect(result).toMatchObject({ caseId: "TC-1", status: "pass", executionMode: "auto-api" });
+    expect(requests[0]!.url).toBe("https://staging.example.com/api/discount?total=100");
+    // The HTTP transcript is captured as digested evidence.
+    expect(result.evidence[0]!.sha256).toMatch(/^[a-f0-9]{64}$/);
+  });
+
+  it("asks before running a state-mutating autonomous case, and honors a refusal", async () => {
+    writeFixture([
+      testCase("TC-1", {
+        execution: { mode: "auto-api" },
+        steps: [
+          {
+            action: "crear una orden",
+            expected: "201",
+            api: {
+              method: "POST",
+              path: "/orders",
+              body: { total: 100 },
+              assertions: [{ type: "status", equals: 201 }],
+            },
+          },
+        ],
+      }),
+    ]);
+
+    let called = false;
+    await runCommand({
+      dir,
+      environment: "staging",
+      apiBaseUrl: "https://staging.example.com/api",
+      ask: scriptedAsk(["n"]), // operator declines the mutation
+      http: async () => {
+        called = true;
+        return { status: 201, headers: {}, body: "{}" };
+      },
+    });
+
+    expect(called).toBe(false);
+    const result = readRun().results[0]!;
+    expect(result.status).toBe("skipped");
+    expect(result.reason).toContain("no aprobó");
   });
 
   it("captures a failure with its actual result and raises a defect", async () => {

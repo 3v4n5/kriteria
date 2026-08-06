@@ -26,6 +26,17 @@ const PRIORITY_ORDER: Record<DesignedCase["priority"], number> = {
   low: 3,
 };
 
+/** Cases the system executes on its own, in plan order. */
+export function selectAutonomousCases(
+  cases: readonly DesignedCase[],
+  modeByCaseId: ReadonlyMap<string, ExecutionMode>,
+  mode: ExecutionMode = "auto-api",
+): RunnableCase[] {
+  return cases
+    .filter((c) => modeByCaseId.get(c.id) === mode)
+    .map((designed) => ({ designed, mode }));
+}
+
 export function selectGuidedCases(
   cases: readonly DesignedCase[],
   modeByCaseId: ReadonlyMap<string, ExecutionMode>,

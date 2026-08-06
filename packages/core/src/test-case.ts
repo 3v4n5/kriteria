@@ -14,6 +14,7 @@ import {
   TEST_TYPES,
 } from "@kriteria/istqb";
 import { z } from "zod/v4";
+import { ApiStepSchema } from "./api-step.js";
 
 export const CasePrioritySchema = z.enum(["critical", "high", "medium", "low"]);
 export type CasePriority = z.infer<typeof CasePrioritySchema>;
@@ -21,6 +22,12 @@ export type CasePriority = z.infer<typeof CasePrioritySchema>;
 export const TestStepSchema = z.object({
   action: z.string().min(1),
   expected: z.string().min(1),
+  /**
+   * Machine-executable form of this same step, emitted when the designer
+   * proposes auto-api. Its presence is what makes the case runnable without
+   * a human; its absence degrades the case to a guided checklist.
+   */
+  api: ApiStepSchema.optional(),
 });
 export type TestStep = z.infer<typeof TestStepSchema>;
 

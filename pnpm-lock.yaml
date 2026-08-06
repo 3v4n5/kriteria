@@ -71,6 +71,9 @@ importers:
       '@kriteria/core':
         specifier: workspace:*
         version: link:../core
+      '@kriteria/ingest':
+        specifier: workspace:*
+        version: link:../ingest
       '@kriteria/istqb':
         specifier: workspace:*
         version: link:../istqb

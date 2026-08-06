@@ -15,7 +15,8 @@ const HELP = `kriteria — agentic QA strategy engine (Fase 0)
 Usage:
   qa plan --from <jira:KEY | file:path> [options]
   qa run <out/REF> --env <nombre> [--url <url>] [--as <nombre>]
-                            Ejecución guiada de los casos para humano (reanudable)
+                   [--api-base-url <url>] [--auto-approve]
+                            Ejecuta casos auto-api y luego guía los manuales (reanudable)
   qa report <out/REF>       Genera informe HTML legible de una corrida
 
 Options:
@@ -27,7 +28,8 @@ Options:
 
 Environment:
   ANTHROPIC_API_KEY   or an \`ant auth login\` profile
-  JIRA_BASE_URL, JIRA_EMAIL, JIRA_API_TOKEN   (only for jira: sources)`;
+  JIRA_BASE_URL, JIRA_EMAIL, JIRA_API_TOKEN   (only for jira: sources)
+  KRITERIA_API_BASE_URL, KRITERIA_API_TOKEN   (ambiente de pruebas para auto-api)`;
 
 async function main(): Promise<void> {
   const [command, ...rest] = process.argv.slice(2);
@@ -45,13 +47,22 @@ async function main(): Promise<void> {
         env: { type: "string", default: "local" },
         url: { type: "string" },
         as: { type: "string" },
+        "api-base-url": { type: "string" },
+        "auto-approve": { type: "boolean", default: false },
       },
     });
+    // The API token comes from the environment only — never a flag, so it
+    // cannot land in shell history or a CI log line.
+    const apiToken = process.env["KRITERIA_API_TOKEN"];
+    const apiBaseUrl = values["api-base-url"] ?? process.env["KRITERIA_API_BASE_URL"];
     await runCommand({
       dir,
       environment: values.env!,
       ...(values.url ? { environmentUrl: values.url } : {}),
       ...(values.as ? { executor: values.as } : {}),
+      ...(apiBaseUrl ? { apiBaseUrl } : {}),
+      ...(apiToken ? { apiToken } : {}),
+      autoApprove: values["auto-approve"]!,
     });
     return;
   }
