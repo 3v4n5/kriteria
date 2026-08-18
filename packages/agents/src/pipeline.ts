@@ -24,6 +24,7 @@ import {
   type RiskRegister,
   type TestBasis,
 } from "@kriteria/core";
+import { auditPlan, renderAudit, type PlanAudit } from "@kriteria/coverage";
 import {
   buildStrategy,
   routeExecution,
@@ -55,6 +56,8 @@ export interface PipelineOptions {
   routing?: Record<AgentRole, RouteConfig>;
   /** Designer revision rounds when the critic finds blockers. Default 1. */
   maxRevisions?: number;
+  /** Tenant ceiling on total cases. Null lifts it. Default 24. */
+  caseCap?: number | null;
   /** Tenant memory snippets to inject as labelled context. */
   tenantContext?: string;
   /** When provided, successful stage outputs are reused across runs. */
@@ -80,6 +83,10 @@ export interface PlanResult {
   design: DesignOutput;
   /** Per-case execution routing: designer proposal validated by the router. */
   executionPlan: RoutedCase[];
+  /** Deterministic audit of the final design. */
+  audit: PlanAudit;
+  /** One audit per design revision, first to last. */
+  auditHistory: PlanAudit[];
   critique: CriticReport;
   /** Critic reports for every round, first to last. */
   critiqueHistory: CriticReport[];
@@ -89,10 +96,14 @@ export interface PlanResult {
 }
 
 /**
- * Cost guard: caps the designer's output volume regardless of depth. Depth
- * governs per-case thoroughness; total volume is an economic decision.
+ * Tenant policy: the ceiling on total designed cases.
+ *
+ * This is an ECONOMIC decision, not a testing one, so it is reconciled into
+ * the strategy (see reconcileCaseBudget) rather than imposed on the designer
+ * behind the strategy's back. The plan then states the cap and its rationale,
+ * and reviewers stop flagging a contradiction that was really a policy.
  */
-const MAX_TOTAL_CASES = 24;
+const DEFAULT_CASE_CAP = 24;
 
 export async function runPlanPipeline(
   basis: TestBasis,
@@ -149,7 +160,13 @@ ${json(analysis)}`,
   );
 
   // 3. Strategy — deterministic, zero tokens.
-  const strategy = buildStrategy(toStrategyInput(analysis, riskRegister));
+  const strategy = buildStrategy({
+    ...toStrategyInput(analysis, riskRegister),
+    areaCount: analysis.features.length,
+    // `??` would collapse an explicit null ("no cap") into the default, so
+    // absence and an intentional lifting of the cap are distinguished here.
+    policyCaseCap: options.caseCap === undefined ? DEFAULT_CASE_CAP : options.caseCap,
+  });
   log(
     `▸ strategy (deterministic): ${strategy.approach.primary.approach}, depth ${strategy.depth}`,
   );
@@ -166,22 +183,68 @@ ${json(riskRegister)}
 ## Selected strategy (deterministic — implement, do not re-litigate)
 ${json(strategySummary(strategy))}
 
-## Hard output budget
-Design AT MOST ${MAX_TOTAL_CASES} cases in total, prioritized by risk: cover
-every high/critical risk and mandatory technique first; push what does not fit
-into exclusions with reasons. Depth guides thoroughness per case, never total
-volume beyond this cap.`;
+## Agreed case budget
+Total cases: AT MOST ${strategy.caseBudget.total ?? "sin límite"}.
+Rationale: ${strategy.caseBudget.rationale}.
+Prioritize by risk — high/critical risks and mandatory techniques first — and
+declare in "exclusions" whatever the budget leaves out, with its reason. Depth
+governs how thorough each case is; this budget governs how many.`;
 
   let design = DesignOutputSchema.parse(
     await stage("designer", DesignOutputSchema, designerBrief),
   );
 
-  // 5. Critic + bounded revision loop
-  const critiqueHistory: CriticReport[] = [];
-  let revisions = 0;
+  const runAudit = (d: DesignOutput): PlanAudit =>
+    auditPlan({
+      analysis,
+      risks: riskRegister,
+      strategy,
+      design: d,
+      acceptanceCriteria: basis.acceptanceCriteria.map((ac) => ({
+        id: ac.id,
+        testable: ac.testable,
+      })),
+    });
 
+  let revisions = 0;
+  let audit = runAudit(design);
+  const auditHistory: PlanAudit[] = [audit];
+  log(
+    `▸ mechanical audit (deterministic): ${audit.findings.length} gap(s), ${audit.caseCount} case(s)`,
+  );
+
+  // 5. Structural repair — free. Gaps a loop can find do not deserve an Opus
+  //    call: the designer fixes them before the critic ever sees the plan.
+  while (audit.hasBlockers && revisions < maxRevisions) {
+    revisions++;
+    log(`▸ structural revision ${revisions}: ${audit.findings.length} gap(s), re-designing ($0 review)`);
+
+    design = DesignOutputSchema.parse(
+      await stage(
+        "designer",
+        DesignOutputSchema,
+        `${designerBrief}
+
+## Structural gaps found by a deterministic audit — close every one
+${json(audit.findings)}
+
+## Your previous design
+${json(design)}`,
+      ),
+    );
+    audit = runAudit(design);
+    auditHistory.push(audit);
+  }
+
+  // 6. Critic — receives the coverage table already computed, so its tokens
+  //    go to judgement rather than to counting.
+  const critiqueHistory: CriticReport[] = [];
   let critique = CriticReportSchema.parse(
-    await stage("critic", CriticReportSchema, criticBrief(basis, analysis, riskRegister, strategy, design)),
+    await stage(
+      "critic",
+      CriticReportSchema,
+      criticBrief(basis, analysis, riskRegister, strategy, design, audit),
+    ),
   );
   critiqueHistory.push(critique);
 
@@ -206,9 +269,15 @@ ${json(critique.findings.filter((f) => f.severity !== "advisory"))}
 ${json(design)}`,
       ),
     );
+    audit = runAudit(design);
+    auditHistory.push(audit);
 
     critique = CriticReportSchema.parse(
-      await stage("critic", CriticReportSchema, criticBrief(basis, analysis, riskRegister, strategy, design)),
+      await stage(
+        "critic",
+        CriticReportSchema,
+        criticBrief(basis, analysis, riskRegister, strategy, design, audit),
+      ),
     );
     critiqueHistory.push(critique);
   }
@@ -239,6 +308,8 @@ ${json(design)}`,
     strategy,
     design,
     executionPlan,
+    audit,
+    auditHistory,
     critique,
     critiqueHistory,
     revisions,
@@ -356,6 +427,7 @@ function criticBrief(
   risks: RiskRegister,
   strategy: TestStrategy,
   design: DesignOutput,
+  audit: PlanAudit,
 ): string {
   return `${renderBasis(basis)}
 
@@ -369,7 +441,9 @@ ${json(risks)}
 ${json(strategySummary(strategy))}
 
 ## Designed cases under review
-${json(design)}`;
+${json(design)}
+
+${renderAudit(audit)}`;
 }
 
 function hasBlockers(critique: CriticReport): boolean {

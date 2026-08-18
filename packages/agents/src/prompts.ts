@@ -81,9 +81,13 @@ Judgement guidance:
   boundary-value-analysis is mandatory, cases at each boundary must exist.
   The critic will check this mechanically.
 - Traceability is structural: every case declares covers (FEA-n), mitigates
-  (RSK-n) and verifies (AC-n). A case that covers nothing does not exist.
-- Respect the case budget per area. Prioritize by risk: critical/high risks
-  get the thorough cases; low risks get smoke coverage.
+  (RSK-n), verifies (AC-n) and validates (BR-n). A case that covers nothing
+  does not exist. A deterministic audit checks these links before any human
+  or model reviews the plan, so an unlinked feature, criterion, rule or
+  priority risk comes straight back to you.
+- Respect the agreed case budget in the brief. It is an economic constraint
+  already reconciled with the strategy, not a contradiction to resolve:
+  prioritize by risk, and put what does not fit in exclusions with its reason.
 - Steps are executable by a tester who has never seen the work item:
   concrete data, concrete expected results. "Verify it works" is not a step.
 - Cases needing human judgement (visual quality, hardware, third parties) get

@@ -67,6 +67,9 @@ export async function planCommand(options: PlanCommandOptions): Promise<void> {
   writeArtifacts(dir, basis.source.ref, result);
 
   console.log(`\n✓ verdict: ${result.critique.verdict} (${result.revisions} revision(s))`);
+  console.log(
+    `  auditoría mecánica: ${result.audit.findings.length} hueco(s) estructural(es) restante(s)`,
+  );
   const costUsd = result.runs.reduce(
     (sum, r) => sum + estimateCostUsd(r.model, r.usage),
     0,
@@ -113,6 +116,7 @@ function writeArtifacts(dir: string, ref: string, result: PlanResult): void {
         types: result.strategy.types,
         techniquesByLevel: result.strategy.techniquesByLevel,
         caseBudgetPerArea: result.strategy.caseBudgetPerArea,
+        caseBudget: result.strategy.caseBudget,
       },
       entryCriteria: result.strategy.entryCriteria,
       exitCriteria: result.strategy.exitCriteria,
@@ -176,12 +180,22 @@ function writeArtifacts(dir: string, ref: string, result: PlanResult): void {
   );
 
   write(
+    "audit.json",
+    JSON.stringify(
+      { findings: result.audit.findings, coverage: result.audit.coverage },
+      null,
+      2,
+    ),
+  );
+
+  write(
     "run.json",
     JSON.stringify(
       {
         ranAt: new Date().toISOString(),
         revisions: result.revisions,
         verdict: result.critique.verdict,
+        auditFindings: result.audit.findings.length,
         totalUsage: result.totalUsage,
         calls: result.runs,
       },

@@ -44,6 +44,12 @@ export const DesignedCaseSchema = z.object({
   mitigates: z.array(z.string().regex(/^RSK-\d+$/)),
   /** Acceptance criteria ids (AC-n) verified by this case. */
   verifies: z.array(z.string().regex(/^AC-\d+$/)),
+  /**
+   * Business rule ids (BR-n) this case exercises. Without this link a rule
+   * can be analysed, stated in the plan and never actually tested — a gap
+   * the mechanical audit could not see and a human rarely notices.
+   */
+  validates: z.array(z.string().regex(/^BR-\d+$/)).default([]),
   preconditions: z.array(z.string()),
   /** Concrete data the case needs, named so it can be generated or seeded. */
   dataRequirements: z.array(z.string()),

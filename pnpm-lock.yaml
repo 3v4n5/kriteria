@@ -50,6 +50,9 @@ importers:
       '@kriteria/core':
         specifier: workspace:*
         version: link:../core
+      '@kriteria/coverage':
+        specifier: workspace:*
+        version: link:../coverage
       '@kriteria/istqb':
         specifier: workspace:*
         version: link:../istqb
@@ -65,6 +68,15 @@ importers:
       zod:
         specifier: ^3.24.1
         version: 3.25.76
+
+  packages/coverage:
+    dependencies:
+      '@kriteria/core':
+        specifier: workspace:*
+        version: link:../core
+      '@kriteria/istqb':
+        specifier: workspace:*
+        version: link:../istqb
 
   packages/execution:
     dependencies:

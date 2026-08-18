@@ -21,6 +21,7 @@ const designedCase = (
   covers: ["FEA-1"],
   mitigates: [],
   verifies: [],
+  validates: [],
   preconditions: [],
   dataRequirements: [],
   steps: [{ action: "hacer algo", expected: "algo pasa" }],

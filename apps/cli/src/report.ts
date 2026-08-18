@@ -3,7 +3,7 @@
  * corrida: out/<REF>/{testplan.yml, testcases.yml, critic.md, run.json}
  * → out/<REF>/informe-<REF>.html
  */
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { parse } from "yaml";
 
@@ -14,6 +14,19 @@ export function reportCommand(dir: string): string {
   const design = parse(readFileSync(join(dir, "testcases.yml"), "utf8"));
   const criticMd = readFileSync(join(dir, "critic.md"), "utf8");
   const run = JSON.parse(readFileSync(join(dir, "run.json"), "utf8"));
+  const auditPath = join(dir, "audit.json");
+  interface AuditFile {
+    findings: { kind: string; severity: string; summary: string; refs: string[] }[];
+    coverage: {
+      features: { id: string; cases: string[] }[];
+      acceptanceCriteria: { id: string; testable: boolean; cases: string[] }[];
+      businessRules: { id: string; cases: string[] }[];
+      risks: { id: string; priority: boolean; cases: string[] }[];
+    };
+  }
+  const audit: AuditFile | null = existsSync(auditPath)
+    ? (JSON.parse(readFileSync(auditPath, "utf8")) as AuditFile)
+    : null;
 
 const esc = (s: unknown) =>
   String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -162,6 +175,7 @@ const html = `<!doctype html><html lang="es"><head><meta charset="utf-8">
 <ul>${plan.strategy.approachRationale.map((r: string) => `<li>${esc(r)}</li>`).join("")}</ul>
 <p><strong>Niveles:</strong> ${plan.strategy.levels.map((l: any) => `<span class="badge">${esc(l.value)}</span>`).join(" ")}
 &nbsp; <strong>Tipos:</strong> ${plan.strategy.types.map((t: any) => `<span class="badge">${esc(t.value)}</span>`).join(" ")}</p>
+${plan.strategy.caseBudget ? `<p class="sub"><strong>Presupuesto de casos:</strong> ${plan.strategy.caseBudget.total ?? "sin límite"}${plan.strategy.caseBudget.capped ? " (acotado por política)" : ""} — ${esc(plan.strategy.caseBudget.rationale)}</p>` : ""}
 <h3>Técnicas por nivel</h3>
 <table><thead><tr><th>Nivel</th><th>Técnica</th><th>Obligatoria</th><th>Justificación</th></tr></thead><tbody>
 ${plan.strategy.techniquesByLevel.flatMap((lt: any) =>
@@ -194,11 +208,39 @@ ${plan.analysis.ambiguities.map((a: any) => `
 ${casesHtml}
 ${design.exclusions?.length ? `<h3>Exclusiones declaradas</h3><ul>${design.exclusions.map((e: any) => `<li><strong>${inlineMd(e.what)}</strong> — ${inlineMd(e.why)}</li>`).join("")}</ul>` : ""}
 
-<h2>6 · Reporte del crítico adversarial</h2>
+${audit ? `
+<h2>6 · Auditoría mecánica (determinista, sin modelo)</h2>
+<p class="sub">Cobertura y trazabilidad verificadas por código antes de que el crítico revisara el plan.</p>
+${audit.findings.length === 0
+  ? '<p>✅ Sin huecos estructurales: cada feature, criterio testeable, regla y riesgo prioritario traza a un caso, y las técnicas obligatorias tienen caso en su nivel.</p>'
+  : `<ul>${audit.findings.map((f) => `<li><span class="badge sev-${f.severity === "blocker" ? "blocker" : "major"}">${f.severity === "blocker" ? "Bloqueante" : "Mayor"}</span> ${esc(f.summary)}</li>`).join("")}</ul>`}
+<h3>Matriz de trazabilidad</h3>
+<table><thead><tr><th>Elemento</th><th>Casos que lo cubren</th></tr></thead><tbody>
+${(
+  [
+    ...audit.coverage.features.map((f) => ({ id: f.id, cases: f.cases })),
+    ...audit.coverage.acceptanceCriteria
+      .filter((a) => a.testable)
+      .map((a) => ({ id: a.id, cases: a.cases })),
+    ...audit.coverage.businessRules.map((r) => ({ id: r.id, cases: r.cases })),
+    ...audit.coverage.risks
+      .filter((r) => r.priority)
+      .map((r) => ({ id: `${r.id} (prioritario)`, cases: r.cases })),
+  ] as { id: string; cases: string[] }[]
+)
+  .map(
+    (row) =>
+      `<tr><td><code>${esc(row.id)}</code></td><td>${row.cases.length === 0 ? '<span style="color:var(--blocker)">— sin cobertura</span>' : esc(row.cases.join(", "))}</td></tr>`,
+  )
+  .join("")}
+</tbody></table>
+` : ""}
+
+<h2>7 · Reporte del crítico adversarial</h2>
 <p class="sub">${inlineMd(scope)}</p>
 ${rounds.map((r, i) => findingsHtml(r, i + 1)).join("")}
 
-<h2>7 · Consumo de la corrida</h2>
+<h2>8 · Consumo de la corrida</h2>
 <table><thead><tr><th>Rol</th><th>Modelo</th><th>Tokens entrada</th><th>Tokens salida</th></tr></thead><tbody>
 ${run.calls.map((c: any) => `<tr><td>${esc(c.role)}</td><td><code>${esc(c.model)}</code></td><td>${c.usage.inputTokens.toLocaleString()}</td><td>${c.usage.outputTokens.toLocaleString()}</td></tr>`).join("")}
 </tbody></table>

@@ -49,7 +49,7 @@ const analysisFixture = {
   ambiguities: [],
   signals: {
     context: {
-      changeType: "enhancement",
+      changeType: "bug-fix",
       specQuality: 0.6,
       hasStateModel: false,
       hasApiContract: false,
@@ -72,12 +72,12 @@ const analysisFixture = {
       codeAccess: false,
     },
     traits: {
-      hasOrderedInputDomain: true,
+      hasOrderedInputDomain: false,
       hasDiscretePartitions: true,
       hasStateMachine: false,
-      hasBusinessRules: true,
+      hasBusinessRules: false,
       independentParameters: 1,
-      hasUserWorkflow: true,
+      hasUserWorkflow: false,
       codeAccess: false,
       safetyCritical: false,
     },
@@ -91,28 +91,36 @@ const riskFixture = {
       id: "RSK-1",
       description: "Double discount at the threshold boundary",
       area: "FEA-1",
-      likelihood: 3,
-      impact: 4,
+      likelihood: 2,
+      impact: 3,
       evidence: [{ from: "AC-1", excerpt: "Cart >= 100" }],
     },
   ],
 };
 
-const caseFixture = (id: string, title: string) => ({
+const caseFixture = (id: string, title: string, overrides: Record<string, unknown> = {}) => ({
   id,
   title,
   level: "system",
   type: "functional",
-  technique: "boundary-value-analysis",
+  technique: "equivalence-partitioning",
   priority: "high",
   covers: ["FEA-1"],
   mitigates: ["RSK-1"],
   verifies: ["AC-1"],
+  validates: [],
   preconditions: [],
   dataRequirements: ["cart totalling exactly 100.00"],
   steps: [{ action: "Checkout with 100.00", expected: "10% discount shown" }],
   needsHuman: false,
+  ...overrides,
 });
+
+/** A design with a structural gap: no case covers the testable AC-1. */
+const gappedDesignFixture = {
+  cases: [caseFixture("TC-1", "Sin verificar el criterio", { verifies: [] })],
+  exclusions: [],
+};
 
 const designFixture = {
   cases: [caseFixture("TC-1", "Boundary at exactly 100")],
@@ -187,9 +195,9 @@ describe("runPlanPipeline", () => {
       "designer",
       "critic",
     ]);
-    // Strategy is computed, not asked for: 3x4 risk → high → thorough.
-    expect(result.strategy.risk.overallLevel).toBe("high");
-    expect(result.strategy.depth).toBe("thorough");
+    // Strategy is computed, not asked for: 2x3 risk → medium → standard.
+    expect(result.strategy.risk.overallLevel).toBe("medium");
+    expect(result.strategy.depth).toBe("standard");
     expect(result.critique.verdict).toBe("pass");
     expect(result.revisions).toBe(0);
     expect(result.totalUsage).toEqual({ inputTokens: 400, outputTokens: 200 });
@@ -236,6 +244,109 @@ describe("runPlanPipeline", () => {
     expect(routed.routed.mode).toBe("auto-api");
     // Autonomous + state-mutating = human gate required.
     expect(routed.routed.requiresGate).toBe(true);
+  });
+
+  describe("mechanical audit", () => {
+    it("repairs structural gaps with the designer BEFORE spending a critic call", async () => {
+      const { call, requests } = fakeCaller([
+        analysisFixture,
+        riskFixture,
+        gappedDesignFixture, // AC-1 testable and unverified
+        designFixture, // repaired
+        passCritique,
+      ]);
+
+      const result = await runPlanPipeline(basis, { call });
+
+      // The critic is called ONCE, at the end — the structural round was free.
+      expect(requests.map((r) => r.role)).toEqual([
+        "analyst",
+        "risk-assessor",
+        "designer",
+        "designer",
+        "critic",
+      ]);
+      expect(result.audit.findings).toEqual([]);
+      expect(result.auditHistory).toHaveLength(2);
+      expect(result.auditHistory[0]!.hasBlockers).toBe(true);
+    });
+
+    it("carries the deterministic gaps to the designer as the revision brief", async () => {
+      const { call, requests } = fakeCaller([
+        analysisFixture,
+        riskFixture,
+        gappedDesignFixture,
+        designFixture,
+        passCritique,
+      ]);
+
+      await runPlanPipeline(basis, { call });
+
+      const repairBrief = requests[3]!.user;
+      expect(repairBrief).toContain("Structural gaps found by a deterministic audit");
+      expect(repairBrief).toContain("unverified-criterion");
+    });
+
+    it("hands the critic the coverage table already computed", async () => {
+      const { call, requests } = fakeCaller([
+        analysisFixture,
+        riskFixture,
+        designFixture,
+        passCritique,
+      ]);
+
+      await runPlanPipeline(basis, { call });
+
+      const criticBrief = requests[3]!.user;
+      expect(criticBrief).toContain("Auditoría mecánica");
+      expect(criticBrief).toContain("no la recalcules");
+    });
+
+    it("stops repairing once the revision budget is spent", async () => {
+      const { call, requests } = fakeCaller([
+        analysisFixture,
+        riskFixture,
+        gappedDesignFixture,
+        gappedDesignFixture, // still gapped after one repair
+        passCritique,
+      ]);
+
+      const result = await runPlanPipeline(basis, { call, maxRevisions: 1 });
+
+      // One repair attempt, then it proceeds to the critic with gaps recorded.
+      expect(requests.filter((r) => r.role === "designer")).toHaveLength(2);
+      expect(result.audit.hasBlockers).toBe(true);
+    });
+  });
+
+  describe("case budget", () => {
+    it("reconciles the tenant cap into the strategy instead of overriding it", async () => {
+      const { call, requests } = fakeCaller([
+        analysisFixture,
+        riskFixture,
+        designFixture,
+        passCritique,
+      ]);
+
+      const result = await runPlanPipeline(basis, { call, caseCap: 5 });
+
+      expect(result.strategy.caseBudget.total).toBe(5);
+      // The designer is told the budget AND why it is what it is.
+      expect(requests[2]!.user).toContain("Agreed case budget");
+      expect(requests[2]!.user).toContain(result.strategy.caseBudget.rationale);
+    });
+
+    it("lifts the cap when the tenant sets none", async () => {
+      const { call } = fakeCaller([
+        analysisFixture,
+        riskFixture,
+        designFixture,
+        passCritique,
+      ]);
+
+      const result = await runPlanPipeline(basis, { call, caseCap: null });
+      expect(result.strategy.caseBudget.total).toBeNull();
+    });
   });
 
   it("routes each role to its configured model", async () => {

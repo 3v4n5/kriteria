@@ -282,6 +282,7 @@ describe("runApiCase", () => {
     covers: ["FEA-1"],
     mitigates: [],
     verifies: [],
+    validates: [],
     preconditions: [],
     dataRequirements: [],
     steps,

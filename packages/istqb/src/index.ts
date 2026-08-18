@@ -33,11 +33,64 @@ import {
 } from "./techniques.js";
 import type { Justified, TestDepth, TestLevel, TestType } from "./types.js";
 
+export interface CaseBudget {
+  /** Cases the chosen depth implies across all areas. */
+  implied: { min: number; max: number };
+  /** Agreed ceiling. Null when no economic cap applies. */
+  total: number | null;
+  /** True when policy bound the depth-implied budget down. */
+  capped: boolean;
+  /** Stated in the plan, so a cap is a declared decision, never a silent override. */
+  rationale: string;
+}
+
+/**
+ * Reconciles what depth implies with what the tenant is willing to pay for.
+ *
+ * A cap is a legitimate business decision; hiding it is not. Left implicit,
+ * the plan claims exhaustive depth while shipping a fraction of the cases,
+ * and every reviewer — human or model — correctly flags the contradiction.
+ * Recording it here makes the constraint part of the strategy: coverage is
+ * prioritized by risk, and the plan says so out loud.
+ */
+export function reconcileCaseBudget(
+  perArea: { min: number; max: number },
+  areaCount: number,
+  policyCap: number | null,
+): CaseBudget {
+  const areas = Math.max(1, areaCount);
+  const implied = { min: perArea.min * areas, max: perArea.max * areas };
+
+  if (policyCap === null || implied.min <= policyCap) {
+    return {
+      implied,
+      total: policyCap,
+      capped: false,
+      rationale: `${areas} área(s) × ${perArea.min}-${perArea.max} casos según la profundidad elegida`,
+    };
+  }
+
+  return {
+    implied,
+    total: policyCap,
+    capped: true,
+    rationale:
+      `la profundidad elegida implicaría ${implied.min}-${implied.max} casos en ${areas} área(s); ` +
+      `la política del tenant los limita a ${policyCap}. La cobertura se prioriza por riesgo: ` +
+      `riesgos altos y críticos y técnicas obligatorias primero, y lo que no entra se declara ` +
+      `explícitamente en las exclusiones`,
+  };
+}
+
 export interface StrategyInput {
   context: StrategyContext;
   system: SystemTraits;
   risks: RiskFactor[];
   traits: ConditionTraits;
+  /** Economic ceiling on total cases. Null means depth decides alone. */
+  policyCaseCap?: number | null;
+  /** Distinct areas the budget spans (typically the feature count). */
+  areaCount?: number;
 }
 
 export interface LevelTechniques {
@@ -53,6 +106,8 @@ export interface TestStrategy {
   types: Justified<TestType>[];
   techniquesByLevel: LevelTechniques[];
   caseBudgetPerArea: { min: number; max: number };
+  /** Reconciled total budget: what depth implies, bounded by tenant policy. */
+  caseBudget: CaseBudget;
   entryCriteria: string[];
   exitCriteria: string[];
 }
@@ -98,6 +153,11 @@ export function buildStrategy(input: StrategyInput): TestStrategy {
     types,
     techniquesByLevel,
     caseBudgetPerArea: caseBudgetForDepth(risk.overallDepth),
+    caseBudget: reconcileCaseBudget(
+      caseBudgetForDepth(risk.overallDepth),
+      input.areaCount ?? 1,
+      input.policyCaseCap ?? null,
+    ),
     entryCriteria: buildEntryCriteria(context, input.traits),
     exitCriteria: buildExitCriteria(context, risk, types, techniquesByLevel),
   };
