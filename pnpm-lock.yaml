@@ -29,6 +29,9 @@ importers:
       '@kriteria/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@kriteria/evals':
+        specifier: workspace:*
+        version: link:../../packages/evals
       '@kriteria/execution':
         specifier: workspace:*
         version: link:../../packages/execution
@@ -77,6 +80,15 @@ importers:
       '@kriteria/istqb':
         specifier: workspace:*
         version: link:../istqb
+
+  packages/evals:
+    dependencies:
+      '@kriteria/istqb':
+        specifier: workspace:*
+        version: link:../istqb
+      zod:
+        specifier: ^3.24.1
+        version: 3.25.76
 
   packages/execution:
     dependencies:

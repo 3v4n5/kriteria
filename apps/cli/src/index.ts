@@ -7,6 +7,7 @@
 
 import { parseArgs } from "node:util";
 import { planCommand } from "./plan.js";
+import { evalCommand } from "./eval.js";
 import { reportCommand } from "./report.js";
 import { runCommand } from "./run.js";
 
@@ -18,6 +19,7 @@ Usage:
                    [--api-base-url <url>] [--auto-approve]
                             Ejecuta casos auto-api y luego guía los manuales (reanudable)
   qa report <out/REF>       Genera informe HTML legible de una corrida
+  qa eval [--only REF]      Puntúa los planes contra el golden set (sin costo de API)
 
 Options:
   --from <src>        Work item source: jira:PROJ-123 or file:raw-issue.json
@@ -63,6 +65,24 @@ async function main(): Promise<void> {
       ...(apiBaseUrl ? { apiBaseUrl } : {}),
       ...(apiToken ? { apiToken } : {}),
       autoApprove: values["auto-approve"]!,
+    });
+    return;
+  }
+  if (command === "eval") {
+    const { values } = parseArgs({
+      args: rest,
+      options: {
+        golden: { type: "string", default: "evals/golden" },
+        out: { type: "string", default: "out" },
+        results: { type: "string", default: "evals/results" },
+        only: { type: "string" },
+      },
+    });
+    evalCommand({
+      goldenDir: values.golden!,
+      outDir: values.out!,
+      resultsDir: values.results!,
+      ...(values.only ? { only: values.only } : {}),
     });
     return;
   }
