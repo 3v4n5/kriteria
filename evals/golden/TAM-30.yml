@@ -1,0 +1,61 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# PLANTILLA del golden set. Copiala como <TICKET>.yml y llenala con TU criterio.
+#
+# ⚠ NO la llenes copiando lo que el sistema produjo: eso hace que el eval se
+#   evalue contra si mismo y siempre de 100%. El golden set vale exactamente
+#   lo que valga tu juicio independiente. Lo ideal es escribirlo ANTES de
+#   mirar el plan generado, o al menos sin tenerlo a la vista.
+#
+# Solo llena los campos sobre los que tengas una opinion real. Lo que omitas
+# se reporta como "sin evaluar" — nunca como aprobado.
+# ─────────────────────────────────────────────────────────────────────────────
+
+workItem: TAM-30
+rationale: >-
+  Seguridad y compliance: fuga de Bearer token de Square en CloudWatch (Sev 2, multi-cliente). Pone a prueba si el sistema detecta datos sensibles, activa pruebas de seguridad, exige confirmacion del fix con test rojo-verde, y ve que la rotacion de tokens es parte del alcance y no solo el cambio de codigo.
+
+expect:
+  # Enfoque ISTQB que elegirias como primario:
+  # analytical | model-based | methodical | process-compliant | directed |
+  # regression-averse | reactive
+  approach:
+  # Otros enfoques que aceptarias como razonables para este item
+  approachAlternatives: []
+
+  # smoke | standard | thorough | exhaustive
+  depth:
+  # low | medium | high | critical
+  riskLevel:
+
+  # Niveles que el plan DEBE incluir (los extra no penalizan)
+  # component | component-integration | system | system-integration | acceptance
+  levels: []
+
+  # Tipos que el plan DEBE incluir
+  # functional | performance | security | usability | accessibility |
+  # compatibility | reliability | confirmation | regression
+  types: []
+
+  # Tecnicas que el plan DEBE marcar como obligatorias en algun nivel
+  mandatoryTechniques: []
+
+  # Temas que el plan DEBE levantar como ambiguedad. Escribe las pocas palabras
+  # que buscarias, no frases completas. Ej: ["session token", "prorrateo"]
+  ambiguityTopics: []
+
+  # Riesgos que el plan DEBE identificar, con el mismo criterio de palabras
+  riskTopics: []
+
+  # Rango de casos que consideras sensato para este item
+  minCases:
+  maxCases:
+
+  # ¿Exiges que la auditoria mecanica cierre sin huecos estructurales?
+  requireCleanAudit: true
+
+humanVerdict:
+  # LA pregunta de Fase 0. Llenala DESPUES de leer el informe del plan.
+  # true = "esto es lo que yo habria hecho" · false = "no" · null = pendiente
+  wouldHaveDoneThis: null
+  reviewedBy:
+  notes: ""
