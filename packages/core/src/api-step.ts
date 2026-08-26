@@ -67,7 +67,15 @@ export const ApiStepSchema = z.object({
     }),
   query: z.record(z.string(), z.string()).optional(),
   headers: z.record(z.string(), z.string()).optional(),
-  body: z.unknown().optional(),
+  /**
+   * Raw request body, already JSON-encoded — e.g. `{"total": 100}`.
+   *
+   * A string rather than a free-form object for two reasons: an untyped
+   * schema field is rejected by structured outputs, and the runner sends the
+   * body verbatim, so `${var}` interpolation works inside it without a
+   * serialize-interpolate-reparse round trip.
+   */
+  body: z.string().optional(),
   assertions: z.array(ApiAssertionSchema).min(1),
   /** Capture values for later steps: variable name → json path. */
   extract: z.record(z.string(), z.string()).optional(),

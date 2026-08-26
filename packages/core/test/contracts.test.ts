@@ -1,4 +1,5 @@
 import { buildStrategy } from "@kriteria/istqb";
+import { z } from "zod/v4";
 import { describe, expect, it } from "vitest";
 import {
   AnalysisSchema,
@@ -121,6 +122,56 @@ const risks: RiskRegister = {
 // ---------------------------------------------------------------------------
 // Contract validation
 // ---------------------------------------------------------------------------
+
+describe("structured-output compatibility", () => {
+  // The API rejects any schema field without a type when anyOf/oneOf/allOf is
+  // absent — a z.unknown() body cost a live run to discover. This walks the
+  // generated JSON Schema so the next such field fails here, not in
+  // production.
+  const walk = (node: unknown, path: string, offenders: string[]): void => {
+    if (typeof node !== "object" || node === null) return;
+    const schema = node as Record<string, unknown>;
+    const isSchemaNode =
+      "type" in schema ||
+      "anyOf" in schema ||
+      "oneOf" in schema ||
+      "allOf" in schema ||
+      "$ref" in schema ||
+      "enum" in schema ||
+      "const" in schema;
+    const looksLikeSchema =
+      "properties" in schema || "items" in schema || "additionalProperties" in schema;
+    if (!isSchemaNode && looksLikeSchema) offenders.push(path);
+
+    for (const [key, value] of Object.entries(schema)) {
+      if (key === "properties" && typeof value === "object" && value !== null) {
+        for (const [prop, sub] of Object.entries(value as Record<string, unknown>)) {
+          if (
+            typeof sub === "object" &&
+            sub !== null &&
+            Object.keys(sub as object).length === 0
+          ) {
+            offenders.push(`${path}.${prop}`);
+          }
+          walk(sub, `${path}.${prop}`, offenders);
+        }
+      } else {
+        walk(value, `${path}.${key}`, offenders);
+      }
+    }
+  };
+
+  it.each([
+    ["AnalysisSchema", AnalysisSchema],
+    ["RiskRegisterSchema", RiskRegisterSchema],
+    ["DesignOutputSchema", DesignOutputSchema],
+    ["CriticReportSchema", CriticReportSchema],
+  ])("%s has a type on every field", (_name, schema) => {
+    const offenders: string[] = [];
+    walk(z.toJSONSchema(schema, { io: "input" }), "$", offenders);
+    expect(offenders).toEqual([]);
+  });
+});
 
 describe("TestBasisSchema", () => {
   it("accepts a normalized work item and applies defaults", () => {

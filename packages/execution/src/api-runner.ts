@@ -108,9 +108,7 @@ export async function runApiStep(
     ...interpolateRecord(step.headers ?? {}, variables),
   };
   const body =
-    step.body === undefined
-      ? undefined
-      : interpolate(JSON.stringify(step.body), variables);
+    step.body === undefined ? undefined : interpolate(step.body, variables);
   if (body !== undefined && !hasHeader(headers, "content-type")) {
     headers["content-type"] = "application/json";
   }

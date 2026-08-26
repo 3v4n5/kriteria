@@ -157,7 +157,7 @@ describe("runCommand", () => {
             api: {
               method: "POST",
               path: "/orders",
-              body: { total: 100 },
+              body: JSON.stringify({ total: 100 }),
               assertions: [{ type: "status", equals: 201 }],
             },
           },
