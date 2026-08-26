@@ -24,44 +24,54 @@ import {
 } from "@kriteria/istqb";
 import { z } from "zod/v4";
 
+/**
+ * A blank field in a YAML template parses as `null`, and a blank field IS an
+ * unfilled one — so null is normalised to "absent" before validation. Without
+ * this the template cannot be used as shipped, which is the one thing a
+ * template must never do.
+ */
+function blankAsAbsent<T extends z.ZodType>(schema: T) {
+  return z.preprocess((value) => (value === null ? undefined : value), schema);
+}
+
 export const ExpectationSchema = z.object({
   /** The approach a senior QA would pick as primary. */
-  approach: z.enum(TEST_APPROACHES).optional(),
+  approach: blankAsAbsent(z.enum(TEST_APPROACHES).optional()),
   /** Other approaches you would accept as reasonable for this item. */
-  approachAlternatives: z.array(z.enum(TEST_APPROACHES)).default([]),
-  depth: z.enum(TEST_DEPTHS).optional(),
-  riskLevel: z.enum(RISK_LEVELS).optional(),
+  approachAlternatives: blankAsAbsent(z.array(z.enum(TEST_APPROACHES)).default([])),
+  depth: blankAsAbsent(z.enum(TEST_DEPTHS).optional()),
+  riskLevel: blankAsAbsent(z.enum(RISK_LEVELS).optional()),
   /** Levels the plan MUST include. Extra levels are not penalised. */
-  levels: z.array(z.enum(TEST_LEVELS)).default([]),
+  levels: blankAsAbsent(z.array(z.enum(TEST_LEVELS)).default([])),
   /** Types the plan MUST include. */
-  types: z.array(z.enum(TEST_TYPES)).default([]),
+  types: blankAsAbsent(z.array(z.enum(TEST_TYPES)).default([])),
   /** Techniques the plan MUST mark mandatory somewhere. */
-  mandatoryTechniques: z.array(z.enum(TEST_TECHNIQUES)).default([]),
+  mandatoryTechniques: blankAsAbsent(z.array(z.enum(TEST_TECHNIQUES)).default([])),
   /**
    * Topics the plan MUST raise as ambiguities, matched loosely by keyword.
    * Phrase them as the few words you would search for, not full sentences.
    */
-  ambiguityTopics: z.array(z.string()).default([]),
+  ambiguityTopics: blankAsAbsent(z.array(z.string()).default([])),
   /** Risks the plan MUST identify, matched the same way. */
-  riskTopics: z.array(z.string()).default([]),
-  minCases: z.number().int().positive().optional(),
-  maxCases: z.number().int().positive().optional(),
+  riskTopics: blankAsAbsent(z.array(z.string()).default([])),
+  minCases: blankAsAbsent(z.number().int().positive().optional()),
+  maxCases: blankAsAbsent(z.number().int().positive().optional()),
   /** The mechanical audit must end with no structural gaps. */
-  requireCleanAudit: z.boolean().default(true),
+  requireCleanAudit: blankAsAbsent(z.boolean().default(true)),
 });
 export type Expectation = z.infer<typeof ExpectationSchema>;
 
 export const GoldenEntrySchema = z.object({
   workItem: z.string().min(1),
   /** One line on why this item is in the set — keeps the set intentional. */
-  rationale: z.string().optional(),
+  rationale: blankAsAbsent(z.string().optional()),
   expect: ExpectationSchema,
   humanVerdict: z
     .object({
       /** The Fase-0 question: "is this what I would have done?" */
       wouldHaveDoneThis: z.boolean().nullable().default(null),
-      reviewedBy: z.string().optional(),
-      notes: z.string().default(""),
+      reviewedBy: blankAsAbsent(z.string().optional()),
+      notes: blankAsAbsent(z.string().default("")),
     })
     .default({ wouldHaveDoneThis: null, notes: "" }),
 });

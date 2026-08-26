@@ -197,6 +197,33 @@ describe("GoldenEntrySchema", () => {
     expect(entry.expect.requireCleanAudit).toBe(true);
   });
 
+  it("accepts the shipped template, whose fields are all blank", () => {
+    // A blank YAML field parses as null. If the schema rejected that, the
+    // template could not be used as delivered — the one thing it must do.
+    const entry = GoldenEntrySchema.parse({
+      workItem: "TICKET-123",
+      rationale: null,
+      expect: {
+        approach: null,
+        approachAlternatives: [],
+        depth: null,
+        riskLevel: null,
+        levels: [],
+        types: [],
+        mandatoryTechniques: [],
+        ambiguityTopics: [],
+        riskTopics: [],
+        minCases: null,
+        maxCases: null,
+        requireCleanAudit: true,
+      },
+      humanVerdict: { wouldHaveDoneThis: null, reviewedBy: null, notes: "" },
+    });
+    expect(entry.expect.approach).toBeUndefined();
+    expect(entry.expect.levels).toEqual([]);
+    expect(entry.humanVerdict.reviewedBy).toBeUndefined();
+  });
+
   it("rejects a vocabulary typo instead of silently ignoring it", () => {
     const parsed = GoldenEntrySchema.safeParse({
       workItem: "T-1",
