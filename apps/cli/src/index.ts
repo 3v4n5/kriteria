@@ -26,6 +26,9 @@ Options:
   --out <dir>         Output directory (default: out)
   --revisions <n>     Max designer revision rounds on blocker findings (default: 1)
   --tenant <slug>     Tenant identifier (reserved for memory injection)
+  --playbooks         Inject procedural playbooks for the selected techniques.
+                      Off by default: it changes the designer's input, so a
+                      plan built with it is not comparable to one built without
   -h, --help          Show this help
 
 Environment:
@@ -106,6 +109,7 @@ async function main(): Promise<void> {
       out: { type: "string", default: "out" },
       revisions: { type: "string", default: "1" },
       tenant: { type: "string" },
+      playbooks: { type: "boolean", default: false },
       help: { type: "boolean", short: "h" },
     },
   });
@@ -120,6 +124,7 @@ async function main(): Promise<void> {
     from: values.from,
     outDir: values.out!,
     maxRevisions: Number.parseInt(values.revisions!, 10) || 1,
+    playbooks: values.playbooks!,
     ...(values.tenant ? { tenant: values.tenant } : {}),
   });
 }

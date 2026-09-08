@@ -23,6 +23,8 @@ export interface PlanCommandOptions {
   outDir: string;
   maxRevisions: number;
   tenant?: string;
+  /** Inject procedural playbooks into the designer brief. Off by default. */
+  playbooks?: boolean;
 }
 
 export async function planCommand(options: PlanCommandOptions): Promise<void> {
@@ -58,6 +60,7 @@ export async function planCommand(options: PlanCommandOptions): Promise<void> {
   const result = await runPlanPipeline(basis, {
     call: createAnthropicCaller(),
     maxRevisions: options.maxRevisions,
+    playbooks: options.playbooks ?? false,
     cache: fileStageCache(join(dir, ".cache")),
     log: (msg) => console.log(`  ${msg}`),
   });
@@ -196,6 +199,9 @@ function writeArtifacts(dir: string, ref: string, result: PlanResult): void {
         revisions: result.revisions,
         verdict: result.critique.verdict,
         auditFindings: result.audit.findings.length,
+        // Which procedure produced this plan — a plan built with playbooks is
+        // not comparable to one built without them.
+        playbookVersions: result.playbookVersions,
         totalUsage: result.totalUsage,
         calls: result.runs,
       },

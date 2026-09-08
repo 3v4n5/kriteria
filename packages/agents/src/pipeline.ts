@@ -33,6 +33,13 @@ import {
   type RoutedExecution,
   type TestStrategy,
 } from "@kriteria/istqb";
+import {
+  loadRegistry,
+  renderPlaybooks,
+  versionStamps,
+  type PlaybookRegistry,
+  type PlaybookVersionStamp,
+} from "@kriteria/playbooks";
 import { SYSTEM_BY_ROLE } from "./prompts.js";
 import {
   DEFAULT_ROUTING,
@@ -67,6 +74,13 @@ export interface PipelineOptions {
    * tenant routes every case to humans until capabilities are configured.
    */
   capabilities?: ExecutionCapabilities;
+  /**
+   * Procedural memory: inject the playbooks for the techniques the engine
+   * selected. OFF by default — it changes the designer's input, so turning it
+   * on invalidates any baseline plan you are still comparing against. Pass
+   * `true` for the shipped library, or a registry to pin your own.
+   */
+  playbooks?: boolean | PlaybookRegistry;
   log?: (message: string) => void;
 }
 
@@ -85,6 +99,8 @@ export interface PlanResult {
   executionPlan: RoutedCase[];
   /** Deterministic audit of the final design. */
   audit: PlanAudit;
+  /** Procedure versions injected, so the plan can be reproduced exactly. */
+  playbookVersions: PlaybookVersionStamp[];
   /** One audit per design revision, first to last. */
   auditHistory: PlanAudit[];
   critique: CriticReport;
@@ -171,6 +187,23 @@ ${json(analysis)}`,
     `▸ strategy (deterministic): ${strategy.approach.primary.approach}, depth ${strategy.depth}`,
   );
 
+  // 3b. Procedure — deterministic selection from the strategy, zero tokens
+  //     to compute but not free to inject, so it runs under a char budget and
+  //     names whatever did not fit.
+  const registry =
+    options.playbooks === true
+      ? loadRegistry()
+      : options.playbooks === false || options.playbooks === undefined
+        ? undefined
+        : options.playbooks;
+  const playbooks = registry?.select(strategy.techniquesByLevel);
+  const playbookBlock = playbooks ? renderPlaybooks(playbooks) : "";
+  if (playbooks) {
+    log(
+      `▸ playbooks (deterministic): ${playbooks.loaded.length}/${playbooks.index.length} cargado(s), ${playbooks.charsUsed} car.`,
+    );
+  }
+
   // 4. Design
   const designerBrief = `${renderBasis(basis)}
 
@@ -188,7 +221,9 @@ Total cases: AT MOST ${strategy.caseBudget.total ?? "sin límite"}.
 Rationale: ${strategy.caseBudget.rationale}.
 Prioritize by risk — high/critical risks and mandatory techniques first — and
 declare in "exclusions" whatever the budget leaves out, with its reason. Depth
-governs how thorough each case is; this budget governs how many.`;
+governs how thorough each case is; this budget governs how many.${
+    playbookBlock ? `\n\n${playbookBlock}` : ""
+  }`;
 
   let design = DesignOutputSchema.parse(
     await stage("designer", DesignOutputSchema, designerBrief),
@@ -309,6 +344,7 @@ ${json(design)}`,
     design,
     executionPlan,
     audit,
+    playbookVersions: playbooks ? versionStamps(playbooks) : [],
     auditHistory,
     critique,
     critiqueHistory,

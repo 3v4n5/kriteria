@@ -1,5 +1,5 @@
 {
-  "name": "@kriteria/agents",
+  "name": "@kriteria/playbooks",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -11,11 +11,7 @@
     "typecheck": "tsc -p tsconfig.json"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.115.0",
-    "@kriteria/core": "workspace:*",
-    "@kriteria/coverage": "workspace:*",
     "@kriteria/istqb": "workspace:*",
-    "@kriteria/playbooks": "workspace:*",
-    "zod": "^3.24.1"
+    "yaml": "^2.7.0"
   }
 }

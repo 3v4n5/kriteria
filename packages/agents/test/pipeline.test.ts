@@ -319,6 +319,65 @@ describe("runPlanPipeline", () => {
     });
   });
 
+  describe("playbooks", () => {
+    it("stays out of the brief by default, so a baseline plan is reproducible", async () => {
+      const { call, requests } = fakeCaller([
+        analysisFixture,
+        riskFixture,
+        designFixture,
+        passCritique,
+      ]);
+
+      const result = await runPlanPipeline(basis, { call });
+
+      const designerBrief = requests.find((r) => r.role === "designer")!.user;
+      expect(designerBrief).not.toContain("Procedure (playbooks)");
+      expect(result.playbookVersions).toEqual([]);
+    });
+
+    it("injects procedure only for the techniques the engine selected", async () => {
+      const { call, requests } = fakeCaller([
+        analysisFixture,
+        riskFixture,
+        designFixture,
+        passCritique,
+      ]);
+
+      const result = await runPlanPipeline(basis, { call, playbooks: true });
+
+      const designerBrief = requests.find((r) => r.role === "designer")!.user;
+      expect(designerBrief).toContain("Procedure (playbooks)");
+
+      // The engine chose the techniques; the registry only supplies method for
+      // those. A technique nobody selected must not ride along on every call.
+      const selected = new Set(
+        result.strategy.techniquesByLevel.flatMap((l) =>
+          l.techniques.map((t) => t.technique),
+        ),
+      );
+      expect(selected.size).toBeGreaterThan(0);
+      for (const stamp of result.playbookVersions) {
+        expect(stamp.sha256).toMatch(/^[a-f0-9]{64}$/);
+      }
+      expect(result.playbookVersions.length).toBeLessThanOrEqual(selected.size);
+      expect(result.playbookVersions.length).toBeGreaterThan(0);
+    });
+
+    it("does not leak procedure into the critic, whose job is to refute independently", async () => {
+      const { call, requests } = fakeCaller([
+        analysisFixture,
+        riskFixture,
+        designFixture,
+        passCritique,
+      ]);
+
+      await runPlanPipeline(basis, { call, playbooks: true });
+
+      const criticBrief = requests.find((r) => r.role === "critic")!.user;
+      expect(criticBrief).not.toContain("Procedure (playbooks)");
+    });
+  });
+
   describe("case budget", () => {
     it("reconciles the tenant cap into the strategy instead of overriding it", async () => {
       const { call, requests } = fakeCaller([
