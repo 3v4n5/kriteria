@@ -319,6 +319,84 @@ describe("runPlanPipeline", () => {
     });
   });
 
+  describe("deterministic trait correction", () => {
+    // The defect this exists for: an analyst reported hasOrderedInputDomain
+    // false on a ticket whose own business rule capped a field at 80
+    // characters, so the engine's mandatory-BVA rule never fired and the plan
+    // shipped with no boundary cases at all.
+    const withBoundedRule = {
+      ...analysisFixture,
+      businessRules: [
+        {
+          id: "BR-1",
+          statement: "The name field must not exceed 80 characters",
+          features: ["FEA-1"],
+          evidence: [{ from: "AC-1", excerpt: "maximum of 80 characters" }],
+        },
+      ],
+    };
+
+    // The fixture cases use equivalence-partitioning, so once BVA is mandatory
+    // the mechanical audit reports technique-not-applied and asks for a
+    // re-design — for free, before the critic ever runs.
+    const designWithBoundaries = {
+      cases: [
+        caseFixture("TC-1", "Name at exactly 80 characters", {
+          technique: "boundary-value-analysis",
+          validates: ["BR-1"],
+        }),
+        caseFixture("TC-2", "Name at 81 characters is rejected", {
+          technique: "boundary-value-analysis",
+          validates: ["BR-1"],
+        }),
+        // Equivalence partitioning stays mandatory too, so a repair that only
+        // adds boundaries would still leave a gap.
+        caseFixture("TC-3", "Name well inside the limit", { validates: ["BR-1"] }),
+      ],
+      exclusions: [],
+    };
+
+    it("overrides the model's trait on the model's own evidence", async () => {
+      const { call, requests } = fakeCaller([
+        withBoundedRule,
+        riskFixture,
+        designFixture,
+        designWithBoundaries,
+        passCritique,
+      ]);
+
+      const result = await runPlanPipeline(basis, { call });
+
+      // The correction propagated all the way to a free structural repair:
+      // two designer calls, and no extra critic round to pay for.
+      expect(requests.filter((r) => r.role === "designer")).toHaveLength(2);
+      expect(result.audit.findings).toEqual([]);
+      expect(result.traitCorrections).toHaveLength(1);
+      expect(result.traitCorrections[0]).toMatchObject({
+        trait: "hasOrderedInputDomain",
+        from: false,
+        to: true,
+      });
+      // The correction has to actually change the strategy, not just be noted.
+      const techniques = result.strategy.techniquesByLevel.flatMap((l) => l.techniques);
+      const bva = techniques.find((t) => t.technique === "boundary-value-analysis");
+      expect(bva?.mandatory).toBe(true);
+    });
+
+    it("leaves the trait alone when the analysis carries no bound", async () => {
+      const { call } = fakeCaller([
+        analysisFixture,
+        riskFixture,
+        designFixture,
+        passCritique,
+      ]);
+
+      const result = await runPlanPipeline(basis, { call });
+
+      expect(result.traitCorrections).toEqual([]);
+    });
+  });
+
   describe("playbooks", () => {
     it("stays out of the brief by default, so a baseline plan is reproducible", async () => {
       const { call, requests } = fakeCaller([

@@ -27,11 +27,13 @@ import {
 import { auditPlan, renderAudit, type PlanAudit } from "@kriteria/coverage";
 import {
   buildStrategy,
+  correctOrderedDomainTrait,
   routeExecution,
   type ExecutionCapabilities,
   type ExecutionMode,
   type RoutedExecution,
   type TestStrategy,
+  type TraitCorrection,
 } from "@kriteria/istqb";
 import {
   loadRegistry,
@@ -101,6 +103,12 @@ export interface PlanResult {
   audit: PlanAudit;
   /** Procedure versions injected, so the plan can be reproduced exactly. */
   playbookVersions: PlaybookVersionStamp[];
+  /**
+   * Model-supplied traits the engine overrode on its own evidence. Recorded
+   * rather than applied silently: a correction is a signal the analyst prompt
+   * needs work, and it only shows up if we keep it.
+   */
+  traitCorrections: TraitCorrection[];
   /** One audit per design revision, first to last. */
   auditHistory: PlanAudit[];
   critique: CriticReport;
@@ -176,8 +184,30 @@ ${json(analysis)}`,
   );
 
   // 3. Strategy — deterministic, zero tokens.
+  //
+  //    First, verify the one trait the engine can check for itself.
+  //    hasOrderedInputDomain drives the mandatory-BVA rule, and a spec that
+  //    says "maximum of 80 characters" has an ordered domain as a matter of
+  //    fact. Same stance as buildStrategy recomputing overall risk instead of
+  //    trusting the caller: where the text carries a numeric bound and the
+  //    model said there was none, code wins.
+  const strategyInput = toStrategyInput(analysis, riskRegister);
+  const traitCorrections: TraitCorrection[] = [];
+  const orderedDomain = correctOrderedDomainTrait(
+    strategyInput.traits.hasOrderedInputDomain,
+    traitEvidenceTexts(analysis, riskRegister),
+  );
+  if (orderedDomain) {
+    traitCorrections.push(orderedDomain);
+    strategyInput.traits = {
+      ...strategyInput.traits,
+      hasOrderedInputDomain: orderedDomain.to,
+    };
+    log(`▸ trait corregido (determinista): ${orderedDomain.reason}`);
+  }
+
   const strategy = buildStrategy({
-    ...toStrategyInput(analysis, riskRegister),
+    ...strategyInput,
     areaCount: analysis.features.length,
     // `??` would collapse an explicit null ("no cap") into the default, so
     // absence and an intentional lifting of the cap are distinguished here.
@@ -345,6 +375,7 @@ ${json(design)}`,
     executionPlan,
     audit,
     playbookVersions: playbooks ? versionStamps(playbooks) : [],
+    traitCorrections,
     auditHistory,
     critique,
     critiqueHistory,
@@ -424,6 +455,23 @@ function renderDevelopment(basis: TestBasis): string {
   ];
   if (lines.length === 0) return "(none discovered)";
   return `${lines.join("\n")}\n(discovered via: ${dev.discoveredVia.join(", ")})`;
+}
+
+/**
+ * The spec-derived text the trait verifier scans.
+ *
+ * Deliberately the ANALYSIS and the RISK REGISTER rather than the raw item:
+ * these are the model's own words, so a correction is an internal
+ * contradiction the engine can point at, not a disagreement about what the
+ * ticket meant. Business rules come first — a numeric bound is most often
+ * stated there.
+ */
+function traitEvidenceTexts(analysis: Analysis, risks: RiskRegister): string[] {
+  return [
+    ...analysis.businessRules.map((r) => r.statement),
+    ...analysis.features.map((f) => `${f.name}. ${f.summary}`),
+    ...risks.factors.map((f) => f.description),
+  ];
 }
 
 /** The slice of the strategy the designer needs — not the whole object. */

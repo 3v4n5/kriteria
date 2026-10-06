@@ -202,6 +202,9 @@ function writeArtifacts(dir: string, ref: string, result: PlanResult): void {
         // Which procedure produced this plan — a plan built with playbooks is
         // not comparable to one built without them.
         playbookVersions: result.playbookVersions,
+        // Traits the engine overrode. A non-empty list here is a standing
+        // signal that the analyst prompt needs work.
+        traitCorrections: result.traitCorrections,
         totalUsage: result.totalUsage,
         calls: result.runs,
       },
