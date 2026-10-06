@@ -232,3 +232,40 @@ describe("GoldenEntrySchema", () => {
     expect(parsed.success).toBe(false);
   });
 });
+
+describe("topic matching across languages", () => {
+  // The plan is generated in English; a golden entry is written in whatever
+  // language its author thinks in. Without alternatives a Spanish topic can
+  // never match an English risk description, and a risk the plan DID identify
+  // is reported as a gap — a false failure in the measurement instrument.
+  const withRisk = (description: string): ActualPlan => ({
+    ...actual,
+    risks: [description],
+  });
+
+  const riskDimension = (entry: GoldenEntry, plan: ActualPlan) =>
+    scorePlan(entry, plan).dimensions.find((d) => d.dimension === "riesgos identificados")!;
+
+  it("matches when any `|` alternative appears in the plan", () => {
+    const d = riskDimension(
+      golden({ riskTopics: ["truncamiento|truncate"] }),
+      withRisk("lowering the column could truncate existing vendor data"),
+    );
+    expect(d.status).toBe("match");
+  });
+
+  it("still reports a gap when no alternative appears", () => {
+    const d = riskDimension(
+      golden({ riskTopics: ["truncamiento|truncate"] }),
+      withRisk("timezone drift on the default date"),
+    );
+    expect(d.status).toBe("mismatch");
+  });
+
+  it("does not let an empty alternative match everything", () => {
+    // A blank topic matching every plan would turn the instrument into a
+    // rubber stamp, so it has to fail closed.
+    const d = riskDimension(golden({ riskTopics: ["|"] }), withRisk("cualquier cosa"));
+    expect(d.status).toBe("mismatch");
+  });
+});

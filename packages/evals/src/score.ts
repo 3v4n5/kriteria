@@ -66,9 +66,27 @@ function normalize(text: string): string {
     .toLowerCase();
 }
 
+/**
+ * Does the plan mention this topic?
+ *
+ * Containment, but a topic may list alternatives separated by `|` and matches
+ * when ANY of them appears. That exists because the plan is generated in
+ * English while a golden entry is written in whatever language its author
+ * thinks in: `truncamiento|truncate` is the honest way to say "either
+ * spelling counts". No stemming and no fuzzy matching — a false match would
+ * silently turn a real gap into a pass, which is the one failure mode a
+ * measurement instrument must not have.
+ */
 function mentions(haystack: readonly string[], topic: string): boolean {
-  const needle = normalize(topic);
-  return haystack.some((entry) => normalize(entry).includes(needle));
+  const alternatives = topic
+    .split("|")
+    .map((part) => normalize(part).trim())
+    .filter((part) => part.length > 0);
+  if (alternatives.length === 0) return false;
+  return haystack.some((entry) => {
+    const text = normalize(entry);
+    return alternatives.some((needle) => text.includes(needle));
+  });
 }
 
 export function scorePlan(golden: GoldenEntry, actual: ActualPlan): EvalResult {

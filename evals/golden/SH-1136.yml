@@ -1,61 +1,101 @@
 # ─────────────────────────────────────────────────────────────────────────────
-# PLANTILLA del golden set. Copiala como <TICKET>.yml y llenala con TU criterio.
+# ⚠ PROCEDENCIA — leelo antes de confiar en el puntaje.
 #
-# ⚠ NO la llenes copiando lo que el sistema produjo: eso hace que el eval se
-#   evalue contra si mismo y siempre de 100%. El golden set vale exactamente
-#   lo que valga tu juicio independiente. Lo ideal es escribirlo ANTES de
-#   mirar el plan generado, o al menos sin tenerlo a la vista.
+# El bloque `expect` NO lo escribio un QA humano. Lo derivo Claude (opus-5) a
+# pedido de Evans, razonando sobre el ticket crudo y sobre ISTQB. Quien lo
+# derivo ya habia visto el plan generado y construyo el sistema: esta
+# contaminado. Por eso:
+#   · ACUERDO   → no prueba casi nada; la contaminacion empuja al acuerdo.
+#   · DESACUERDO → si es señal.
 #
-# Solo llena los campos sobre los que tengas una opinion real. Lo que omitas
-# se reporta como "sin evaluar" — nunca como aprobado.
+# Esto NO cierra el gate de Fase 0. `wouldHaveDoneThis` sigue null porque
+# "¿es esto lo que yo habria hecho?" solo la puede responder Evans.
+#
+# ── Correccion v2 (misma sesion) ─────────────────────────────────────────────
+# La v1 se derivo SOLO del campo description, y el TestBasis tambien incluye los
+# comentarios. Los comentarios (auditoria humana de Nicolas Londoño) cierran
+# cuatro de los 12 issues, asi que la v1 exigia cosas factualmente equivocadas.
+# Lo corregido — errores sobre el INSUMO, no ajustes para subir el puntaje:
+#   · quitado "unit cost" de ambiguedades  → comentario 2: "answered — it is
+#     derived by design". No es pregunta abierta.
+#   · quitado "expenses"                   → comentario 2: "already fixed by SH-1222".
+#   · quitado "notes"                      → comentario 1: el backend ya impone
+#     max(500). El limite si esta especificado.
+#   · quitado "datos existentes"           → el sistema SI lo levanta, dentro de la
+#     ambiguedad del limite de 80 y en RSK-7. Era mal keyword mio.
+#   · "truncamiento" → "truncamiento|truncate" → el plan se genera en INGLES.
+#   · quitado "huerfanas" de riesgos       → Issues 6/11 estan bloqueados; no hay
+#     nada que probar, exigir ese riesgo era incorrecto.
+#   · casos 28..45 → 18..32                → con 2 y 4 ya resueltos, 3 respondido y
+#     1/6/11 bloqueados, la superficie viva son 9 features, no 12 issues.
+#
+# Lo que NO se movio, porque es desacuerdo de criterio y no error de hecho:
+# profundidad, nivel de riesgo y tecnicas obligatorias.
 # ─────────────────────────────────────────────────────────────────────────────
 
 workItem: SH-1136
 rationale: >-
-  Spec deliberadamente debil: 12 issues en un ticket con preguntas abiertas sin resolver (Issue 3 pide definir el calculo antes de implementar, Issue 7 pide un limite de caracteres sin decir cual) y duplicacion (Issues 6 y 11). Pone a prueba la deteccion de ambiguedades y si bloquea en vez de inventar supuestos.
+  Spec deliberadamente debil: 12 issues en un ticket con preguntas abiertas sin resolver y duplicacion (Issues 6 y 11). Pone a prueba la deteccion de ambiguedades y si bloquea en vez de inventar supuestos. Los comentarios traen una auditoria humana completa, asi que tambien mide si el sistema lee el hilo y no solo la descripcion.
 
 expect:
-  # Enfoque ISTQB que elegirias como primario:
-  # analytical | model-based | methodical | process-compliant | directed |
-  # regression-averse | reactive
-  approach:
-  # Otros enfoques que aceptarias como razonables para este item
-  approachAlternatives: []
+  # 9 features heterogeneas con spec floja y mitad del ticket bloqueado: hay que
+  # triar por riesgo, no cubrir uniformemente.
+  approach: analytical
+  approachAlternatives: [reactive, methodical]
 
-  # smoke | standard | thorough | exhaustive
-  depth:
-  # low | medium | high | critical
-  riskLevel:
+  # DESACUERDO SOSTENIDO (el sistema dice standard/medium).
+  # RSK-7 del propio sistema dice que bajar la columna de 255 a 80 "could truncate
+  # existing vendor data in production" — perdida de datos, impacto 4. El sistema
+  # le puso probabilidad 2 porque la decision esta frenada; yo le pongo 3 porque
+  # el freno es un supuesto de trabajo, no un control implementado. 4x3=12 → high.
+  # Es debatible: si Purchase Orders aun no tiene datos de produccion, medium es
+  # lo correcto. La rama `qa/test-api-product-SH-1128` sugiere modulo en
+  # construccion, asi que esta dimension puede caer del lado del sistema.
+  depth: thorough
+  riskLevel: high
 
-  # Niveles que el plan DEBE incluir (los extra no penalizan)
-  # component | component-integration | system | system-integration | acceptance
-  levels: []
+  # Issues 7 y 8 piden validacion "both on the frontend and backend" — dos niveles
+  # explicitos. El select de Vendor cruza frontend/backend.
+  levels: [component, system-integration, system]
 
-  # Tipos que el plan DEBE incluir
-  # functional | performance | security | usability | accessibility |
-  # compatibility | reliability | confirmation | regression
-  types: []
+  # functional obvio; confirmation porque es ticket de bugs; regression porque los
+  # renombres tocan todo el modulo y RSK-3 es una contradiccion monetaria ya
+  # corregida que puede volver; usability porque el titulo dice "UX improvements".
+  types: [functional, confirmation, regression, usability]
 
-  # Tecnicas que el plan DEBE marcar como obligatorias en algun nivel
-  mandatoryTechniques: []
+  # DESACUERDO SOSTENIDO, y el mas fuerte de los dos.
+  # Issue 8 fija un maximo de 80 caracteres y el backend ya impone 500 en Notes.
+  # Mas aun: el propio risk-assessor escribio en RSK-2 "boundary values (0,
+  # negative, very small decimals)" y en RSK-4 "at the boundary". El sistema
+  # identifico el riesgo de limites y aun asi no eligio la tecnica de limites,
+  # porque el analista marco hasOrderedInputDomain: false. Es una contradiccion
+  # interna, no una diferencia de gusto.
+  mandatoryTechniques:
+    - boundary-value-analysis
+    - decision-table
+    - equivalence-partitioning
 
-  # Temas que el plan DEBE levantar como ambiguedad. Escribe las pocas palabras
-  # que buscarias, no frases completas. Ej: ["session token", "prorrateo"]
-  ambiguityTopics: []
+  # Solo las que siguen abiertas despues de leer los comentarios.
+  ambiguityTopics:
+    - "80"      # ¿el limite aplica al PO name o al vendor name?
+    - vendor    # ¿el modulo Vendor entra en este ticket o es bloqueador?
 
-  # Riesgos que el plan DEBE identificar, con el mismo criterio de palabras
-  riskTopics: []
+  riskTopics:
+    - truncamiento|truncate   # datos actuales de 255 contra el nuevo limite de 80
+    - rename                  # relabel ahead del esquema corrompe el significado
+    - backend                 # validacion que vive solo en el frontend
 
-  # Rango de casos que consideras sensato para este item
-  minCases:
-  maxCases:
+  # 9 features a profundidad standard/thorough: ~2-3 casos cada una, mas una tabla
+  # de decision para Issue 12 y juegos de limites en cantidad y notas.
+  minCases: 18
+  maxCases: 32
 
-  # ¿Exiges que la auditoria mecanica cierre sin huecos estructurales?
   requireCleanAudit: true
 
 humanVerdict:
-  # LA pregunta de Fase 0. Llenala DESPUES de leer el informe del plan.
-  # true = "esto es lo que yo habria hecho" · false = "no" · null = pendiente
+  # Intencionalmente null: es LA pregunta de Fase 0 y no la puede responder ni el
+  # sistema ni quien lo construyo.
   wouldHaveDoneThis: null
-  reviewedBy:
-  notes: ""
+  reviewedBy: "claude-opus-5 (derivado del ticket, NO juicio humano — pendiente Evans)"
+  notes: >-
+    v2. Expect derivado por Claude, no por un QA humano, y contaminado: quien lo derivo ya habia visto el plan. Solo los desacuerdos son señal. Dos desacuerdos sostenidos: (a) riesgo/profundidad high+thorough contra medium+standard, debatible y posiblemente del lado del sistema si el modulo no tiene datos en produccion; (b) boundary-value-analysis ausente del plan, que NO es debatible — el risk-assessor nombro valores limite en RSK-2 y RSK-4 mientras el analista declaraba hasOrderedInputDomain: false. Evans ya sabia de (b) antes de que se llenara este archivo, asi que esa dimension venia informada. Cuando Evans de su veredicto conviene que reescriba expect con su propio criterio y se compare contra esta version.
