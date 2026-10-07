@@ -64,13 +64,13 @@ h2. Notes
 - **AC-4** A successfully collected installment creates the expected savings-account charge-payment transaction.
 - **AC-5** A successfully collected installment reduces the savings-account balance by the collected amount.
 - **AC-6** A successfully collected recurring installment advances the charge to its next due date.
-- **AC-7** When an account has insufficient balance for an installment:
+- **AC-7** When an account has insufficient balance for an installment: the installment remains outstanding; the charge's due date does not advance; further installments for that recurring charge are not processed during that execution; processing continues with other eligible charges; the job is not marked as failed solely because of the insufficient balance; a warning identifies the charge, savings account, installment due date, and reason; the unpaid installment is included in a durable per-execution report or metric.
 - **AC-8** Existing insufficient-balance results and configured overdraft rules remain unchanged.
 - **AC-9** Validation, persistence, configuration, and unexpected errors cause the job to be reported as failed.
 - **AC-10** Job error details for fatal errors identify the affected charge or savings account, installment due date, and failure reason.
 - **AC-11** Re-running the job resumes from the first unpaid installment without collecting previously committed installments again.
 - **AC-12** When all eligible installments are collected or skipped only because of insufficient balance, the job is reported as successful.
-- **AC-13** Automated tests cover:
+- **AC-13** Automated tests cover: charges on funded and insufficiently funded savings accounts; a recurring charge for which some, but not all, overdue installments can be collected; preservation of successful payments, balance changes, transactions, and due-date advancement when a later installment is unpaid; continued processing of other eligible charges after an insufficient-balance result; durable counting or reporting of unpaid installments; failure of the job for validation and unexpected processing errors; successful execution when insufficient balance is the only issue; prevention of duplicate collection on re-execution; existing all-success behavior.
 
 ## Comentarios
 

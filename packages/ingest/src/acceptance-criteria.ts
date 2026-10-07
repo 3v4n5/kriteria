@@ -28,6 +28,17 @@ const ANY_HEADING = /^(?:#{1,6}\s+\S|h[1-6]\.\s*\S)/i;
 const BULLET = /^\s*(?:[-*+]|\d+[.)])\s+(.+)$/;
 
 /**
+ * A nested bullet: wiki `** item` / `*** item`, or an indented Markdown one.
+ *
+ * These are a CONTINUATION of the criterion above, not criteria of their own.
+ * A parent like "When an account has insufficient balance:" is unverifiable
+ * on its own, so dropping its children leaves a criterion that says nothing —
+ * and the analyst would then try to trace a hollow AC to a test case. They
+ * are folded into the parent instead.
+ */
+const NESTED_BULLET = /^(?:\s*\*{2,}|\s{2,}(?:[-+]|\d+[.)]))\s+(.+)$/;
+
+/**
  * Vague qualifiers that make a criterion unverifiable unless a measurable
  * anchor (number, unit, %, comparison) appears alongside them.
  */
@@ -45,10 +56,29 @@ export function isTestable(text: string): boolean {
   return VERIFIABLE_SHAPE.test(text) || MEASURABLE_ANCHOR.test(text);
 }
 
+/** Drops the list punctuation Jira authors leave at the end of an item. */
+function trimItem(text: string): string {
+  return text.trim().replace(/[;,]+$/, "");
+}
+
 export function extractAcceptanceCriteria(
   description: string,
 ): AcceptanceCriterion[] {
   const texts: string[] = [];
+
+  // A top-level bullet and the nested bullets that qualify it form ONE
+  // criterion, so the parent is held open until the next sibling or the end
+  // of the section.
+  let pending: { text: string; children: string[] } | null = null;
+  const flush = (): void => {
+    if (!pending) return;
+    texts.push(
+      pending.children.length === 0
+        ? pending.text
+        : `${pending.text.replace(/[;:,]+$/, "")}: ${pending.children.join("; ")}`,
+    );
+    pending = null;
+  };
 
   // 1) Bullets under an "Acceptance Criteria" heading, until the next heading.
   const lines = description.split(/\r?\n/);
@@ -61,9 +91,21 @@ export function extractAcceptanceCriteria(
     if (inSection && ANY_HEADING.test(line)) inSection = false;
     if (!inSection) continue;
 
+    const nested = NESTED_BULLET.exec(line);
+    if (nested?.[1]) {
+      // Buffered rather than appended in place, so siblings are joined with
+      // "; " after a single colon instead of a run of colons.
+      if (pending) pending.children.push(trimItem(nested[1]));
+      continue;
+    }
+
     const bullet = BULLET.exec(line);
-    if (bullet?.[1]) texts.push(bullet[1].trim());
+    if (bullet?.[1]) {
+      flush();
+      pending = { text: trimItem(bullet[1]), children: [] };
+    }
   }
+  flush();
 
   // 2) Gherkin scenarios anywhere — one criterion per scenario block.
   const gherkin =

@@ -114,3 +114,48 @@ describe("Jira wiki markup", () => {
     expect(criteria).toHaveLength(1);
   });
 });
+
+describe("nested bullets", () => {
+  // A parent like "When X:" is unverifiable alone, so dropping its children
+  // leaves a criterion that says nothing — and the analyst would try to trace
+  // that hollow AC to a case. Real shape, from FINERACT-2836.
+  it("folds wiki sub-bullets into the criterion they belong to", () => {
+    const criteria = extractAcceptanceCriteria(
+      [
+        "h2. Acceptance Criteria",
+        "* When an account has insufficient balance for an installment:",
+        "** the installment remains outstanding;",
+        "** the charge's due date does not advance;",
+        "* Existing overdraft rules remain unchanged.",
+      ].join("\n"),
+    );
+
+    expect(criteria).toHaveLength(2);
+    expect(criteria[0]!.text).toContain("remains outstanding");
+    expect(criteria[0]!.text).toContain("due date does not advance");
+    expect(criteria[0]!.text).not.toMatch(/:$/);
+    expect(criteria[1]!.text).toContain("overdraft");
+  });
+
+  it("folds indented Markdown sub-bullets the same way", () => {
+    const criteria = extractAcceptanceCriteria(
+      [
+        "## Acceptance Criteria",
+        "- The export covers:",
+        "  - every visible column",
+        "  - the applied filters",
+      ].join("\n"),
+    );
+
+    expect(criteria).toHaveLength(1);
+    expect(criteria[0]!.text).toContain("every visible column");
+    expect(criteria[0]!.text).toContain("applied filters");
+  });
+
+  it("ignores a nested bullet with no parent instead of crashing", () => {
+    const criteria = extractAcceptanceCriteria(
+      ["h2. Acceptance Criteria", "** huérfana sin padre"].join("\n"),
+    );
+    expect(criteria).toHaveLength(0);
+  });
+});
