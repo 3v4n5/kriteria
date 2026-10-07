@@ -77,3 +77,40 @@ describe("isTestable", () => {
     expect(isTestable("Fast: page loads in less than 2 seconds")).toBe(true);
   });
 });
+
+describe("Jira wiki markup", () => {
+  // Self-hosted Jira (Apache, Jenkins, MongoDB) serves wiki markup, not
+  // Markdown. A Markdown-only heading matcher reports every such ticket as
+  // having no acceptance criteria.
+  it("finds criteria under an h2. heading", () => {
+    const criteria = extractAcceptanceCriteria(
+      [
+        "h2. Acceptance Criteria",
+        "* The tax amount is persisted with 2 decimals",
+        "* A Deduction over the limit returns a validation error",
+      ].join("\n"),
+    );
+    expect(criteria.map((c) => c.id)).toEqual(["AC-1", "AC-2"]);
+    expect(criteria[0]!.text).toContain("2 decimals");
+  });
+
+  it("stops at the next wiki heading instead of swallowing the rest", () => {
+    const criteria = extractAcceptanceCriteria(
+      [
+        "h3. Acceptance Criteria",
+        "* The order total must include tax",
+        "h3. Notes",
+        "* This is not a criterion",
+      ].join("\n"),
+    );
+    expect(criteria).toHaveLength(1);
+    expect(criteria[0]!.text).toContain("order total");
+  });
+
+  it("still ends the section at a Markdown heading", () => {
+    const criteria = extractAcceptanceCriteria(
+      ["## Acceptance Criteria", "- must reject 81 characters", "## Notes", "- irrelevante"].join("\n"),
+    );
+    expect(criteria).toHaveLength(1);
+  });
+});

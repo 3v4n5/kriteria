@@ -2,7 +2,11 @@
  * Acceptance-criteria extraction from free-form descriptions.
  *
  * Finds ACs in the shapes teams actually write: an "Acceptance Criteria"
- * section with bullets, and/or Gherkin scenarios anywhere in the text. Each
+ * section with bullets, and/or Gherkin scenarios anywhere in the text.
+ * Headings are matched in both Markdown (`## Acceptance Criteria`) and Jira
+ * wiki markup (`h2. Acceptance Criteria`) — self-hosted Jira serves wiki,
+ * so a Markdown-only matcher reports every such ticket as having no criteria
+ * at all. Each
  * criterion is tagged testable/non-testable with a deterministic heuristic;
  * non-testable ones are the analyst's cue to raise an ambiguity, not a
  * reason to drop them.
@@ -11,9 +15,15 @@
 import type { AcceptanceCriterion } from "@kriteria/core";
 
 const SECTION_HEADING =
-  /^#{0,6}\s*(?:\*\*)?\s*(acceptance criteria|criterios? de aceptaci[oó]n|ac\b)\s*:?\s*(?:\*\*)?\s*$/i;
+  /^(?:#{0,6}|h[1-6]\.)\s*(?:\*\*)?\s*(acceptance criteria|criterios? de aceptaci[oó]n|ac\b)\s*:?\s*(?:\*\*)?\s*$/i;
 
-const ANY_HEADING = /^#{1,6}\s+\S/;
+/**
+ * Where the criteria section ends. `#` is NOT treated as a wiki ordered-list
+ * bullet on purpose: `# text` is both a Markdown H1 and a wiki list item, and
+ * reading headings as bullets loses the section boundary — a worse failure
+ * than missing the rarer wiki-numbered criterion.
+ */
+const ANY_HEADING = /^(?:#{1,6}\s+\S|h[1-6]\.\s*\S)/i;
 
 const BULLET = /^\s*(?:[-*+]|\d+[.)])\s+(.+)$/;
 

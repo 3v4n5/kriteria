@@ -32,9 +32,9 @@ pnpm test                           # vitest
 pnpm typecheck                      # tsc across all packages
 ```
 
-Node >= 22, pnpm 11.4.0. Env: `ANTHROPIC_API_KEY`; `JIRA_BASE_URL`/`JIRA_EMAIL`/
-`JIRA_API_TOKEN` for `jira:` sources; `KRITERIA_API_BASE_URL`/`KRITERIA_API_TOKEN` for
-`auto-api` runs.
+Node >= 22, pnpm 11.4.0. Env: `ANTHROPIC_API_KEY`; `JIRA_BASE_URL` (+ optional
+`JIRA_EMAIL`/`JIRA_API_TOKEN` — omit both for public trackers, and `JIRA_API_VERSION=2`
+for self-hosted Jira); `KRITERIA_API_BASE_URL`/`KRITERIA_API_TOKEN` for `auto-api` runs.
 
 ## Hard rules
 

@@ -6,6 +6,7 @@
  */
 
 import { parseArgs } from "node:util";
+import { goldenAddCommand } from "./golden-add.js";
 import { planCommand } from "./plan.js";
 import { evalCommand } from "./eval.js";
 import { reportCommand } from "./report.js";
@@ -20,6 +21,8 @@ Usage:
                             Ejecuta casos auto-api y luego guía los manuales (reanudable)
   qa report <out/REF>       Genera informe HTML legible de una corrida
   qa eval [--only REF]      Puntúa los planes contra el golden set (sin costo de API)
+  qa golden-add <KEY...>    Trae tickets públicos al corpus: fixture + golden en
+                            blanco + brief legible. Nunca llena \`expect\`.
 
 Options:
   --from <src>        Work item source: jira:PROJ-123 or file:raw-issue.json
@@ -33,7 +36,11 @@ Options:
 
 Environment:
   ANTHROPIC_API_KEY   or an \`ant auth login\` profile
-  JIRA_BASE_URL, JIRA_EMAIL, JIRA_API_TOKEN   (only for jira: sources)
+  JIRA_BASE_URL       required for jira: sources
+  JIRA_EMAIL, JIRA_API_TOKEN   optional — omit both to read a public tracker
+                      anonymously; half a pair is treated as neither
+  JIRA_API_VERSION    "3" (Atlassian Cloud, default) or "2" (Server/DC —
+                      required for issues.apache.org, issues.jenkins.io, …)
   KRITERIA_API_BASE_URL, KRITERIA_API_TOKEN   (ambiente de pruebas para auto-api)`;
 
 async function main(): Promise<void> {
@@ -69,6 +76,28 @@ async function main(): Promise<void> {
       ...(apiToken ? { apiToken } : {}),
       autoApprove: values["auto-approve"]!,
     });
+    return;
+  }
+  if (command === "golden-add") {
+    const { values, positionals: keys } = parseArgs({
+      args: rest,
+      options: { instance: { type: "string" }, evals: { type: "string", default: "evals" } },
+      allowPositionals: true,
+    });
+    if (keys.length === 0) {
+      throw new Error("uso: qa golden-add <KEY> [<KEY>...] [--instance <nombre>]");
+    }
+    const results = await goldenAddCommand({
+      keys,
+      ...(values.instance ? { instance: values.instance } : {}),
+      evalsDir: values.evals!,
+      log: (msg) => console.log(msg),
+    });
+    const failed = results.filter((r) => !r.fetched);
+    console.log(
+      `\n✓ ${results.length - failed.length}/${results.length} tickets en el corpus`,
+    );
+    if (failed.length > 0) process.exitCode = 1;
     return;
   }
   if (command === "eval") {
