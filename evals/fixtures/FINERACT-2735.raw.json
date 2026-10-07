@@ -1,0 +1,68 @@
+{
+  "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+  "id": "13660378",
+  "self": "https://issues.apache.org/jira/rest/api/2/issue/13660378",
+  "key": "FINERACT-2735",
+  "fields": {
+    "summary": "Validate order query parameter on datatables endpoint against actual table columns",
+    "issuetype": {
+      "self": "https://issues.apache.org/jira/rest/api/2/issuetype/1",
+      "id": "1",
+      "description": "A problem which impairs or prevents the functions of the product.",
+      "iconUrl": "https://issues.apache.org/jira/secure/viewavatar?size=xsmall&avatarId=21133&avatarType=issuetype",
+      "name": "Bug",
+      "subtask": false,
+      "avatarId": 21133
+    },
+    "components": [],
+    "attachment": [],
+    "subtasks": [],
+    "description": "Currently, the {{order}} query parameter accepted by the datatables read endpoints ({{{}GET /datatables/\\{datatable}/\\{apptableId}{}}} and {{{}GET /datatables/\\{datatable}/\\{apptableId}/\\{datatableId}{}}}) is passed through without sufficient validation. This ticket proposes validating {{order}} against the datatable's actual column list before it's used to build the query, consistent with how sorting is already restricted on the offices endpoint.\r\n\r\n*Proposed behavior:*\r\n * {{order}} must reference a single column that exists on the target datatable (verified against the table's resolved column metadata).\r\n * An optional {{ASC}} / {{DESC}} direction token may follow the column name (case-insensitive).\r\n * Column names containing spaces or other characters must be quoted, using either double quotes ({{{}\"Column Name\"{}}}) or backticks ({{{}`Column Name`{}}}) — consistent with standard SQL identifier-quoting conventions across PostgreSQL, MySQL, and MariaDB. Quoting is optional for column names that don't require it.\r\n * Multiple columns (comma-separated) are not supported, matching the existing convention on the offices endpoint.\r\n * Requests with an {{order}} value that doesn't resolve to a real column, or that use invalid syntax, will be rejected with a clear error rather than silently ignored or passed through.\r\n * This behavior applies consistently to both affected endpoints, since they share the same underlying validation.\r\n\r\n*Motivation:*\r\n * Brings datatables sorting behavior in line with the existing, simpler convention already used elsewhere (offices endpoint).\r\n * Improves input validation and predictability of API behavior.\r\n * Removes ambiguity around how column names containing spaces are interpreted in the {{order}} parameter.\r\n\r\n*Acceptance criteria:*\r\n * Valid single-column {{order}} values (quoted or unquoted, with or without direction) return correctly sorted results on both endpoints.\r\n * {{order}} values referencing a non-existent column are rejected with an appropriate error response on both endpoints.\r\n * {{order}} values using unsupported syntax (multiple columns, malformed quoting, invalid direction token) are rejected with an appropriate error response on both endpoints.\r\n * Existing API consumers using single-column, unquoted, no-space column names for {{order}} continue to work unchanged.",
+    "issuelinks": [],
+    "comment": {
+      "comments": [],
+      "maxResults": 0,
+      "total": 0,
+      "startAt": 0
+    },
+    "priority": {
+      "self": "https://issues.apache.org/jira/rest/api/2/priority/3",
+      "iconUrl": "https://issues.apache.org/jira/images/icons/priorities/major.svg",
+      "name": "Major",
+      "id": "3"
+    },
+    "updated": "2026-08-20T13:31:35.881+0000",
+    "labels": []
+  },
+  "names": {
+    "summary": "Summary",
+    "issuetype": "Issue Type",
+    "components": "Component/s",
+    "attachment": "Attachment",
+    "subtasks": "Sub-Tasks",
+    "description": "Description",
+    "issuelinks": "Linked Issues",
+    "comment": "Comment",
+    "priority": "Priority",
+    "updated": "Updated",
+    "labels": "Labels"
+  },
+  "remoteLinks": [
+    {
+      "id": 440324,
+      "self": "https://issues.apache.org/jira/rest/api/2/issue/FINERACT-2735/remotelink/440324",
+      "globalId": "github=https://github.com/apache/fineract/pull/6230",
+      "application": {},
+      "object": {
+        "url": "https://github.com/apache/fineract/pull/6230",
+        "title": "GitHub Pull Request #6230",
+        "icon": {
+          "url16x16": "https://github.com/favicon.ico"
+        },
+        "status": {
+          "icon": {}
+        }
+      }
+    }
+  ]
+}

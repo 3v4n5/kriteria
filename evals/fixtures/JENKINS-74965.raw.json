@@ -1,0 +1,122 @@
+{
+  "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+  "id": "223243",
+  "self": "https://issues.jenkins.io/rest/api/2/issue/223243",
+  "key": "JENKINS-74965",
+  "fields": {
+    "summary": "Add support for Repository, Project and Workspace Access Token for Bitbucket Cloud",
+    "issuetype": {
+      "self": "https://issues.jenkins.io/rest/api/2/issuetype/2",
+      "id": "2",
+      "description": "A new feature of the product, which has yet to be developed.",
+      "iconUrl": "https://issues.jenkins.io/secure/viewavatar?size=xsmall&avatarId=14681&avatarType=issuetype",
+      "name": "New Feature",
+      "subtask": false,
+      "avatarId": 14681
+    },
+    "components": [
+      {
+        "self": "https://issues.jenkins.io/rest/api/2/component/21428",
+        "id": "21428",
+        "name": "bitbucket-branch-source-plugin",
+        "description": "bitbucket-branch-source-plugin plugin"
+      }
+    ],
+    "attachment": [],
+    "description": "Access Tokens are passwords used for scripting tasks and integrating tools (such as CI/CD tools) with Bitbucket Cloud. Workspace Access Tokens are designed for use with a single application with limited permissions, so they don't require two-step verification (2SV, also known as two-factor authentication or 2FA).\n\nWorkspace Access Tokens are not tied to a user's account but are connected to a Bitbucket workspace, restricting the token's access to a single workspace and any projects/repositories under that workspace, providing a more secure solution than user-based authentication methods such as App passwords.\n\nProject Access Tokens are tied to a Bitbucket project, not a user's account, restricting the token's access to a single project and any repositories in that project. This provides a more secure solution than user-based authentication methods such as App passwords.\n\nRepository Access Tokens are tied to a repository, not a user’s account. This restricts the token’s access to a single repository, providing a more secure solution than user-based authentication methods such as App passwords.\n\nBitbucket documentation describe how these can be used in-place of legacy username:password format here:\n * [Using Workspace Access Tokens|https://support.atlassian.com/bitbucket-cloud/docs/using-workspace-access-tokens/]\n * [Using Project Access Tokens|https://support.atlassian.com/bitbucket-cloud/docs/using-project-access-tokens/]\n * [Using Repository Access Tokens|https://support.atlassian.com/bitbucket-cloud/docs/using-access-tokens/]\n\nSo in theory they should work in the same way that OAuth tokens do by setting {{jenkins:credentials:username}} to {{x-token-auth}} to perform git clone/feath/pull operation and send the token as Header {{Authorization: Bearer <access_token>}} for the REST APIs",
+    "issuelinks": [
+      {
+        "id": "49078",
+        "self": "https://issues.jenkins.io/rest/api/2/issueLink/49078",
+        "outwardIssue": {
+          "id": "223250",
+          "key": "JENKINS-74972",
+          "self": "https://issues.jenkins.io/rest/api/2/issue/223250",
+          "fields": {
+            "summary": "CredentialsMatcher.CQL.describe() implementations return invalid CQL",
+            "status": {
+              "self": "https://issues.jenkins.io/rest/api/2/status/6",
+              "description": "The issue is considered finished, the resolution is correct. Issues which are closed can be reopened.",
+              "iconUrl": "https://issues.jenkins.io/images/icons/statuses/closed.png",
+              "name": "Closed",
+              "id": "6",
+              "statusCategory": {
+                "self": "https://issues.jenkins.io/rest/api/2/statuscategory/3",
+                "id": 3,
+                "key": "done",
+                "colorName": "success",
+                "name": "Done"
+              }
+            },
+            "priority": {
+              "self": "https://issues.jenkins.io/rest/api/2/priority/4",
+              "iconUrl": "https://issues.jenkins.io/images/icons/priorities/minor.svg",
+              "name": "Minor",
+              "id": "4"
+            },
+            "issuetype": {
+              "self": "https://issues.jenkins.io/rest/api/2/issuetype/1",
+              "id": "1",
+              "description": "A problem which impairs or prevents the functions of the product.",
+              "iconUrl": "https://issues.jenkins.io/secure/viewavatar?size=xsmall&avatarId=14673&avatarType=issuetype",
+              "name": "Bug",
+              "subtask": false,
+              "avatarId": 14673
+            }
+          }
+        },
+        "type": {
+          "id": "10220",
+          "name": "Cause",
+          "inward": "is caused by",
+          "outward": "causes",
+          "self": "https://issues.jenkins.io/rest/api/2/issueLinkType/10220"
+        }
+      }
+    ],
+    "comment": {
+      "comments": [],
+      "maxResults": 1000,
+      "total": 0,
+      "startAt": 0
+    },
+    "priority": {
+      "self": "https://issues.jenkins.io/rest/api/2/priority/3",
+      "iconUrl": "https://issues.jenkins.io/images/icons/priorities/major.svg",
+      "name": "Major",
+      "id": "3"
+    },
+    "updated": "2024-12-09T18:55:38.000+0000",
+    "labels": []
+  },
+  "renderedFields": null,
+  "names": {
+    "summary": "Summary",
+    "issuetype": "Issue Type",
+    "components": "Component/s",
+    "attachment": "Attachment",
+    "description": "Description",
+    "issuelinks": "Linked Issues",
+    "comment": "Comment",
+    "priority": "Priority",
+    "updated": "Updated",
+    "labels": "Labels"
+  },
+  "remoteLinks": [
+    {
+      "id": 30296,
+      "self": "https://issues.jenkins.io/rest/api/2/issue/JENKINS-74965/remotelink/30296",
+      "application": {},
+      "object": {
+        "url": "https://github.com/jenkinsci/bitbucket-branch-source-plugin/pull/934",
+        "title": "PR",
+        "icon": {
+          "url16x16": "https://github.com/favicon.ico"
+        },
+        "status": {
+          "icon": {}
+        }
+      }
+    }
+  ]
+}

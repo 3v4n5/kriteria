@@ -5,6 +5,7 @@
  *   pnpm qa plan --from file:fixtures/raw-issue.json --out out --revisions 1
  */
 
+import { readFileSync } from "node:fs";
 import { parseArgs } from "node:util";
 import { goldenAddCommand } from "./golden-add.js";
 import { planCommand } from "./plan.js";
@@ -81,14 +82,24 @@ async function main(): Promise<void> {
   if (command === "golden-add") {
     const { values, positionals: keys } = parseArgs({
       args: rest,
-      options: { instance: { type: "string" }, evals: { type: "string", default: "evals" } },
+      options: {
+        instance: { type: "string" },
+        evals: { type: "string", default: "evals" },
+        rationales: { type: "string" },
+      },
       allowPositionals: true,
     });
     if (keys.length === 0) {
       throw new Error("uso: qa golden-add <KEY> [<KEY>...] [--instance <nombre>]");
     }
+    // A JSON map of key → rationale. A file rather than flags because the
+    // rationale is a sentence per ticket, and the batch is usually a dozen.
+    const rationales = values.rationales
+      ? (JSON.parse(readFileSync(values.rationales, "utf8")) as Record<string, string>)
+      : undefined;
     const results = await goldenAddCommand({
       keys,
+      ...(rationales ? { rationales } : {}),
       ...(values.instance ? { instance: values.instance } : {}),
       evalsDir: values.evals!,
       log: (msg) => console.log(msg),

@@ -1,0 +1,310 @@
+{
+  "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+  "id": "13575900",
+  "self": "https://issues.apache.org/jira/rest/api/2/issue/13575900",
+  "key": "OFBIZ-13033",
+  "fields": {
+    "summary": "Creating a new invoice generates an error",
+    "issuetype": {
+      "self": "https://issues.apache.org/jira/rest/api/2/issuetype/1",
+      "id": "1",
+      "description": "A problem which impairs or prevents the functions of the product.",
+      "iconUrl": "https://issues.apache.org/jira/secure/viewavatar?size=xsmall&avatarId=21133&avatarType=issuetype",
+      "name": "Bug",
+      "subtask": false,
+      "avatarId": 21133
+    },
+    "components": [],
+    "attachment": [],
+    "subtasks": [],
+    "description": "after selecting the invoice type to create, selecting the opposing party and clicking the create button, following error is shown:\r\n\r\n{code:java}\r\njava.lang.IllegalArgumentException: Could not find screen with name [InvoiceOverview] in class resource [component://accounting/widget/InvoiceScreens.xml]\r\n{code}\r\n\r\n\r\n\r\n",
+    "issuelinks": [
+      {
+        "id": "12684856",
+        "self": "https://issues.apache.org/jira/rest/api/2/issueLink/12684856",
+        "type": {
+          "id": "12310000",
+          "name": "Duplicate",
+          "inward": "is duplicated by",
+          "outward": "duplicates",
+          "self": "https://issues.apache.org/jira/rest/api/2/issueLinkType/12310000"
+        },
+        "outwardIssue": {
+          "id": "13575714",
+          "key": "OFBIZ-13017",
+          "self": "https://issues.apache.org/jira/rest/api/2/issue/13575714",
+          "fields": {
+            "summary": "invoiceOverview generates an error",
+            "status": {
+              "self": "https://issues.apache.org/jira/rest/api/2/status/6",
+              "description": "The issue is considered finished, the resolution is correct. Issues which are not closed can be reopened.",
+              "iconUrl": "https://issues.apache.org/jira/images/icons/statuses/closed.png",
+              "name": "Closed",
+              "id": "6",
+              "statusCategory": {
+                "self": "https://issues.apache.org/jira/rest/api/2/statuscategory/3",
+                "id": 3,
+                "key": "done",
+                "colorName": "green",
+                "name": "Done"
+              }
+            },
+            "priority": {
+              "self": "https://issues.apache.org/jira/rest/api/2/priority/3",
+              "iconUrl": "https://issues.apache.org/jira/images/icons/priorities/major.svg",
+              "name": "Major",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://issues.apache.org/jira/rest/api/2/issuetype/1",
+              "id": "1",
+              "description": "A problem which impairs or prevents the functions of the product.",
+              "iconUrl": "https://issues.apache.org/jira/secure/viewavatar?size=xsmall&avatarId=21133&avatarType=issuetype",
+              "name": "Bug",
+              "subtask": false,
+              "avatarId": 21133
+            }
+          }
+        }
+      }
+    ],
+    "comment": {
+      "comments": [
+        {
+          "self": "https://issues.apache.org/jira/rest/api/2/issue/13575900/comment/17837344",
+          "id": "17837344",
+          "author": {
+            "self": "https://issues.apache.org/jira/rest/api/2/user?username=jleroux",
+            "name": "jleroux",
+            "key": "jacques.le.roux",
+            "avatarUrls": {
+              "48x48": "https://issues.apache.org/jira/secure/useravatar?ownerId=jacques.le.roux&avatarId=29375",
+              "24x24": "https://issues.apache.org/jira/secure/useravatar?size=small&ownerId=jacques.le.roux&avatarId=29375",
+              "16x16": "https://issues.apache.org/jira/secure/useravatar?size=xsmall&ownerId=jacques.le.roux&avatarId=29375",
+              "32x32": "https://issues.apache.org/jira/secure/useravatar?size=medium&ownerId=jacques.le.roux&avatarId=29375"
+            },
+            "displayName": "Jacques Le Roux",
+            "active": true,
+            "timeZone": "Europe/Paris"
+          },
+          "body": "Pierre,\r\n\r\nThis is a duplicate of OFBIZ-13017, exactly the same error. Please close if you agree, TIA",
+          "updateAuthor": {
+            "self": "https://issues.apache.org/jira/rest/api/2/user?username=jleroux",
+            "name": "jleroux",
+            "key": "jacques.le.roux",
+            "avatarUrls": {
+              "48x48": "https://issues.apache.org/jira/secure/useravatar?ownerId=jacques.le.roux&avatarId=29375",
+              "24x24": "https://issues.apache.org/jira/secure/useravatar?size=small&ownerId=jacques.le.roux&avatarId=29375",
+              "16x16": "https://issues.apache.org/jira/secure/useravatar?size=xsmall&ownerId=jacques.le.roux&avatarId=29375",
+              "32x32": "https://issues.apache.org/jira/secure/useravatar?size=medium&ownerId=jacques.le.roux&avatarId=29375"
+            },
+            "displayName": "Jacques Le Roux",
+            "active": true,
+            "timeZone": "Europe/Paris"
+          },
+          "created": "2024-04-15T16:26:41.398+0000",
+          "updated": "2024-04-15T16:26:41.398+0000"
+        },
+        {
+          "self": "https://issues.apache.org/jira/rest/api/2/issue/13575900/comment/17837352",
+          "id": "17837352",
+          "author": {
+            "self": "https://issues.apache.org/jira/rest/api/2/user?username=pierresmits",
+            "name": "pierresmits",
+            "key": "pfm.smits",
+            "avatarUrls": {
+              "48x48": "https://issues.apache.org/jira/secure/useravatar?ownerId=pfm.smits&avatarId=13737",
+              "24x24": "https://issues.apache.org/jira/secure/useravatar?size=small&ownerId=pfm.smits&avatarId=13737",
+              "16x16": "https://issues.apache.org/jira/secure/useravatar?size=xsmall&ownerId=pfm.smits&avatarId=13737",
+              "32x32": "https://issues.apache.org/jira/secure/useravatar?size=medium&ownerId=pfm.smits&avatarId=13737"
+            },
+            "displayName": "Pierre Smits",
+            "active": true,
+            "timeZone": "Europe/Amsterdam"
+          },
+          "body": "Not quite the duplicate. OFBIZ-13017 happens when an invoice is access from the main page.",
+          "updateAuthor": {
+            "self": "https://issues.apache.org/jira/rest/api/2/user?username=pierresmits",
+            "name": "pierresmits",
+            "key": "pfm.smits",
+            "avatarUrls": {
+              "48x48": "https://issues.apache.org/jira/secure/useravatar?ownerId=pfm.smits&avatarId=13737",
+              "24x24": "https://issues.apache.org/jira/secure/useravatar?size=small&ownerId=pfm.smits&avatarId=13737",
+              "16x16": "https://issues.apache.org/jira/secure/useravatar?size=xsmall&ownerId=pfm.smits&avatarId=13737",
+              "32x32": "https://issues.apache.org/jira/secure/useravatar?size=medium&ownerId=pfm.smits&avatarId=13737"
+            },
+            "displayName": "Pierre Smits",
+            "active": true,
+            "timeZone": "Europe/Amsterdam"
+          },
+          "created": "2024-04-15T16:31:52.609+0000",
+          "updated": "2024-04-15T16:31:52.609+0000"
+        },
+        {
+          "self": "https://issues.apache.org/jira/rest/api/2/issue/13575900/comment/17837367",
+          "id": "17837367",
+          "author": {
+            "self": "https://issues.apache.org/jira/rest/api/2/user?username=jleroux",
+            "name": "jleroux",
+            "key": "jacques.le.roux",
+            "avatarUrls": {
+              "48x48": "https://issues.apache.org/jira/secure/useravatar?ownerId=jacques.le.roux&avatarId=29375",
+              "24x24": "https://issues.apache.org/jira/secure/useravatar?size=small&ownerId=jacques.le.roux&avatarId=29375",
+              "16x16": "https://issues.apache.org/jira/secure/useravatar?size=xsmall&ownerId=jacques.le.roux&avatarId=29375",
+              "32x32": "https://issues.apache.org/jira/secure/useravatar?size=medium&ownerId=jacques.le.roux&avatarId=29375"
+            },
+            "displayName": "Jacques Le Roux",
+            "active": true,
+            "timeZone": "Europe/Paris"
+          },
+          "body": "Yes but I bet it's the same reason. At the end, when the invoice is created, to view it invoiceOverview is used",
+          "updateAuthor": {
+            "self": "https://issues.apache.org/jira/rest/api/2/user?username=jleroux",
+            "name": "jleroux",
+            "key": "jacques.le.roux",
+            "avatarUrls": {
+              "48x48": "https://issues.apache.org/jira/secure/useravatar?ownerId=jacques.le.roux&avatarId=29375",
+              "24x24": "https://issues.apache.org/jira/secure/useravatar?size=small&ownerId=jacques.le.roux&avatarId=29375",
+              "16x16": "https://issues.apache.org/jira/secure/useravatar?size=xsmall&ownerId=jacques.le.roux&avatarId=29375",
+              "32x32": "https://issues.apache.org/jira/secure/useravatar?size=medium&ownerId=jacques.le.roux&avatarId=29375"
+            },
+            "displayName": "Jacques Le Roux",
+            "active": true,
+            "timeZone": "Europe/Paris"
+          },
+          "created": "2024-04-15T17:03:48.529+0000",
+          "updated": "2024-04-15T17:03:48.529+0000"
+        },
+        {
+          "self": "https://issues.apache.org/jira/rest/api/2/issue/13575900/comment/17837368",
+          "id": "17837368",
+          "author": {
+            "self": "https://issues.apache.org/jira/rest/api/2/user?username=jleroux",
+            "name": "jleroux",
+            "key": "jacques.le.roux",
+            "avatarUrls": {
+              "48x48": "https://issues.apache.org/jira/secure/useravatar?ownerId=jacques.le.roux&avatarId=29375",
+              "24x24": "https://issues.apache.org/jira/secure/useravatar?size=small&ownerId=jacques.le.roux&avatarId=29375",
+              "16x16": "https://issues.apache.org/jira/secure/useravatar?size=xsmall&ownerId=jacques.le.roux&avatarId=29375",
+              "32x32": "https://issues.apache.org/jira/secure/useravatar?size=medium&ownerId=jacques.le.roux&avatarId=29375"
+            },
+            "displayName": "Jacques Le Roux",
+            "active": true,
+            "timeZone": "Europe/Paris"
+          },
+          "body": "Anyway when Leila will fix OFBIZ-12994 we will know...",
+          "updateAuthor": {
+            "self": "https://issues.apache.org/jira/rest/api/2/user?username=jleroux",
+            "name": "jleroux",
+            "key": "jacques.le.roux",
+            "avatarUrls": {
+              "48x48": "https://issues.apache.org/jira/secure/useravatar?ownerId=jacques.le.roux&avatarId=29375",
+              "24x24": "https://issues.apache.org/jira/secure/useravatar?size=small&ownerId=jacques.le.roux&avatarId=29375",
+              "16x16": "https://issues.apache.org/jira/secure/useravatar?size=xsmall&ownerId=jacques.le.roux&avatarId=29375",
+              "32x32": "https://issues.apache.org/jira/secure/useravatar?size=medium&ownerId=jacques.le.roux&avatarId=29375"
+            },
+            "displayName": "Jacques Le Roux",
+            "active": true,
+            "timeZone": "Europe/Paris"
+          },
+          "created": "2024-04-15T17:04:19.443+0000",
+          "updated": "2024-04-15T17:04:19.443+0000"
+        },
+        {
+          "self": "https://issues.apache.org/jira/rest/api/2/issue/13575900/comment/17855655",
+          "id": "17855655",
+          "author": {
+            "self": "https://issues.apache.org/jira/rest/api/2/user?username=mleila",
+            "name": "mleila",
+            "key": "mleila",
+            "avatarUrls": {
+              "48x48": "https://issues.apache.org/jira/secure/useravatar?ownerId=mleila&avatarId=51784",
+              "24x24": "https://issues.apache.org/jira/secure/useravatar?size=small&ownerId=mleila&avatarId=51784",
+              "16x16": "https://issues.apache.org/jira/secure/useravatar?size=xsmall&ownerId=mleila&avatarId=51784",
+              "32x32": "https://issues.apache.org/jira/secure/useravatar?size=medium&ownerId=mleila&avatarId=51784"
+            },
+            "displayName": "Mekika Leila",
+            "active": true,
+            "timeZone": "Europe/Paris"
+          },
+          "body": "Hello [~jleroux]\r\n\r\nI tried to reproduce by creating a new invoice in [https://demo-trunk.ofbiz.apache.org/accounting/control/findInvoices]  but did not have the error.",
+          "updateAuthor": {
+            "self": "https://issues.apache.org/jira/rest/api/2/user?username=mleila",
+            "name": "mleila",
+            "key": "mleila",
+            "avatarUrls": {
+              "48x48": "https://issues.apache.org/jira/secure/useravatar?ownerId=mleila&avatarId=51784",
+              "24x24": "https://issues.apache.org/jira/secure/useravatar?size=small&ownerId=mleila&avatarId=51784",
+              "16x16": "https://issues.apache.org/jira/secure/useravatar?size=xsmall&ownerId=mleila&avatarId=51784",
+              "32x32": "https://issues.apache.org/jira/secure/useravatar?size=medium&ownerId=mleila&avatarId=51784"
+            },
+            "displayName": "Mekika Leila",
+            "active": true,
+            "timeZone": "Europe/Paris"
+          },
+          "created": "2024-06-17T15:34:18.126+0000",
+          "updated": "2024-06-17T15:34:18.126+0000"
+        },
+        {
+          "self": "https://issues.apache.org/jira/rest/api/2/issue/13575900/comment/17855688",
+          "id": "17855688",
+          "author": {
+            "self": "https://issues.apache.org/jira/rest/api/2/user?username=jleroux",
+            "name": "jleroux",
+            "key": "jacques.le.roux",
+            "avatarUrls": {
+              "48x48": "https://issues.apache.org/jira/secure/useravatar?ownerId=jacques.le.roux&avatarId=29375",
+              "24x24": "https://issues.apache.org/jira/secure/useravatar?size=small&ownerId=jacques.le.roux&avatarId=29375",
+              "16x16": "https://issues.apache.org/jira/secure/useravatar?size=xsmall&ownerId=jacques.le.roux&avatarId=29375",
+              "32x32": "https://issues.apache.org/jira/secure/useravatar?size=medium&ownerId=jacques.le.roux&avatarId=29375"
+            },
+            "displayName": "Jacques Le Roux",
+            "active": true,
+            "timeZone": "Europe/Paris"
+          },
+          "body": "Thanks Leïla",
+          "updateAuthor": {
+            "self": "https://issues.apache.org/jira/rest/api/2/user?username=jleroux",
+            "name": "jleroux",
+            "key": "jacques.le.roux",
+            "avatarUrls": {
+              "48x48": "https://issues.apache.org/jira/secure/useravatar?ownerId=jacques.le.roux&avatarId=29375",
+              "24x24": "https://issues.apache.org/jira/secure/useravatar?size=small&ownerId=jacques.le.roux&avatarId=29375",
+              "16x16": "https://issues.apache.org/jira/secure/useravatar?size=xsmall&ownerId=jacques.le.roux&avatarId=29375",
+              "32x32": "https://issues.apache.org/jira/secure/useravatar?size=medium&ownerId=jacques.le.roux&avatarId=29375"
+            },
+            "displayName": "Jacques Le Roux",
+            "active": true,
+            "timeZone": "Europe/Paris"
+          },
+          "created": "2024-06-17T18:06:22.611+0000",
+          "updated": "2024-06-17T18:06:22.611+0000"
+        }
+      ],
+      "maxResults": 6,
+      "total": 6,
+      "startAt": 0
+    },
+    "priority": {
+      "self": "https://issues.apache.org/jira/rest/api/2/priority/3",
+      "iconUrl": "https://issues.apache.org/jira/images/icons/priorities/major.svg",
+      "name": "Major",
+      "id": "3"
+    },
+    "updated": "2024-06-17T18:08:10.077+0000",
+    "labels": []
+  },
+  "names": {
+    "summary": "Summary",
+    "issuetype": "Issue Type",
+    "components": "Component/s",
+    "attachment": "Attachment",
+    "subtasks": "Sub-Tasks",
+    "description": "Description",
+    "issuelinks": "Linked Issues",
+    "comment": "Comment",
+    "priority": "Priority",
+    "updated": "Updated",
+    "labels": "Labels"
+  }
+}

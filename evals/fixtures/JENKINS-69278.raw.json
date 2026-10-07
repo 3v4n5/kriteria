@@ -1,0 +1,197 @@
+{
+  "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+  "id": "216321",
+  "self": "https://issues.jenkins.io/rest/api/2/issue/216321",
+  "key": "JENKINS-69278",
+  "fields": {
+    "summary": "Missing permission check allows listing workspace contents",
+    "issuetype": {
+      "self": "https://issues.jenkins.io/rest/api/2/issuetype/1",
+      "id": "1",
+      "description": "A problem which impairs or prevents the functions of the product.",
+      "iconUrl": "https://issues.jenkins.io/secure/viewavatar?size=xsmall&avatarId=14673&avatarType=issuetype",
+      "name": "Bug",
+      "subtask": false,
+      "avatarId": 14673
+    },
+    "components": [
+      {
+        "self": "https://issues.jenkins.io/rest/api/2/component/21959",
+        "id": "21959",
+        "name": "android-signing-plugin",
+        "description": "subcomponent"
+      }
+    ],
+    "attachment": [],
+    "description": "There is currently a security alert for this plugin, but the SECURITY-2404 issue is still private.\n\nIs work being done on it? Can a fix be expected any time soon?",
+    "issuelinks": [],
+    "comment": {
+      "comments": [
+        {
+          "self": "https://issues.jenkins.io/rest/api/2/issue/216321/comment/429053",
+          "id": "429053",
+          "author": {
+            "self": "https://issues.jenkins.io/rest/api/2/user?username=markewaite",
+            "name": "markewaite",
+            "key": "markewaite",
+            "avatarUrls": {
+              "48x48": "https://issues.jenkins.io/secure/useravatar?ownerId=markewaite&avatarId=12478",
+              "24x24": "https://issues.jenkins.io/secure/useravatar?size=small&ownerId=markewaite&avatarId=12478",
+              "16x16": "https://issues.jenkins.io/secure/useravatar?size=xsmall&ownerId=markewaite&avatarId=12478",
+              "32x32": "https://issues.jenkins.io/secure/useravatar?size=medium&ownerId=markewaite&avatarId=12478"
+            },
+            "displayName": "Mark Waite",
+            "active": true,
+            "timeZone": "America/Denver"
+          },
+          "body": "The security issue is described in the [July 27, 2022 security advisory|https://www.jenkins.io/security/advisory/2022-07-27/#SECURITY-2404].  I'm reasonably confident that no work is currently being done to resolve the issue.\n\nThe security team contacts plugin maintainers and gives them a reasonable time to fix the issue before they publish a security advisory.  If the maintainer does not respond or does not provide the fix, then the advisory is published to note that there is a known issue in the plugin.\n\nWe'd love to have you or someone at your employer [adopt the plugin|https://www.jenkins.io/doc/developer/plugin-governance/adopt-a-plugin/], resolve the security issue, and release a new version of the plugin.  There is a [five part video series|https://www.youtube.com/watch?v=Fev8KfFsPZE] on adopting a plugin and a [three part video series|https://www.youtube.com/watch?v=D-b9WWx1Xes] on resolving a vulnerability in a plugin.  If you prefer written instructions, there is the [\"Contributing to Open Source\" document|https://docs.google.com/document/d/1PKYIpPlRVGsBqrz0Ob1Cv3cefOZ5j2xtGZdWs27kLuw/edit?usp=sharing] that guides many of the same steps.",
+          "updateAuthor": {
+            "self": "https://issues.jenkins.io/rest/api/2/user?username=markewaite",
+            "name": "markewaite",
+            "key": "markewaite",
+            "avatarUrls": {
+              "48x48": "https://issues.jenkins.io/secure/useravatar?ownerId=markewaite&avatarId=12478",
+              "24x24": "https://issues.jenkins.io/secure/useravatar?size=small&ownerId=markewaite&avatarId=12478",
+              "16x16": "https://issues.jenkins.io/secure/useravatar?size=xsmall&ownerId=markewaite&avatarId=12478",
+              "32x32": "https://issues.jenkins.io/secure/useravatar?size=medium&ownerId=markewaite&avatarId=12478"
+            },
+            "displayName": "Mark Waite",
+            "active": true,
+            "timeZone": "America/Denver"
+          },
+          "created": "2022-08-08T13:05:43.000+0000",
+          "updated": "2022-08-08T13:26:01.000+0000"
+        },
+        {
+          "self": "https://issues.jenkins.io/rest/api/2/issue/216321/comment/435060",
+          "id": "435060",
+          "author": {
+            "self": "https://issues.jenkins.io/rest/api/2/user?username=sandeepkm",
+            "name": "sandeepkm",
+            "key": "JIRAUSER135542",
+            "avatarUrls": {
+              "48x48": "https://www.gravatar.com/avatar/ad8c9e0eadc2721ffe49865bc955150f?d=mm&s=48",
+              "24x24": "https://www.gravatar.com/avatar/ad8c9e0eadc2721ffe49865bc955150f?d=mm&s=24",
+              "16x16": "https://www.gravatar.com/avatar/ad8c9e0eadc2721ffe49865bc955150f?d=mm&s=16",
+              "32x32": "https://www.gravatar.com/avatar/ad8c9e0eadc2721ffe49865bc955150f?d=mm&s=32"
+            },
+            "displayName": "Sandeep Kumar Mahapatra",
+            "active": true,
+            "timeZone": "Asia/Kolkata"
+          },
+          "body": "I have created a pull-request: [https://github.com/jenkinsci/android-signing-plugin/pull/3]\n\n[~restjohn] Kindly review.",
+          "updateAuthor": {
+            "self": "https://issues.jenkins.io/rest/api/2/user?username=sandeepkm",
+            "name": "sandeepkm",
+            "key": "JIRAUSER135542",
+            "avatarUrls": {
+              "48x48": "https://www.gravatar.com/avatar/ad8c9e0eadc2721ffe49865bc955150f?d=mm&s=48",
+              "24x24": "https://www.gravatar.com/avatar/ad8c9e0eadc2721ffe49865bc955150f?d=mm&s=24",
+              "16x16": "https://www.gravatar.com/avatar/ad8c9e0eadc2721ffe49865bc955150f?d=mm&s=16",
+              "32x32": "https://www.gravatar.com/avatar/ad8c9e0eadc2721ffe49865bc955150f?d=mm&s=32"
+            },
+            "displayName": "Sandeep Kumar Mahapatra",
+            "active": true,
+            "timeZone": "Asia/Kolkata"
+          },
+          "created": "2023-02-09T20:15:51.000+0000",
+          "updated": "2023-02-09T20:15:51.000+0000"
+        },
+        {
+          "self": "https://issues.jenkins.io/rest/api/2/issue/216321/comment/448315",
+          "id": "448315",
+          "author": {
+            "self": "https://issues.jenkins.io/rest/api/2/user?username=panicking",
+            "name": "panicking",
+            "key": "JIRAUSER152767",
+            "avatarUrls": {
+              "48x48": "https://www.gravatar.com/avatar/8140cae0d74e49c60b8d4f09841a589a?d=mm&s=48",
+              "24x24": "https://www.gravatar.com/avatar/8140cae0d74e49c60b8d4f09841a589a?d=mm&s=24",
+              "16x16": "https://www.gravatar.com/avatar/8140cae0d74e49c60b8d4f09841a589a?d=mm&s=16",
+              "32x32": "https://www.gravatar.com/avatar/8140cae0d74e49c60b8d4f09841a589a?d=mm&s=32"
+            },
+            "displayName": "Michael Nazzareno",
+            "active": true,
+            "timeZone": "UTC"
+          },
+          "body": "[~markewaite] Willing to help but I really have poor knowlege about it. I know that we have jelly form and I read some documentation but for instance the sign plugin project ANDROID_HOME or other variable that ask to sign some package and so on what exact we need to avoid because ANDROID_HOME can be out of the workspace because it's an external tool",
+          "updateAuthor": {
+            "self": "https://issues.jenkins.io/rest/api/2/user?username=panicking",
+            "name": "panicking",
+            "key": "JIRAUSER152767",
+            "avatarUrls": {
+              "48x48": "https://www.gravatar.com/avatar/8140cae0d74e49c60b8d4f09841a589a?d=mm&s=48",
+              "24x24": "https://www.gravatar.com/avatar/8140cae0d74e49c60b8d4f09841a589a?d=mm&s=24",
+              "16x16": "https://www.gravatar.com/avatar/8140cae0d74e49c60b8d4f09841a589a?d=mm&s=16",
+              "32x32": "https://www.gravatar.com/avatar/8140cae0d74e49c60b8d4f09841a589a?d=mm&s=32"
+            },
+            "displayName": "Michael Nazzareno",
+            "active": true,
+            "timeZone": "UTC"
+          },
+          "created": "2024-07-18T06:03:54.000+0000",
+          "updated": "2024-07-18T06:03:54.000+0000"
+        },
+        {
+          "self": "https://issues.jenkins.io/rest/api/2/issue/216321/comment/448317",
+          "id": "448317",
+          "author": {
+            "self": "https://issues.jenkins.io/rest/api/2/user?username=markewaite",
+            "name": "markewaite",
+            "key": "markewaite",
+            "avatarUrls": {
+              "48x48": "https://issues.jenkins.io/secure/useravatar?ownerId=markewaite&avatarId=12478",
+              "24x24": "https://issues.jenkins.io/secure/useravatar?size=small&ownerId=markewaite&avatarId=12478",
+              "16x16": "https://issues.jenkins.io/secure/useravatar?size=xsmall&ownerId=markewaite&avatarId=12478",
+              "32x32": "https://issues.jenkins.io/secure/useravatar?size=medium&ownerId=markewaite&avatarId=12478"
+            },
+            "displayName": "Mark Waite",
+            "active": true,
+            "timeZone": "America/Denver"
+          },
+          "body": "[~panicking] I don't know the plugin to be able to help with the question",
+          "updateAuthor": {
+            "self": "https://issues.jenkins.io/rest/api/2/user?username=markewaite",
+            "name": "markewaite",
+            "key": "markewaite",
+            "avatarUrls": {
+              "48x48": "https://issues.jenkins.io/secure/useravatar?ownerId=markewaite&avatarId=12478",
+              "24x24": "https://issues.jenkins.io/secure/useravatar?size=small&ownerId=markewaite&avatarId=12478",
+              "16x16": "https://issues.jenkins.io/secure/useravatar?size=xsmall&ownerId=markewaite&avatarId=12478",
+              "32x32": "https://issues.jenkins.io/secure/useravatar?size=medium&ownerId=markewaite&avatarId=12478"
+            },
+            "displayName": "Mark Waite",
+            "active": true,
+            "timeZone": "America/Denver"
+          },
+          "created": "2024-07-18T06:31:09.000+0000",
+          "updated": "2024-07-18T06:31:09.000+0000"
+        }
+      ],
+      "maxResults": 1000,
+      "total": 4,
+      "startAt": 0
+    },
+    "priority": {
+      "self": "https://issues.jenkins.io/rest/api/2/priority/2",
+      "iconUrl": "https://issues.jenkins.io/images/icons/priorities/critical.svg",
+      "name": "Critical",
+      "id": "2"
+    },
+    "updated": "2026-08-24T21:10:51.970+0000",
+    "labels": []
+  },
+  "renderedFields": null,
+  "names": {
+    "summary": "Summary",
+    "issuetype": "Issue Type",
+    "components": "Component/s",
+    "attachment": "Attachment",
+    "description": "Description",
+    "issuelinks": "Linked Issues",
+    "comment": "Comment",
+    "priority": "Priority",
+    "updated": "Updated",
+    "labels": "Labels"
+  }
+}

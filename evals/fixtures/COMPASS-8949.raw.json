@@ -1,0 +1,82 @@
+{
+  "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+  "id": "2927733",
+  "self": "https://jira.mongodb.org/rest/api/2/issue/2927733",
+  "key": "COMPASS-8949",
+  "fields": {
+    "summary": "\"hotkey\" on \"add stage\" dropdown of the \"aggregation focus mode\" is broken",
+    "issuetype": {
+      "self": "https://jira.mongodb.org/rest/api/2/issuetype/1",
+      "id": "1",
+      "description": "A problem which impairs or prevents the functions of the product.",
+      "iconUrl": "https://jira.mongodb.org/secure/viewavatar?size=xsmall&avatarId=14703&avatarType=issuetype",
+      "name": "Bug",
+      "subtask": false,
+      "avatarId": 14703
+    },
+    "components": [
+      {
+        "self": "https://jira.mongodb.org/rest/api/2/component/16775",
+        "id": "16775",
+        "name": "Aggregation pipeline"
+      }
+    ],
+    "attachment": [
+      {
+        "self": "https://jira.mongodb.org/rest/api/2/attachment/643205",
+        "id": "643205",
+        "filename": "410054554-d67e013f-c0ba-4f54-ad2e-d82b8b80cf10.png",
+        "author": {
+          "self": "https://jira.mongodb.org/rest/api/2/user?username=kraen.hansen%40mongodb.com",
+          "name": "kraen.hansen@mongodb.com",
+          "key": "kraen.hansen",
+          "avatarUrls": {
+            "48x48": "https://jira.mongodb.org/secure/useravatar?ownerId=kraen.hansen&avatarId=21837",
+            "24x24": "https://jira.mongodb.org/secure/useravatar?size=small&ownerId=kraen.hansen&avatarId=21837",
+            "16x16": "https://jira.mongodb.org/secure/useravatar?size=xsmall&ownerId=kraen.hansen&avatarId=21837",
+            "32x32": "https://jira.mongodb.org/secure/useravatar?size=medium&ownerId=kraen.hansen&avatarId=21837"
+          },
+          "displayName": "Kræn Hansen",
+          "active": false,
+          "timeZone": "Europe/Copenhagen"
+        },
+        "created": "2025-02-11T10:56:19.000+0000",
+        "size": 263223,
+        "mimeType": "image/png",
+        "content": "https://jira.mongodb.org/secure/attachment/643205/410054554-d67e013f-c0ba-4f54-ad2e-d82b8b80cf10.png",
+        "thumbnail": "https://jira.mongodb.org/secure/thumbnail/643205/_thumb_643205.png"
+      }
+    ],
+    "subtasks": [],
+    "description": "h3. *Problem Statement/Rationale*\r\n\r\nAs per [this comment|https://github.com/mongodb-js/compass/pull/6661#discussion_r1943163464] from [~rhys.howell@mongodb.com] the UI displaying the hotkey on the dropdown is broken.\r\n\r\n*Please be sure to attach relevant logs {_}with any sensitive data redacted{_}.*\r\n\r\nN/A\r\n\r\n*Steps to Reproduce*\r\n * Connect to a server\r\n * Navigate to a collection's \"Aggreggations\" tab.\r\n * Click the \"Add Stage\" button in the bottom.\r\n * Click the [ ] (FullScreenEnter) icon to enter into \"focus mode\".\r\n * Click the \"Add Stage\" split button to reveal the dropdown menu with where the \"hotkey\" text is show in poor contrast under each label instead of being right-aligned.\r\n\r\nh3. *Expected Results and Actual Results*\r\n\r\n !410054554-d67e013f-c0ba-4f54-ad2e-d82b8b80cf10.png|thumbnail! \r\n(as-is on the left, to-be on the right)\r\n\r\nh3. *Additional Notes*\r\n\r\n{color:#505f79}Any additional information that may be useful to include.{color}",
+    "issuelinks": [],
+    "comment": {
+      "comments": [],
+      "maxResults": 1000,
+      "total": 0,
+      "startAt": 0
+    },
+    "priority": {
+      "self": "https://jira.mongodb.org/rest/api/2/priority/4",
+      "iconUrl": "https://jira.mongodb.org/images/icons/priorities/minor.svg",
+      "name": "Minor - P4",
+      "id": "4"
+    },
+    "updated": "2025-03-04T15:31:23.000+0000",
+    "labels": []
+  },
+  "renderedFields": null,
+  "names": {
+    "summary": "Summary",
+    "issuetype": "Issue Type",
+    "components": "Component/s",
+    "attachment": "Attachment",
+    "subtasks": "Sub-Tasks",
+    "description": "Description",
+    "issuelinks": "Linked Issues",
+    "comment": "Comment",
+    "priority": "Priority",
+    "updated": "Updated",
+    "labels": "Labels"
+  }
+}

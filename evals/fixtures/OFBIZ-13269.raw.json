@@ -1,0 +1,181 @@
+{
+  "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+  "id": "13621579",
+  "self": "https://issues.apache.org/jira/rest/api/2/issue/13621579",
+  "key": "OFBIZ-13269",
+  "fields": {
+    "summary": "Need to have a support for maximum discount cap in Promotions",
+    "issuetype": {
+      "self": "https://issues.apache.org/jira/rest/api/2/issuetype/3",
+      "id": "3",
+      "description": "A task that needs to be done.",
+      "iconUrl": "https://issues.apache.org/jira/secure/viewavatar?size=xsmall&avatarId=21148&avatarType=issuetype",
+      "name": "Task",
+      "subtask": false,
+      "avatarId": 21148
+    },
+    "components": [
+      {
+        "self": "https://issues.apache.org/jira/rest/api/2/component/12311152",
+        "id": "12311152",
+        "name": "order",
+        "description": "The order component"
+      }
+    ],
+    "attachment": [
+      {
+        "self": "https://issues.apache.org/jira/rest/api/2/attachment/13078566",
+        "id": "13078566",
+        "filename": "AddMaxDiscountAmount.png",
+        "author": {
+          "self": "https://issues.apache.org/jira/rest/api/2/user?username=ankit.joshi",
+          "name": "ankit.joshi",
+          "key": "ankit.joshi",
+          "avatarUrls": {
+            "48x48": "https://issues.apache.org/jira/secure/useravatar?avatarId=10452",
+            "24x24": "https://issues.apache.org/jira/secure/useravatar?size=small&avatarId=10452",
+            "16x16": "https://issues.apache.org/jira/secure/useravatar?size=xsmall&avatarId=10452",
+            "32x32": "https://issues.apache.org/jira/secure/useravatar?size=medium&avatarId=10452"
+          },
+          "displayName": "Ankit Joshi",
+          "active": true,
+          "timeZone": "Etc/UTC"
+        },
+        "created": "2025-09-26T14:57:46.915+0000",
+        "size": 184632,
+        "mimeType": "image/png",
+        "content": "https://issues.apache.org/jira/secure/attachment/13078566/AddMaxDiscountAmount.png"
+      },
+      {
+        "self": "https://issues.apache.org/jira/rest/api/2/attachment/13078567",
+        "id": "13078567",
+        "filename": "Cart-Total-Below-Threshold.png",
+        "author": {
+          "self": "https://issues.apache.org/jira/rest/api/2/user?username=ankit.joshi",
+          "name": "ankit.joshi",
+          "key": "ankit.joshi",
+          "avatarUrls": {
+            "48x48": "https://issues.apache.org/jira/secure/useravatar?avatarId=10452",
+            "24x24": "https://issues.apache.org/jira/secure/useravatar?size=small&avatarId=10452",
+            "16x16": "https://issues.apache.org/jira/secure/useravatar?size=xsmall&avatarId=10452",
+            "32x32": "https://issues.apache.org/jira/secure/useravatar?size=medium&avatarId=10452"
+          },
+          "displayName": "Ankit Joshi",
+          "active": true,
+          "timeZone": "Etc/UTC"
+        },
+        "created": "2025-09-26T14:58:33.507+0000",
+        "size": 169488,
+        "mimeType": "image/png",
+        "content": "https://issues.apache.org/jira/secure/attachment/13078567/Cart-Total-Below-Threshold.png"
+      },
+      {
+        "self": "https://issues.apache.org/jira/rest/api/2/attachment/13078568",
+        "id": "13078568",
+        "filename": "Cart-Total-Exceeds-Threshold.png",
+        "author": {
+          "self": "https://issues.apache.org/jira/rest/api/2/user?username=ankit.joshi",
+          "name": "ankit.joshi",
+          "key": "ankit.joshi",
+          "avatarUrls": {
+            "48x48": "https://issues.apache.org/jira/secure/useravatar?avatarId=10452",
+            "24x24": "https://issues.apache.org/jira/secure/useravatar?size=small&avatarId=10452",
+            "16x16": "https://issues.apache.org/jira/secure/useravatar?size=xsmall&avatarId=10452",
+            "32x32": "https://issues.apache.org/jira/secure/useravatar?size=medium&avatarId=10452"
+          },
+          "displayName": "Ankit Joshi",
+          "active": true,
+          "timeZone": "Etc/UTC"
+        },
+        "created": "2025-09-26T14:58:44.359+0000",
+        "size": 169034,
+        "mimeType": "image/png",
+        "content": "https://issues.apache.org/jira/secure/attachment/13078568/Cart-Total-Exceeds-Threshold.png"
+      }
+    ],
+    "subtasks": [],
+    "description": "*Scenario:*\r\n\r\nWhile configuring a Cart Range Percent Discount for promotions, there doesn’t seem to be an out-of-the-box option to set a maximum discount cap. For instance, if the business wants to offer a 15% discount on the cart total, but with a maximum discount limit of $100 irrespective of the cart value, the system currently applies the percentage across the total cart value without a ceiling.\r\n\r\nThe primary aim is not to enforce a minimum margin rule for the product price but to set a maximum discount limit regardless of the cart total particularly for the high valued cart totals. \r\n\r\nThe requirement also considers a case whereby system is applying single cart promotion at a time just to simplify the scenario.\r\n\r\n*Solution Proposal:*\r\nExtending the ProductPromoAction entity with maxDiscountAmount field and considering this configuration in the promotion engine to validate the max discount that can be provided to the customer.",
+    "issuelinks": [],
+    "comment": {
+      "comments": [
+        {
+          "self": "https://issues.apache.org/jira/rest/api/2/issue/13621579/comment/18023135",
+          "id": "18023135",
+          "author": {
+            "self": "https://issues.apache.org/jira/rest/api/2/user?username=ankit.joshi",
+            "name": "ankit.joshi",
+            "key": "ankit.joshi",
+            "avatarUrls": {
+              "48x48": "https://issues.apache.org/jira/secure/useravatar?avatarId=10452",
+              "24x24": "https://issues.apache.org/jira/secure/useravatar?size=small&avatarId=10452",
+              "16x16": "https://issues.apache.org/jira/secure/useravatar?size=xsmall&avatarId=10452",
+              "32x32": "https://issues.apache.org/jira/secure/useravatar?size=medium&avatarId=10452"
+            },
+            "displayName": "Ankit Joshi",
+            "active": true,
+            "timeZone": "Etc/UTC"
+          },
+          "body": "Implemented the requirement to introduce ceiling for the Percentage based cart-discounts. Extended the Promotion Engine datamodel and the code workflow, included the support to configure and validate MaxDiscountAmount if applicable while applying the cart based promotions.\r\n\r\nCoordinated with [~diveshdutta] and utilized AI Open Cloud Codex tool to implement and achieve the requirement.\r\n\r\nScnearios covered:\r\n\r\n* Add/Edit UX to configure MaxDiscountAmount when creating the Promo conditions/actions\r\n\r\nRefer: AddMaxDiscountAmount.png\r\n* Applying the 10 percent discount based on cart-total when the cart-total is less than MaxDiscount threshold\r\n\r\nRefer: Cart-Total-Below-Threshold.png\r\n* Overriding and applying MaxDiscount amount itself when the percent discount based on cart-total exceeds MaxDiscount threshold\r\nRefer: Cart-Total-Exceeds-Threshold.png\r\n\r\nAttached resources: \r\n* Github PR link: https://cwiki.apache.org/confluence/display/OFBIZ/Case+Study+of+AI-Driven+Development+for+Jira+Ticket+OFBIZ-13269 \r\n* Confluence documentation link summarizing the learnings and achievements while implementing the business logic using AI tool:\r\nhttps://cwiki.apache.org/confluence/display/OFBIZ/Case+Study+of+AI-Driven+Development+for+Jira+Ticket+OFBIZ-13269",
+          "updateAuthor": {
+            "self": "https://issues.apache.org/jira/rest/api/2/user?username=ankit.joshi",
+            "name": "ankit.joshi",
+            "key": "ankit.joshi",
+            "avatarUrls": {
+              "48x48": "https://issues.apache.org/jira/secure/useravatar?avatarId=10452",
+              "24x24": "https://issues.apache.org/jira/secure/useravatar?size=small&avatarId=10452",
+              "16x16": "https://issues.apache.org/jira/secure/useravatar?size=xsmall&avatarId=10452",
+              "32x32": "https://issues.apache.org/jira/secure/useravatar?size=medium&avatarId=10452"
+            },
+            "displayName": "Ankit Joshi",
+            "active": true,
+            "timeZone": "Etc/UTC"
+          },
+          "created": "2025-09-26T14:59:05.136+0000",
+          "updated": "2025-09-26T15:01:06.592+0000"
+        }
+      ],
+      "maxResults": 1,
+      "total": 1,
+      "startAt": 0
+    },
+    "priority": {
+      "self": "https://issues.apache.org/jira/rest/api/2/priority/4",
+      "iconUrl": "https://issues.apache.org/jira/images/icons/priorities/minor.svg",
+      "name": "Minor",
+      "id": "4"
+    },
+    "updated": "2026-03-27T05:31:52.222+0000",
+    "labels": []
+  },
+  "names": {
+    "summary": "Summary",
+    "issuetype": "Issue Type",
+    "components": "Component/s",
+    "attachment": "Attachment",
+    "subtasks": "Sub-Tasks",
+    "description": "Description",
+    "issuelinks": "Linked Issues",
+    "comment": "Comment",
+    "priority": "Priority",
+    "updated": "Updated",
+    "labels": "Labels"
+  },
+  "remoteLinks": [
+    {
+      "id": 407481,
+      "self": "https://issues.apache.org/jira/rest/api/2/issue/OFBIZ-13269/remotelink/407481",
+      "globalId": "github=https://github.com/apache/ofbiz-framework/pull/910",
+      "application": {},
+      "object": {
+        "url": "https://github.com/apache/ofbiz-framework/pull/910",
+        "title": "GitHub Pull Request #910",
+        "icon": {
+          "url16x16": "https://github.com/favicon.ico"
+        },
+        "status": {
+          "icon": {}
+        }
+      }
+    }
+  ]
+}

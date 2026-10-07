@@ -1,0 +1,128 @@
+{
+  "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+  "id": "13580606",
+  "self": "https://issues.apache.org/jira/rest/api/2/issue/13580606",
+  "key": "OFBIZ-13109",
+  "fields": {
+    "summary": "Numbering of Customer return invoice does not apply numbering scheme preference",
+    "issuetype": {
+      "self": "https://issues.apache.org/jira/rest/api/2/issuetype/1",
+      "id": "1",
+      "description": "A problem which impairs or prevents the functions of the product.",
+      "iconUrl": "https://issues.apache.org/jira/secure/viewavatar?size=xsmall&avatarId=21133&avatarType=issuetype",
+      "name": "Bug",
+      "subtask": false,
+      "avatarId": 21133
+    },
+    "components": [
+      {
+        "self": "https://issues.apache.org/jira/rest/api/2/component/12311146",
+        "id": "12311146",
+        "name": "accounting",
+        "description": "The accounting component."
+      }
+    ],
+    "attachment": [],
+    "subtasks": [],
+    "description": "When a customer return invoice are created, the numbering thereof should follow the preferences set for customer invoices in PartyAcctgPreference. Instead, a customer return invoice get a number per the methodology for supplier invoices.",
+    "issuelinks": [],
+    "comment": {
+      "comments": [
+        {
+          "self": "https://issues.apache.org/jira/rest/api/2/issue/13580606/comment/18081134",
+          "id": "18081134",
+          "author": {
+            "self": "https://issues.apache.org/jira/rest/api/2/user?username=mridulpathak",
+            "name": "mridulpathak",
+            "key": "mridulpathak",
+            "avatarUrls": {
+              "48x48": "https://issues.apache.org/jira/secure/useravatar?ownerId=mridulpathak&avatarId=38805",
+              "24x24": "https://issues.apache.org/jira/secure/useravatar?size=small&ownerId=mridulpathak&avatarId=38805",
+              "16x16": "https://issues.apache.org/jira/secure/useravatar?size=xsmall&ownerId=mridulpathak&avatarId=38805",
+              "32x32": "https://issues.apache.org/jira/secure/useravatar?size=medium&ownerId=mridulpathak&avatarId=38805"
+            },
+            "displayName": "Mridul Pathak",
+            "active": true,
+            "timeZone": "Asia/Kolkata"
+          },
+          "body": "This is an invalid issue reported as a bug because there is no separate sequence configuration available for customer vs supplier invoices in PartyAcctgPreference entity.",
+          "updateAuthor": {
+            "self": "https://issues.apache.org/jira/rest/api/2/user?username=mridulpathak",
+            "name": "mridulpathak",
+            "key": "mridulpathak",
+            "avatarUrls": {
+              "48x48": "https://issues.apache.org/jira/secure/useravatar?ownerId=mridulpathak&avatarId=38805",
+              "24x24": "https://issues.apache.org/jira/secure/useravatar?size=small&ownerId=mridulpathak&avatarId=38805",
+              "16x16": "https://issues.apache.org/jira/secure/useravatar?size=xsmall&ownerId=mridulpathak&avatarId=38805",
+              "32x32": "https://issues.apache.org/jira/secure/useravatar?size=medium&ownerId=mridulpathak&avatarId=38805"
+            },
+            "displayName": "Mridul Pathak",
+            "active": true,
+            "timeZone": "Asia/Kolkata"
+          },
+          "created": "2026-05-15T10:29:28.526+0000",
+          "updated": "2026-05-15T10:29:28.526+0000"
+        },
+        {
+          "self": "https://issues.apache.org/jira/rest/api/2/issue/13580606/comment/18081623",
+          "id": "18081623",
+          "author": {
+            "self": "https://issues.apache.org/jira/rest/api/2/user?username=pierresmits",
+            "name": "pierresmits",
+            "key": "pfm.smits",
+            "avatarUrls": {
+              "48x48": "https://issues.apache.org/jira/secure/useravatar?ownerId=pfm.smits&avatarId=13737",
+              "24x24": "https://issues.apache.org/jira/secure/useravatar?size=small&ownerId=pfm.smits&avatarId=13737",
+              "16x16": "https://issues.apache.org/jira/secure/useravatar?size=xsmall&ownerId=pfm.smits&avatarId=13737",
+              "32x32": "https://issues.apache.org/jira/secure/useravatar?size=medium&ownerId=pfm.smits&avatarId=13737"
+            },
+            "displayName": "Pierre Smits",
+            "active": true,
+            "timeZone": "Europe/Amsterdam"
+          },
+          "body": "Hi [~mridulpathak],\r\n\r\nConfiguring the *Invoice ID Prefix* (field invoiceIdPrefix) in the accounting preferences separates sales invoice numbering from supplier invoice sequences.\r\n\r\nAdditionally, enabling the *{{useInvoiceIdForReturns}}* field should ensure that customer sales returns and generated credit notes maintain a continuous, sequential ID in line with sales invoices.",
+          "updateAuthor": {
+            "self": "https://issues.apache.org/jira/rest/api/2/user?username=pierresmits",
+            "name": "pierresmits",
+            "key": "pfm.smits",
+            "avatarUrls": {
+              "48x48": "https://issues.apache.org/jira/secure/useravatar?ownerId=pfm.smits&avatarId=13737",
+              "24x24": "https://issues.apache.org/jira/secure/useravatar?size=small&ownerId=pfm.smits&avatarId=13737",
+              "16x16": "https://issues.apache.org/jira/secure/useravatar?size=xsmall&ownerId=pfm.smits&avatarId=13737",
+              "32x32": "https://issues.apache.org/jira/secure/useravatar?size=medium&ownerId=pfm.smits&avatarId=13737"
+            },
+            "displayName": "Pierre Smits",
+            "active": true,
+            "timeZone": "Europe/Amsterdam"
+          },
+          "created": "2026-05-18T08:16:22.041+0000",
+          "updated": "2026-05-18T08:16:22.041+0000"
+        }
+      ],
+      "maxResults": 2,
+      "total": 2,
+      "startAt": 0
+    },
+    "priority": {
+      "self": "https://issues.apache.org/jira/rest/api/2/priority/3",
+      "iconUrl": "https://issues.apache.org/jira/images/icons/priorities/major.svg",
+      "name": "Major",
+      "id": "3"
+    },
+    "updated": "2026-05-18T14:57:45.011+0000",
+    "labels": []
+  },
+  "names": {
+    "summary": "Summary",
+    "issuetype": "Issue Type",
+    "components": "Component/s",
+    "attachment": "Attachment",
+    "subtasks": "Sub-Tasks",
+    "description": "Description",
+    "issuelinks": "Linked Issues",
+    "comment": "Comment",
+    "priority": "Priority",
+    "updated": "Updated",
+    "labels": "Labels"
+  }
+}

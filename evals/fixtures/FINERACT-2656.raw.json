@@ -1,0 +1,74 @@
+{
+  "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+  "id": "13655440",
+  "self": "https://issues.apache.org/jira/rest/api/2/issue/13655440",
+  "key": "FINERACT-2656",
+  "fields": {
+    "summary": "Disbursing a loan with an account-transfer disbursement charge and no linked savings account throws NullPointerException (HTTP 500)",
+    "issuetype": {
+      "self": "https://issues.apache.org/jira/rest/api/2/issuetype/1",
+      "id": "1",
+      "description": "A problem which impairs or prevents the functions of the product.",
+      "iconUrl": "https://issues.apache.org/jira/secure/viewavatar?size=xsmall&avatarId=21133&avatarType=issuetype",
+      "name": "Bug",
+      "subtask": false,
+      "avatarId": 21133
+    },
+    "components": [
+      {
+        "self": "https://issues.apache.org/jira/rest/api/2/component/12328707",
+        "id": "12328707",
+        "name": "Loan"
+      }
+    ],
+    "attachment": [],
+    "subtasks": [],
+    "description": "h3. Observed behavior\r\n\r\nDisbursing a loan that has a charge configured as *due at disbursement* with {*}payment mode = \"account transfer\"{*}, when the loan has {*}no linked savings account{*}, returns HTTP 500 with a raw NPE:\r\n\r\njava.lang.NullPointerException: Cannot invoke\r\n\"org.apache.fineract.portfolio.account.data.PortfolioAccountData.getId()\"\r\nbecause \"savingAccountData\" is null\r\n    at org.apache.fineract.portfolio.loanaccount.service.LoanWritePlatformServiceJpaRepositoryImpl.disburseLoan(LoanWritePlatformServiceJpaRepositoryImpl.java:490)\r\n\r\n\r\nh3. Expected behavior\r\n\r\nThe disbursement should fail with a clean domain validation error stating that a charge payable by account transfer requires a linked savings account — the same way the disburse-to-savings path already does ({{{}LinkedAccountRequiredException{}}}, HTTP 403/400 with {{{}error.msg.loan.<context>.requires.linked.account{}}}) — *not* an unhandled NullPointerException / HTTP 500.\r\nh3. Steps to reproduce\r\n # Create a charge with *Charge time type = Disbursement* and {*}Charge payment mode = Account transfer{*}.\r\n # Attach that charge to a loan product / loan application, and *do not* configure a linked savings account on the loan.\r\n # Approve the loan, then {{POST /fineract-provider/api/v1/loans/\\{loanId}?command=disburse}} with a normal disbursement body.\r\n # Observe HTTP 500 and the NPE above. The charge collection ({{{}isDueAtDisbursement && getChargePaymentMode().isPaymentModeAccountTransfer() && isChargePending(){}}}) is non-empty, so the code enters the transfer loop and dereferences the null linked-account.\r\n\r\nh3. Root cause\r\n\r\n{{LoanWritePlatformServiceJpaRepositoryImpl}} retrieves the loan's linked savings account inside the disbursement-charge transfer loop and dereferences it with {*}no null check{*}:\r\n \r\n \r\nfor (final Map.Entry<Long, BigDecimal> entrySet : disBuLoanCharges.entrySet()) {\r\n    final PortfolioAccountData savingAccountData =\r\n            this.accountAssociationsReadPlatformService.retriveLoanLinkedAssociation(loanId);\r\n    ...\r\n    final AccountTransferDTO accountTransferDTO = new AccountTransferDTO(actualDisbursementDate, entrySet.getValue(),\r\n            PortfolioAccountType.SAVINGS, PortfolioAccountType.LOAN, savingAccountData.getId(), loanId, \"Loan Charge Payment\",\r\n            ...);\r\n    this.accountTransfersWritePlatformService.transferFunds(accountTransferDTO);\r\n}\r\n \r\n \r\n{{AccountAssociationsReadPlatformServiceImpl.retriveLoanLinkedAssociation(loanId)}} returns *null* when the loan has no {{LINKED_ACCOUNT_ASSOCIATION}} row (it catches {{EmptyResultDataAccessException}} and returns the null-initialised local). The code assumes a linked account always exists and calls {{savingAccountData.getId()}} → NPE.\r\n\r\nThe correct guard *already exists* elsewhere in the same class (disburse-to-savings, ~line 1718):\r\n\r\nfinal PortfolioAccountData portfolioAccountData = this.accountAssociationsReadPlatformService\r\n        .retriveLoanLinkedAssociation(loan.getId());\r\nif (portfolioAccountData == null) {\r\n    final String errorMessage = \"Disburse Loan with id:\" + loan.getId() + \" requires linked savings account for payment\";\r\n    throw new LinkedAccountRequiredException(\"loan.disburse.to.savings\", errorMessage, loan.getId());\r\n}\r\nh3. Affected code (same unguarded {{retriveLoanLinkedAssociation(...).getId()}} pattern)\r\n\r\nAll in {{{}org.apache.fineract.portfolio.loanaccount.service.LoanWritePlatformServiceJpaRepositoryImpl{}}}:\r\n * *{{disburseLoan(...)}}* — disbursement-charge transfer loop (the reported NPE).\r\n * *{{disburseLoan(...)}}* — down-payment auto-transfer standing-instruction block ({{{}if (isAccountTransfer && loan.shouldCreateStandingInstructionAtDisbursement()){}}}).\r\n * *{{undoLoanDisbursal(...)}}* — undo-disbursal charge transfer loop (mirror of the disburse loop).\r\n\r\nAnd in {{org.apache.fineract.portfolio.loanaccount.jobs.transferfeechargeforloans.TransferFeeChargeForLoansTasklet}} — two {{retriveLoanLinkedAssociation(...)}} call sites in the charge-transfer loop, same missing null check.\r\n\r\n{{}}",
+    "issuelinks": [],
+    "comment": {
+      "comments": [],
+      "maxResults": 0,
+      "total": 0,
+      "startAt": 0
+    },
+    "priority": {
+      "self": "https://issues.apache.org/jira/rest/api/2/priority/2",
+      "iconUrl": "https://issues.apache.org/jira/images/icons/priorities/critical.svg",
+      "name": "Critical",
+      "id": "2"
+    },
+    "updated": "2026-07-08T14:40:44.559+0000",
+    "labels": []
+  },
+  "names": {
+    "summary": "Summary",
+    "issuetype": "Issue Type",
+    "components": "Component/s",
+    "attachment": "Attachment",
+    "subtasks": "Sub-Tasks",
+    "description": "Description",
+    "issuelinks": "Linked Issues",
+    "comment": "Comment",
+    "priority": "Priority",
+    "updated": "Updated",
+    "labels": "Labels"
+  },
+  "remoteLinks": [
+    {
+      "id": 434547,
+      "self": "https://issues.apache.org/jira/rest/api/2/issue/FINERACT-2656/remotelink/434547",
+      "globalId": "github=https://github.com/apache/fineract/pull/6026",
+      "application": {},
+      "object": {
+        "url": "https://github.com/apache/fineract/pull/6026",
+        "title": "GitHub Pull Request #6026",
+        "icon": {
+          "url16x16": "https://github.com/favicon.ico"
+        },
+        "status": {
+          "icon": {}
+        }
+      }
+    }
+  ]
+}

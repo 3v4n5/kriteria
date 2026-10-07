@@ -1,0 +1,68 @@
+{
+  "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+  "id": "13663189",
+  "self": "https://issues.apache.org/jira/rest/api/2/issue/13663189",
+  "key": "FINERACT-2782",
+  "fields": {
+    "summary": "UPDATE /v1/email endpoint throws UnsupportedCommandException despite being documented",
+    "issuetype": {
+      "self": "https://issues.apache.org/jira/rest/api/2/issuetype/1",
+      "id": "1",
+      "description": "A problem which impairs or prevents the functions of the product.",
+      "iconUrl": "https://issues.apache.org/jira/secure/viewavatar?size=xsmall&avatarId=21133&avatarType=issuetype",
+      "name": "Bug",
+      "subtask": false,
+      "avatarId": 21133
+    },
+    "components": [],
+    "attachment": [],
+    "subtasks": [],
+    "description": "What is broken\r\n\r\nEmailApiResource exposes CREATE, RETRIEVE, UPDATE, DELETE endpoints for\r\n/v1/email. CREATE and DELETE have working @CommandType handlers; UPDATE\r\ndoes not, so calling the UPDATE endpoint throws UnsupportedCommandException\r\ndespite the endpoint existing and being documented.\r\n\r\nWhy it's broken\r\n\r\nEverything downstream of the handler already exists and is correct:\r\n- EmailWritePlatformService.update(Long, JsonCommand) — interface method\r\n  already declared\r\n- EmailWritePlatformServiceJpaRepositoryImpl.update(...) — already\r\n  implemented (validates, assembles, applies changes, saves only if\r\n  changed, returns CommandProcessingResult)\r\n- EmailApiResource.java — already calls\r\n  CommandWrapperBuilder().updateEmail(resourceId)\r\n- UPDATE_EMAIL permission — already exists in\r\n  fineract-provider/src/main/resources/db/changelog/tenant/parts/0002_initial_data.xml,\r\n  same pattern as CREATE_EMAIL/DELETE_EMAIL\r\n\r\nThe only missing piece is the command handler itself, routing\r\n@CommandType(entity=\"EMAIL\", action=\"UPDATE\") to the existing service\r\nmethod.\r\n\r\nChanges made\r\n\r\n- Added UpdateEmailCommandHandler.java, matching the structural pattern\r\n  of CreateEmailCommandHandler.java and the sibling\r\n  UpdateEmailCampaignCommandHandler.java (@Service,\r\n  @RequiredArgsConstructor, single injected write service,\r\n  @Transactional processCommand calling .update(command.entityId(), command))\r\n\r\n \r\n\r\nNote: no test coverage exists for the /emails resource at any layer\r\n(CREATE/RETRIEVE/UPDATE/DELETE), and a separate, pre-existing validator\r\nbug was found while investigating this (EmailDataValidator validates\r\nagainst the wrong resource's constants). Both are being tracked and\r\nwill be fixed in a different ticket, since they are\r\nindependent of this handler-wiring fix.",
+    "issuelinks": [],
+    "comment": {
+      "comments": [],
+      "maxResults": 0,
+      "total": 0,
+      "startAt": 0
+    },
+    "priority": {
+      "self": "https://issues.apache.org/jira/rest/api/2/priority/4",
+      "iconUrl": "https://issues.apache.org/jira/images/icons/priorities/minor.svg",
+      "name": "Minor",
+      "id": "4"
+    },
+    "updated": "2026-09-07T19:51:31.462+0000",
+    "labels": []
+  },
+  "names": {
+    "summary": "Summary",
+    "issuetype": "Issue Type",
+    "components": "Component/s",
+    "attachment": "Attachment",
+    "subtasks": "Sub-Tasks",
+    "description": "Description",
+    "issuelinks": "Linked Issues",
+    "comment": "Comment",
+    "priority": "Priority",
+    "updated": "Updated",
+    "labels": "Labels"
+  },
+  "remoteLinks": [
+    {
+      "id": 442855,
+      "self": "https://issues.apache.org/jira/rest/api/2/issue/FINERACT-2782/remotelink/442855",
+      "globalId": "github=https://github.com/apache/fineract/pull/6325",
+      "application": {},
+      "object": {
+        "url": "https://github.com/apache/fineract/pull/6325",
+        "title": "GitHub Pull Request #6325",
+        "icon": {
+          "url16x16": "https://github.com/favicon.ico"
+        },
+        "status": {
+          "icon": {}
+        }
+      }
+    }
+  ]
+}

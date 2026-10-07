@@ -1,0 +1,164 @@
+{
+  "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+  "id": "217757",
+  "self": "https://issues.jenkins.io/rest/api/2/issue/217757",
+  "key": "JENKINS-70470",
+  "fields": {
+    "summary": "ScriptlerBuilder checks against Overall.RunScripts-Permission instead of Scriptler.RunScripts-Permission",
+    "issuetype": {
+      "self": "https://issues.jenkins.io/rest/api/2/issuetype/1",
+      "id": "1",
+      "description": "A problem which impairs or prevents the functions of the product.",
+      "iconUrl": "https://issues.jenkins.io/secure/viewavatar?size=xsmall&avatarId=14673&avatarType=issuetype",
+      "name": "Bug",
+      "subtask": false,
+      "avatarId": 14673
+    },
+    "components": [
+      {
+        "self": "https://issues.jenkins.io/rest/api/2/component/15743",
+        "id": "15743",
+        "name": "scriptler-plugin",
+        "description": "scriptler plugin"
+      }
+    ],
+    "attachment": [],
+    "description": "Non-Admin-Users can't configure jobs with scriptler-scripts although they have the permissions Scriptler.RunScripts and Scriptler.ConfigureScripts (verified using [https://raw.githubusercontent.com/samrocketman/jenkins-script-console-scripts/main/audit-user-permissions.groovy] in the console). The error message is: builderId: As the given builder does not have ID, it must be equals to one of the existing builder that does not have ID. Which should not even be checked when the user has the correct permissions.\n\nBut the method checkPermission in ScriptlerBuilder checks with \"if(Jenkins.get().hasPermission(Jenkins.RUN_SCRIPTS)){\" against the permission Overall.RunScripts and therefore denies our users to configure the job with a scriptler script.\n\nCould you please verify if this diagnosis is correct and correct the plugin as neccessary?",
+    "issuelinks": [],
+    "comment": {
+      "comments": [
+        {
+          "self": "https://issues.jenkins.io/rest/api/2/issue/217757/comment/435125",
+          "id": "435125",
+          "author": {
+            "self": "https://issues.jenkins.io/rest/api/2/user?username=zhaider",
+            "name": "zhaider",
+            "key": "JIRAUSER140198",
+            "avatarUrls": {
+              "48x48": "https://www.gravatar.com/avatar/81f2d519a9dcd4fc2f4380c951226d21?d=mm&s=48",
+              "24x24": "https://www.gravatar.com/avatar/81f2d519a9dcd4fc2f4380c951226d21?d=mm&s=24",
+              "16x16": "https://www.gravatar.com/avatar/81f2d519a9dcd4fc2f4380c951226d21?d=mm&s=16",
+              "32x32": "https://www.gravatar.com/avatar/81f2d519a9dcd4fc2f4380c951226d21?d=mm&s=32"
+            },
+            "displayName": "Zuhair Haider",
+            "active": true,
+            "timeZone": "UTC"
+          },
+          "body": "Same as JENKINS-70066",
+          "updateAuthor": {
+            "self": "https://issues.jenkins.io/rest/api/2/user?username=zhaider",
+            "name": "zhaider",
+            "key": "JIRAUSER140198",
+            "avatarUrls": {
+              "48x48": "https://www.gravatar.com/avatar/81f2d519a9dcd4fc2f4380c951226d21?d=mm&s=48",
+              "24x24": "https://www.gravatar.com/avatar/81f2d519a9dcd4fc2f4380c951226d21?d=mm&s=24",
+              "16x16": "https://www.gravatar.com/avatar/81f2d519a9dcd4fc2f4380c951226d21?d=mm&s=16",
+              "32x32": "https://www.gravatar.com/avatar/81f2d519a9dcd4fc2f4380c951226d21?d=mm&s=32"
+            },
+            "displayName": "Zuhair Haider",
+            "active": true,
+            "timeZone": "UTC"
+          },
+          "created": "2023-02-13T14:50:51.000+0000",
+          "updated": "2023-02-13T14:50:51.000+0000"
+        },
+        {
+          "self": "https://issues.jenkins.io/rest/api/2/issue/217757/comment/451029",
+          "id": "451029",
+          "author": {
+            "self": "https://issues.jenkins.io/rest/api/2/user?username=mtughan",
+            "name": "mtughan",
+            "key": "mtughan",
+            "avatarUrls": {
+              "48x48": "https://www.gravatar.com/avatar/ccd4b4d2c06b734cf7c8cf593e4be95f?d=mm&s=48",
+              "24x24": "https://www.gravatar.com/avatar/ccd4b4d2c06b734cf7c8cf593e4be95f?d=mm&s=24",
+              "16x16": "https://www.gravatar.com/avatar/ccd4b4d2c06b734cf7c8cf593e4be95f?d=mm&s=16",
+              "32x32": "https://www.gravatar.com/avatar/ccd4b4d2c06b734cf7c8cf593e4be95f?d=mm&s=32"
+            },
+            "displayName": "Michael Tughan",
+            "active": true,
+            "timeZone": "America/Toronto"
+          },
+          "body": "[~schaarda], this should now be fixed with release 384.v5d0d63f4a_51e.",
+          "updateAuthor": {
+            "self": "https://issues.jenkins.io/rest/api/2/user?username=mtughan",
+            "name": "mtughan",
+            "key": "mtughan",
+            "avatarUrls": {
+              "48x48": "https://www.gravatar.com/avatar/ccd4b4d2c06b734cf7c8cf593e4be95f?d=mm&s=48",
+              "24x24": "https://www.gravatar.com/avatar/ccd4b4d2c06b734cf7c8cf593e4be95f?d=mm&s=24",
+              "16x16": "https://www.gravatar.com/avatar/ccd4b4d2c06b734cf7c8cf593e4be95f?d=mm&s=16",
+              "32x32": "https://www.gravatar.com/avatar/ccd4b4d2c06b734cf7c8cf593e4be95f?d=mm&s=32"
+            },
+            "displayName": "Michael Tughan",
+            "active": true,
+            "timeZone": "America/Toronto"
+          },
+          "created": "2024-12-04T16:14:49.000+0000",
+          "updated": "2024-12-04T16:14:49.000+0000"
+        },
+        {
+          "self": "https://issues.jenkins.io/rest/api/2/issue/217757/comment/451215",
+          "id": "451215",
+          "author": {
+            "self": "https://issues.jenkins.io/rest/api/2/user?username=schaarda",
+            "name": "schaarda",
+            "key": "schaarda",
+            "avatarUrls": {
+              "48x48": "https://www.gravatar.com/avatar/b73f35b4ac2a491ee88364735ab3b5be?d=mm&s=48",
+              "24x24": "https://www.gravatar.com/avatar/b73f35b4ac2a491ee88364735ab3b5be?d=mm&s=24",
+              "16x16": "https://www.gravatar.com/avatar/b73f35b4ac2a491ee88364735ab3b5be?d=mm&s=16",
+              "32x32": "https://www.gravatar.com/avatar/b73f35b4ac2a491ee88364735ab3b5be?d=mm&s=32"
+            },
+            "displayName": "Daniel Schaarschmidt",
+            "active": true,
+            "timeZone": "UTC"
+          },
+          "body": "Thank you, works now.",
+          "updateAuthor": {
+            "self": "https://issues.jenkins.io/rest/api/2/user?username=schaarda",
+            "name": "schaarda",
+            "key": "schaarda",
+            "avatarUrls": {
+              "48x48": "https://www.gravatar.com/avatar/b73f35b4ac2a491ee88364735ab3b5be?d=mm&s=48",
+              "24x24": "https://www.gravatar.com/avatar/b73f35b4ac2a491ee88364735ab3b5be?d=mm&s=24",
+              "16x16": "https://www.gravatar.com/avatar/b73f35b4ac2a491ee88364735ab3b5be?d=mm&s=16",
+              "32x32": "https://www.gravatar.com/avatar/b73f35b4ac2a491ee88364735ab3b5be?d=mm&s=32"
+            },
+            "displayName": "Daniel Schaarschmidt",
+            "active": true,
+            "timeZone": "UTC"
+          },
+          "created": "2024-12-11T12:58:27.000+0000",
+          "updated": "2024-12-11T12:58:27.000+0000"
+        }
+      ],
+      "maxResults": 1000,
+      "total": 3,
+      "startAt": 0
+    },
+    "priority": {
+      "self": "https://issues.jenkins.io/rest/api/2/priority/2",
+      "iconUrl": "https://issues.jenkins.io/images/icons/priorities/critical.svg",
+      "name": "Critical",
+      "id": "2"
+    },
+    "updated": "2024-12-11T12:58:27.000+0000",
+    "labels": [
+      "Permission"
+    ]
+  },
+  "renderedFields": null,
+  "names": {
+    "summary": "Summary",
+    "issuetype": "Issue Type",
+    "components": "Component/s",
+    "attachment": "Attachment",
+    "description": "Description",
+    "issuelinks": "Linked Issues",
+    "comment": "Comment",
+    "priority": "Priority",
+    "updated": "Updated",
+    "labels": "Labels"
+  }
+}

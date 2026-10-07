@@ -1,0 +1,169 @@
+{
+  "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+  "id": "13668315",
+  "self": "https://issues.apache.org/jira/rest/api/2/issue/13668315",
+  "key": "FINERACT-2855",
+  "fields": {
+    "summary": "Duplicate overdraft interest transactions created on successive business dates",
+    "issuetype": {
+      "self": "https://issues.apache.org/jira/rest/api/2/issuetype/1",
+      "id": "1",
+      "description": "A problem which impairs or prevents the functions of the product.",
+      "iconUrl": "https://issues.apache.org/jira/secure/viewavatar?size=xsmall&avatarId=21133&avatarType=issuetype",
+      "name": "Bug",
+      "subtask": false,
+      "avatarId": 21133
+    },
+    "components": [
+      {
+        "self": "https://issues.apache.org/jira/rest/api/2/component/12328706",
+        "id": "12328706",
+        "name": "Savings"
+      }
+    ],
+    "attachment": [
+      {
+        "self": "https://issues.apache.org/jira/rest/api/2/attachment/13084742",
+        "id": "13084742",
+        "filename": "Fineract_1.15.0_Duplicate_Overdraft_Interest_Issue.pdf",
+        "author": {
+          "self": "https://issues.apache.org/jira/rest/api/2/user?username=adamsaghy",
+          "name": "adamsaghy",
+          "key": "adamsaghy",
+          "avatarUrls": {
+            "48x48": "https://issues.apache.org/jira/secure/useravatar?avatarId=34045",
+            "24x24": "https://issues.apache.org/jira/secure/useravatar?size=small&avatarId=34045",
+            "16x16": "https://issues.apache.org/jira/secure/useravatar?size=xsmall&avatarId=34045",
+            "32x32": "https://issues.apache.org/jira/secure/useravatar?size=medium&avatarId=34045"
+          },
+          "displayName": "Adam Saghy",
+          "active": true,
+          "timeZone": "Etc/UTC"
+        },
+        "created": "2026-09-24T12:30:39.432+0000",
+        "size": 31545,
+        "mimeType": "application/pdf",
+        "content": "https://issues.apache.org/jira/secure/attachment/13084742/Fineract_1.15.0_Duplicate_Overdraft_Interest_Issue.pdf"
+      }
+    ],
+    "subtasks": [],
+    "description": "Greetings.\r\nI am trying to evaluate the OD functionalities. \r\n \r\nWhile testing, I find that the Interest posting getting duplicated daily.\r\nI have enclosed a detailed report for your reference.\r\n \r\nCould you kindly evaluate and plan a suitable fix? \r\n \r\nRegards\r\nBala.\r\nFineract/Mifos enthusiast.\r\n \r\nSee more details in the attachment.",
+    "issuelinks": [],
+    "comment": {
+      "comments": [
+        {
+          "self": "https://issues.apache.org/jira/rest/api/2/issue/13668315/comment/18118849",
+          "id": "18118849",
+          "author": {
+            "self": "https://issues.apache.org/jira/rest/api/2/user?username=bgowda",
+            "name": "bgowda",
+            "key": "bgowda",
+            "avatarUrls": {
+              "48x48": "https://issues.apache.org/jira/secure/useravatar?avatarId=10452",
+              "24x24": "https://issues.apache.org/jira/secure/useravatar?size=small&avatarId=10452",
+              "16x16": "https://issues.apache.org/jira/secure/useravatar?size=xsmall&avatarId=10452",
+              "32x32": "https://issues.apache.org/jira/secure/useravatar?size=medium&avatarId=10452"
+            },
+            "displayName": "Bharath Gowda",
+            "active": true,
+            "timeZone": "Etc/UTC"
+          },
+          "body": "[~josealbertohm] will you be able to look into this issue? It looks similar to what we encountered few months back?",
+          "updateAuthor": {
+            "self": "https://issues.apache.org/jira/rest/api/2/user?username=bgowda",
+            "name": "bgowda",
+            "key": "bgowda",
+            "avatarUrls": {
+              "48x48": "https://issues.apache.org/jira/secure/useravatar?avatarId=10452",
+              "24x24": "https://issues.apache.org/jira/secure/useravatar?size=small&avatarId=10452",
+              "16x16": "https://issues.apache.org/jira/secure/useravatar?size=xsmall&avatarId=10452",
+              "32x32": "https://issues.apache.org/jira/secure/useravatar?size=medium&avatarId=10452"
+            },
+            "displayName": "Bharath Gowda",
+            "active": true,
+            "timeZone": "Etc/UTC"
+          },
+          "created": "2026-09-24T13:03:31.600+0000",
+          "updated": "2026-09-24T13:03:31.600+0000"
+        },
+        {
+          "self": "https://issues.apache.org/jira/rest/api/2/issue/13668315/comment/18119019",
+          "id": "18119019",
+          "author": {
+            "self": "https://issues.apache.org/jira/rest/api/2/user?username=alberto_art3ch",
+            "name": "alberto_art3ch",
+            "key": "JIRAUSER304864",
+            "avatarUrls": {
+              "48x48": "https://issues.apache.org/jira/secure/useravatar?avatarId=10452",
+              "24x24": "https://issues.apache.org/jira/secure/useravatar?size=small&avatarId=10452",
+              "16x16": "https://issues.apache.org/jira/secure/useravatar?size=xsmall&avatarId=10452",
+              "32x32": "https://issues.apache.org/jira/secure/useravatar?size=medium&avatarId=10452"
+            },
+            "displayName": "Jose Alberto Hernandez",
+            "active": true,
+            "timeZone": "Etc/UTC"
+          },
+          "body": "[~bgowda] The fineract PR for this is https://github.com/apache/fineract/pull/6508",
+          "updateAuthor": {
+            "self": "https://issues.apache.org/jira/rest/api/2/user?username=alberto_art3ch",
+            "name": "alberto_art3ch",
+            "key": "JIRAUSER304864",
+            "avatarUrls": {
+              "48x48": "https://issues.apache.org/jira/secure/useravatar?avatarId=10452",
+              "24x24": "https://issues.apache.org/jira/secure/useravatar?size=small&avatarId=10452",
+              "16x16": "https://issues.apache.org/jira/secure/useravatar?size=xsmall&avatarId=10452",
+              "32x32": "https://issues.apache.org/jira/secure/useravatar?size=medium&avatarId=10452"
+            },
+            "displayName": "Jose Alberto Hernandez",
+            "active": true,
+            "timeZone": "Etc/UTC"
+          },
+          "created": "2026-09-25T03:20:15.527+0000",
+          "updated": "2026-09-25T03:20:15.527+0000"
+        }
+      ],
+      "maxResults": 2,
+      "total": 2,
+      "startAt": 0
+    },
+    "priority": {
+      "self": "https://issues.apache.org/jira/rest/api/2/priority/2",
+      "iconUrl": "https://issues.apache.org/jira/images/icons/priorities/critical.svg",
+      "name": "Critical",
+      "id": "2"
+    },
+    "updated": "2026-09-29T18:59:17.765+0000",
+    "labels": []
+  },
+  "names": {
+    "summary": "Summary",
+    "issuetype": "Issue Type",
+    "components": "Component/s",
+    "attachment": "Attachment",
+    "subtasks": "Sub-Tasks",
+    "description": "Description",
+    "issuelinks": "Linked Issues",
+    "comment": "Comment",
+    "priority": "Priority",
+    "updated": "Updated",
+    "labels": "Labels"
+  },
+  "remoteLinks": [
+    {
+      "id": 448343,
+      "self": "https://issues.apache.org/jira/rest/api/2/issue/FINERACT-2855/remotelink/448343",
+      "globalId": "github=https://github.com/apache/fineract/pull/6508",
+      "application": {},
+      "object": {
+        "url": "https://github.com/apache/fineract/pull/6508",
+        "title": "GitHub Pull Request #6508",
+        "icon": {
+          "url16x16": "https://github.com/favicon.ico"
+        },
+        "status": {
+          "icon": {}
+        }
+      }
+    }
+  ]
+}

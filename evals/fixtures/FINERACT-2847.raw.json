@@ -1,0 +1,74 @@
+{
+  "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+  "id": "13667750",
+  "self": "https://issues.apache.org/jira/rest/api/2/issue/13667750",
+  "key": "FINERACT-2847",
+  "fields": {
+    "summary": "Expose transaction allocation history for savings account charges",
+    "issuetype": {
+      "self": "https://issues.apache.org/jira/rest/api/2/issuetype/4",
+      "id": "4",
+      "description": "An improvement or enhancement to an existing feature or task.",
+      "iconUrl": "https://issues.apache.org/jira/secure/viewavatar?size=xsmall&avatarId=21140&avatarType=issuetype",
+      "name": "Improvement",
+      "subtask": false,
+      "avatarId": 21140
+    },
+    "components": [
+      {
+        "self": "https://issues.apache.org/jira/rest/api/2/component/12328717",
+        "id": "12328717",
+        "name": "Charges"
+      }
+    ],
+    "attachment": [],
+    "subtasks": [],
+    "description": "*As a* financial institution staff member,\r\n*I want* to retrieve the transactions associated with an individual savings account charge, including allocated amounts and available payment references,\r\n*so that* I can explain partial settlements, reconcile payments, and distinguish valid transactions from reversed ones.\r\n\r\nh2. Background\r\n\r\nA savings account charge’s balances do not provide a complete explanation of how the charge is settled. Staff need to identify the associated transactions and distinguish each transaction’s total amount from the portion allocated to the selected charge.\r\n\r\nThis distinction is particularly important for partial payments and recurring charges, where historical allocations may not correspond to the current amount due. Available payment details and receipt references help staff reconcile charge settlements with external payment records.\r\n\r\nh2. Acceptance Criteria\r\n\r\n* An authorized API consumer can optionally request transaction allocation history when retrieving an individual savings account charge.\r\n* Each history entry identifies the transaction and allocation, transaction date and type, total transaction amount, amount allocated to the selected charge, and reversal status.\r\n* Multiple partial settlements remain individually identifiable, with their respective allocated amounts.\r\n* Reversed transactions remain visible and are explicitly marked as reversed.\r\n* Available payment details include the payment type and receipt reference, together with any recorded account, check, routing, and bank information.\r\n* Transactions without payment details remain visible; missing payment information does not prevent history retrieval.\r\n* History contains only allocations for the requested charge and savings account. Transactions belonging to another account are not disclosed.\r\n* Retrieving transaction history requires savings-account read permission in addition to the existing charge-read authorization.\r\n* History is returned newest first, with deterministic ordering for entries on the same date.\r\n* A charge without associated transaction allocations returns an empty history collection.\r\n* Requests that do not ask for transaction history retain the existing response behavior.\r\n* Retrieving history does not modify charge balances, transactions, allocations, or payment details.\r\n\r\nh2. Notes\r\n\r\n* The scope is the individual savings account charge read API, with history requested through {{associations=transactions}} or {{associations=all}}.\r\n* History reflects recorded charge allocations. It does not infer payments, waivers, or write-offs from balance differences.\r\n* Historical allocation totals must not be presented as the current outstanding balance of a recurring charge.\r\n* Creating, collecting, waiving, reversing, or editing charges is outside this story’s scope.",
+    "issuelinks": [],
+    "comment": {
+      "comments": [],
+      "maxResults": 0,
+      "total": 0,
+      "startAt": 0
+    },
+    "priority": {
+      "self": "https://issues.apache.org/jira/rest/api/2/priority/4",
+      "iconUrl": "https://issues.apache.org/jira/images/icons/priorities/minor.svg",
+      "name": "Minor",
+      "id": "4"
+    },
+    "updated": "2026-09-22T15:06:29.667+0000",
+    "labels": []
+  },
+  "names": {
+    "summary": "Summary",
+    "issuetype": "Issue Type",
+    "components": "Component/s",
+    "attachment": "Attachment",
+    "subtasks": "Sub-Tasks",
+    "description": "Description",
+    "issuelinks": "Linked Issues",
+    "comment": "Comment",
+    "priority": "Priority",
+    "updated": "Updated",
+    "labels": "Labels"
+  },
+  "remoteLinks": [
+    {
+      "id": 447844,
+      "self": "https://issues.apache.org/jira/rest/api/2/issue/FINERACT-2847/remotelink/447844",
+      "globalId": "github=https://github.com/apache/fineract/pull/6491",
+      "application": {},
+      "object": {
+        "url": "https://github.com/apache/fineract/pull/6491",
+        "title": "GitHub Pull Request #6491",
+        "icon": {
+          "url16x16": "https://github.com/favicon.ico"
+        },
+        "status": {
+          "icon": {}
+        }
+      }
+    }
+  ]
+}
