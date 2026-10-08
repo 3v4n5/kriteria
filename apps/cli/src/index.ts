@@ -9,6 +9,7 @@ import { readFileSync } from "node:fs";
 import { parseArgs } from "node:util";
 import { createAnthropicCaller } from "@kriteria/agents";
 import { baselineCommand } from "./baseline.js";
+import { loadDotenv } from "./dotenv.js";
 import { goldenAddCommand } from "./golden-add.js";
 import { reviewCommand } from "./review.js";
 import { planCommand } from "./plan.js";
@@ -42,7 +43,7 @@ Options:
                       plan built with it is not comparable to one built without
   -h, --help          Show this help
 
-Environment:
+Environment (un .env en la raíz del proyecto también sirve — está gitignorado):
   ANTHROPIC_API_KEY   or an \`ant auth login\` profile
   JIRA_BASE_URL       required for jira: sources
   JIRA_EMAIL, JIRA_API_TOKEN   optional — omit both to read a public tracker
@@ -52,6 +53,10 @@ Environment:
   KRITERIA_API_BASE_URL, KRITERIA_API_TOKEN   (ambiente de pruebas para auto-api)`;
 
 async function main(): Promise<void> {
+  // Before anything reads process.env. The real environment wins, so this
+  // only fills gaps.
+  loadDotenv();
+
   const [command, ...rest] = process.argv.slice(2);
 
   if (!command || command === "-h" || command === "--help") {
