@@ -174,6 +174,38 @@ async function askKeywords(
     .filter(Boolean);
 }
 
+/**
+ * Open-ended list: one item per line, blank line ends it.
+ *
+ * Used for the criteria a reviewer writes. Not comma-separated like the
+ * keyword fields, because a criterion is a full sentence and commas belong
+ * inside it.
+ */
+async function askLines(
+  ask: Ask,
+  question: string,
+  hint: string,
+  current: readonly string[] = [],
+): Promise<string[]> {
+  console.log(`\n${question}`);
+  console.log(`   ${hint}`);
+  if (current.length > 0) {
+    console.log("   ya tenías:");
+    current.forEach((c, i) => console.log(`     ${i + 1}. ${c}`));
+    console.log("   (Enter en la primera = conservar lo que ya estaba)");
+  } else {
+    console.log("   (uno por línea · línea vacía para terminar)");
+  }
+
+  const out: string[] = [];
+  for (;;) {
+    const raw = (await ask(`   ${out.length + 1}. `)).trim();
+    if (raw === "") break;
+    out.push(raw);
+  }
+  return out.length === 0 ? [...current] : out;
+}
+
 async function askNumber(
   ask: Ask,
   question: string,
@@ -283,6 +315,23 @@ async function expectPhase(
     await showBrief(ask, readFileSync(briefPath, "utf8"));
   }
 
+  // Asked BEFORE the strategy questions: writing the criteria is how a
+  // reviewer works out what the ticket even asks for, and the answer should
+  // inform the decisions that follow — not be an afterthought.
+  const hasOwnCriteria = /\*\*AC-\d/.test(
+    existsSync(briefPath) ? readFileSync(briefPath, "utf8") : "",
+  );
+  const reviewerCriteria = await askLines(
+    ask,
+    hasOwnCriteria
+      ? "El ticket ya trae criterios. ¿Agregarías o corregirías alguno?"
+      : "Este ticket NO trae criterios de aceptación. ¿Cuáles deberían ser?",
+    hasOwnCriteria
+      ? "Solo los que falten o estén mal. Enter directo si los de arriba te sirven."
+      : "Lo que debe cumplirse para darlo por bueno. Uno por línea.",
+    entry.reviewerCriteria,
+  );
+
   console.log(`\n${"─".repeat(70)}`);
   console.log("  Tus decisiones. Enter en cualquiera = no tengo opinión.");
   console.log(`${"─".repeat(70)}`);
@@ -348,12 +397,15 @@ async function expectPhase(
 
   console.log(`\n${"─".repeat(70)}`);
   console.log("  Resumen de lo que registraste:");
+  if (reviewerCriteria.length > 0) {
+    console.log(`   ✅ criterios que escribiste: ${reviewerCriteria.length}`);
+  }
   for (const line of summarize(expect)) console.log(`   ${line}`);
   console.log(`${"─".repeat(70)}`);
 
   const confirm = await askYesNo(ask, "¿Guardo esto?");
   if (confirm !== true) return null;
-  return { ...entry, expect };
+  return { ...entry, reviewerCriteria, expect };
 }
 
 /** The verdict phase is the only place the produced plan is shown. */
@@ -401,6 +453,18 @@ async function verdictPhase(
   console.log(`    niveles ............ ${(strategy.levels ?? []).map((l: any) => l.value).join(", ") || "—"}`);
   console.log(`    tipos .............. ${(strategy.types ?? []).map((t: any) => t.value).join(", ") || "—"}`);
   console.log(`    casos diseñados .... ${(cases.cases ?? []).length}`);
+
+  if (entry.reviewerCriteria.length > 0) {
+    console.log("\n  Los criterios que TÚ escribiste, y los casos del plan:");
+    entry.reviewerCriteria.forEach((c, i) => console.log(`    ${i + 1}. ${c}`));
+    console.log("\n  Casos diseñados:");
+    for (const c of (cases.cases ?? []) as { id: string; title: string }[]) {
+      console.log(`    ${c.id} ${c.title}`);
+    }
+    console.log(
+      "\n  (la comparación la haces tú — comparar prosa con prosa no es medición)",
+    );
+  }
 
   const report = join(planDir, `informe-${entry.workItem}.html`);
   console.log(

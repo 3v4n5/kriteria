@@ -65,6 +65,23 @@ export const GoldenEntrySchema = z.object({
   workItem: z.string().min(1),
   /** One line on why this item is in the set — keeps the set intentional. */
   rationale: blankAsAbsent(z.string().optional()),
+  /**
+   * Acceptance criteria the REVIEWER wrote, because the ticket had none or
+   * had bad ones.
+   *
+   * Deliberately outside `expect`: it is not a strategy judgement and is not
+   * scored dimension-by-dimension. Comparing prose to prose is not
+   * measurement, and a keyword match over a full sentence would manufacture
+   * a number nobody should trust.
+   *
+   * What it IS: the clearest statement of what the reviewer believes the
+   * ticket actually asks for. Writing the missing criteria is a senior QA's
+   * first move on a spec-less ticket, so capturing it keeps the most
+   * valuable part of the review from being thrown away — and the verdict
+   * phase shows it beside the designed cases, so the yes/no is informed by
+   * whether the plan covered what the reviewer thinks matters.
+   */
+  reviewerCriteria: blankAsAbsent(z.array(z.string().min(1)).default([])),
   expect: ExpectationSchema,
   humanVerdict: z
     .object({
