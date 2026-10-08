@@ -7,6 +7,8 @@
 
 import { readFileSync } from "node:fs";
 import { parseArgs } from "node:util";
+import { createAnthropicCaller } from "@kriteria/agents";
+import { baselineCommand } from "./baseline.js";
 import { goldenAddCommand } from "./golden-add.js";
 import { planCommand } from "./plan.js";
 import { evalCommand } from "./eval.js";
@@ -22,6 +24,8 @@ Usage:
                             Ejecuta casos auto-api y luego guía los manuales (reanudable)
   qa report <out/REF>       Genera informe HTML legible de una corrida
   qa eval [--only REF]      Puntúa los planes contra el golden set (sin costo de API)
+  qa baseline <KEY...>      Juicio de un modelo independiente que solo ve el brief,
+                            para medir si predice el tuyo. CUESTA API (Opus).
   qa golden-add <KEY...>    Trae tickets públicos al corpus: fixture + golden en
                             blanco + brief legible. Nunca llena \`expect\`.
 
@@ -111,6 +115,32 @@ async function main(): Promise<void> {
     if (failed.length > 0) process.exitCode = 1;
     return;
   }
+  if (command === "baseline") {
+    const { values, positionals: keys } = parseArgs({
+      args: rest,
+      options: {
+        evals: { type: "string", default: "evals" },
+        force: { type: "boolean", default: false },
+      },
+      allowPositionals: true,
+    });
+    if (keys.length === 0) {
+      throw new Error("uso: qa baseline <KEY> [<KEY>...] [--force]");
+    }
+    const results = await baselineCommand({
+      keys,
+      call: createAnthropicCaller(),
+      evalsDir: values.evals!,
+      force: values.force!,
+      log: (msg) => console.log(msg),
+    });
+    const written = results.filter((r) => r.written);
+    const cost = written.reduce((sum, r) => sum + (r.costUsd ?? 0), 0);
+    console.log(
+      `\n✓ ${written.length}/${results.length} baseline(s) generado(s) ≈ $${cost.toFixed(3)} USD`,
+    );
+    return;
+  }
   if (command === "eval") {
     const { values } = parseArgs({
       args: rest,
@@ -118,6 +148,7 @@ async function main(): Promise<void> {
         golden: { type: "string", default: "evals/golden" },
         out: { type: "string", default: "out" },
         results: { type: "string", default: "evals/results" },
+        baseline: { type: "string", default: "evals/baseline" },
         only: { type: "string" },
       },
     });
@@ -125,6 +156,7 @@ async function main(): Promise<void> {
       goldenDir: values.golden!,
       outDir: values.out!,
       resultsDir: values.results!,
+      baselineDir: values.baseline!,
       ...(values.only ? { only: values.only } : {}),
     });
     return;

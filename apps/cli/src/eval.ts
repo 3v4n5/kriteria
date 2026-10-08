@@ -6,14 +6,20 @@
  * or engine change without a token budget conversation.
  */
 
+import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import {
+  BaselineEntrySchema,
   GoldenEntrySchema,
+  compareExpectations,
   scorePlan,
+  summarizeAgreement,
   summarizeSuite,
   type ActualPlan,
+  type AgreementResult,
   type EvalResult,
+  type GoldenEntry,
 } from "@kriteria/evals";
 import { parse as fromYaml } from "yaml";
 
@@ -21,6 +27,8 @@ export interface EvalCommandOptions {
   goldenDir: string;
   outDir: string;
   resultsDir: string;
+  /** Independent model judgements, for the agreement metrics. */
+  baselineDir?: string;
   /** Score only this work item. */
   only?: string;
 }
@@ -47,6 +55,11 @@ export function evalCommand(options: EvalCommandOptions): void {
 
   const results: EvalResult[] = [];
   const skipped: string[] = [];
+  // Three pairs, not one. Kriteria-vs-human is the gate; the other two say
+  // whether a model's judgement can stand in for a human's at all.
+  const planVsBaseline: EvalResult[] = [];
+  const humanVsBaseline: AgreementResult[] = [];
+  const staleBaselines: string[] = [];
 
   for (const file of files.sort()) {
     if (file.startsWith("_")) continue; // templates
@@ -61,7 +74,23 @@ export function evalCommand(options: EvalCommandOptions): void {
       continue;
     }
 
-    results.push(scorePlan(golden, readActualPlan(planDir, golden.workItem)));
+    const actual = readActualPlan(planDir, golden.workItem);
+    results.push(scorePlan(golden, actual));
+
+    const baseline = readBaseline(options.baselineDir, golden.workItem, staleBaselines);
+    if (baseline) {
+      // The baseline is scored against the plan exactly as a golden entry is,
+      // so the two numbers are directly comparable.
+      planVsBaseline.push(
+        scorePlan(
+          { ...golden, expect: baseline.expect } satisfies GoldenEntry,
+          actual,
+        ),
+      );
+      humanVsBaseline.push(
+        compareExpectations(golden.workItem, golden.expect, baseline.expect),
+      );
+    }
   }
 
   if (results.length === 0) {
@@ -88,6 +117,8 @@ export function evalCommand(options: EvalCommandOptions): void {
   }
 
   const summary = summarizeSuite(results);
+  const baselineSummary = summarizeSuite(planVsBaseline);
+  const agreement = summarizeAgreement(humanVsBaseline);
   console.log(`\n${"─".repeat(64)}`);
   console.log(
     `Puntaje mecánico: ${summary.dimensionRatio === null ? "—" : `${Math.round(summary.dimensionRatio * 100)}%`} de las dimensiones evaluadas`,
@@ -103,12 +134,41 @@ export function evalCommand(options: EvalCommandOptions): void {
         : "  ❌ umbral ≥3/5 NO alcanzado — el juicio del sistema necesita trabajo",
     );
   }
+  if (humanVsBaseline.length > 0) {
+    const pct = (r: number | null) => (r === null ? "—" : `${Math.round(r * 100)}%`);
+    console.log(`\nBaseline independiente (${humanVsBaseline.length} ticket(s)):`);
+    console.log(`  Kriteria vs tu criterio ...... ${pct(summary.dimensionRatio)}`);
+    console.log(`  Kriteria vs modelo ........... ${pct(baselineSummary.dimensionRatio)}`);
+    console.log(
+      `  tu criterio vs modelo ........ ${pct(agreement.ratio)} (${agreement.agreed}/${agreement.compared} dimensiones donde ambos se pronunciaron)`,
+    );
+    console.log(
+      agreement.ratio === null
+        ? "  ⏳ aún no hay dimensiones donde ambos opinen"
+        : "  ↳ si este tercer número es alto, el juicio del modelo predice el tuyo y el corpus se puede escalar con muestreo",
+    );
+  }
+  for (const s of staleBaselines) console.log(`  ⚠️  ${s}`);
   for (const s of skipped) console.log(`  ◻️ omitido: ${s}`);
 
   mkdirSync(resolve(options.resultsDir), { recursive: true });
   const stamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
   const path = join(resolve(options.resultsDir), `${stamp}.json`);
-  writeFileSync(path, JSON.stringify(summary, null, 2), "utf8");
+  writeFileSync(
+    path,
+    JSON.stringify(
+      {
+        ...summary,
+        baseline:
+          humanVsBaseline.length > 0
+            ? { planVsBaseline: baselineSummary, humanVsBaseline: agreement }
+            : null,
+      },
+      null,
+      2,
+    ),
+    "utf8",
+  );
   console.log(`\nresultados: ${path}`);
 }
 
@@ -148,4 +208,36 @@ function readActualPlan(planDir: string, workItem: string): ActualPlan {
     // artifact must never score a false pass.
     auditFindingCount: audit === null ? null : audit.findings.length,
   };
+}
+
+/**
+ * Loads a baseline, if one exists for this item.
+ *
+ * A baseline whose digest no longer matches its brief is REFUSED, not used
+ * with a warning tacked on: the brief is the only thing the model saw, so if
+ * it changed, the judgement was formed from a document that no longer exists.
+ */
+function readBaseline(
+  baselineDir: string | undefined,
+  workItem: string,
+  stale: string[],
+): { expect: GoldenEntry["expect"] } | null {
+  if (!baselineDir) return null;
+  const path = join(resolve(baselineDir), `${workItem}.yml`);
+  if (!existsSync(path)) return null;
+
+  const entry = BaselineEntrySchema.parse(fromYaml(readFileSync(path, "utf8")));
+  const briefPath = join(resolve(baselineDir), "..", "briefs", `${workItem}.md`);
+  if (existsSync(briefPath)) {
+    const digest = createHash("sha256")
+      .update(readFileSync(briefPath, "utf8"), "utf8")
+      .digest("hex");
+    if (digest !== entry.source.briefSha256) {
+      stale.push(
+        `baseline de ${workItem} ignorado: el brief cambió desde que se generó (regenera con qa baseline --force)`,
+      );
+      return null;
+    }
+  }
+  return { expect: entry.expect };
 }

@@ -12,6 +12,9 @@ export const AGENT_ROLES = [
   "risk-assessor",
   "designer",
   "critic",
+  // Not part of the product pipeline: this one judges a ticket in isolation
+  // to produce an independent reference for the eval's agreement metric.
+  "baseline-reviewer",
 ] as const;
 
 export type AgentRole = (typeof AGENT_ROLES)[number];
@@ -40,6 +43,10 @@ export const DEFAULT_ROUTING: Record<AgentRole, RouteConfig> = {
   // chain, so it gets the largest budget; medium effort keeps thinking spend
   // bounded (Opus 5 medium is still a strong reviewer).
   critic: { model: "claude-opus-5", effort: "medium", maxTokens: 24000 },
+  // Opus on purpose: this is a REFERENCE standard, so it should be the
+  // strongest judgement available, not the cheapest. Its output is a small
+  // form, so the budget is modest despite the model.
+  "baseline-reviewer": { model: "claude-opus-5", effort: "medium", maxTokens: 8000 },
 };
 
 /** USD per million tokens, for run-cost reporting. */

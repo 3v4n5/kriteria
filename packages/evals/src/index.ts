@@ -7,4 +7,6 @@
  */
 
 export * from "./golden.js";
+export * from "./baseline.js";
+export * from "./text.js";
 export * from "./score.js";

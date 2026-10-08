@@ -15,8 +15,8 @@ flow is deterministic TypeScript; models only fill in schema-validated forms.
 | `packages/playbooks` | Procedural memory — versioned Markdown, one per technique, selected deterministically from the strategy. |
 | `packages/coverage` | Mechanical audit of a designed plan: coverage, traceability, mandatory techniques, budget. |
 | `packages/execution` | Plan → recorded run. Pure logic; the interactive shell lives in the CLI. |
-| `packages/evals` | The measurement instrument. Scores plans against recorded expectations, offline and free. |
-| `apps/cli` | Entrypoint: `plan`, `run`, `report`, `eval`. |
+| `packages/evals` | The measurement instrument: golden set, independent baseline, agreement scoring. |
+| `apps/cli` | Entrypoint: `plan`, `run`, `report`, `eval`, `golden-add`, `baseline`. |
 
 Pipeline: Analyst → Risk Assessor → istqb engine → Designer → mechanical audit
 (free structural repair) → Critic → execution routing.
@@ -28,6 +28,8 @@ pnpm qa plan --from jira:KEY        # or --from file:path.json; --playbooks opts
 pnpm qa run out/<REF> --env <name>  # auto-api cases, then guided manual; resumable
 pnpm qa report out/<REF>            # HTML report
 pnpm qa eval [--only REF]           # score against the golden set (no API cost)
+pnpm qa golden-add <KEY...>         # pull public tickets into the corpus (no API cost)
+pnpm qa baseline <KEY...>           # independent model judgement — COSTS API (Opus)
 pnpm test                           # vitest
 pnpm typecheck                      # tsc across all packages
 ```
@@ -43,8 +45,9 @@ for self-hosted Jira); `KRITERIA_API_BASE_URL`/`KRITERIA_API_TOKEN` for `auto-ap
   knowledge is tenant memory, injected at runtime as a labelled context block.
   Enforced by test in `playbooks` (`registry.test.ts`); convention only in `istqb`.
 - **The golden set's `expect` block is written by a human, never by a model.** A
-  model-derived expectation measures the system against itself and always scores well.
-  `humanVerdict.wouldHaveDoneThis` is the Fase 0 gate and only a human answers it.
+  model-derived expectation measures the system against itself. `humanVerdict`
+  is the Fase 0 gate and only a human answers it. Model judgement goes in
+  `evals/baseline/` instead — a separate track, never copied into `golden/`.
 - **Any execution that mutates state requires a human gate.** `routeExecution` sets
   `requiresGate`, and `runApiStep` throws `MutationNotApprovedError` unless the caller
   states the operator approved it.
