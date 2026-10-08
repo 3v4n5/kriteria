@@ -16,7 +16,7 @@ flow is deterministic TypeScript; models only fill in schema-validated forms.
 | `packages/coverage` | Mechanical audit of a designed plan: coverage, traceability, mandatory techniques, budget. |
 | `packages/execution` | Plan → recorded run. Pure logic; the interactive shell lives in the CLI. |
 | `packages/evals` | The measurement instrument: golden set, independent baseline, agreement scoring. |
-| `apps/cli` | Entrypoint: `plan`, `run`, `report`, `eval`, `golden-add`, `baseline`. |
+| `apps/cli` | Entrypoint: `plan`, `run`, `report`, `eval`, `review`, `golden-add`, `baseline`. |
 
 Pipeline: Analyst → Risk Assessor → istqb engine → Designer → mechanical audit
 (free structural repair) → Critic → execution routing.
@@ -28,6 +28,8 @@ pnpm qa plan --from jira:KEY        # or --from file:path.json; --playbooks opts
 pnpm qa run out/<REF> --env <name>  # auto-api cases, then guided manual; resumable
 pnpm qa report out/<REF>            # HTML report
 pnpm qa eval [--only REF]           # score against the golden set (no API cost)
+pnpm qa review <KEY>                # guided form: your judgement, before seeing the plan
+pnpm qa review <KEY> --verdict      # shows the plan, records the Fase 0 verdict
 pnpm qa golden-add <KEY...>         # pull public tickets into the corpus (no API cost)
 pnpm qa baseline <KEY...>           # independent model judgement — COSTS API (Opus)
 pnpm test                           # vitest
@@ -48,6 +50,8 @@ for self-hosted Jira); `KRITERIA_API_BASE_URL`/`KRITERIA_API_TOKEN` for `auto-ap
   model-derived expectation measures the system against itself. `humanVerdict`
   is the Fase 0 gate and only a human answers it. Model judgement goes in
   `evals/baseline/` instead — a separate track, never copied into `golden/`.
+  `qa review` captures it as a form; its expectation phase prints nothing the
+  pipeline produced, so the ordering is enforced by the tool, not by willpower.
 - **Any execution that mutates state requires a human gate.** `routeExecution` sets
   `requiresGate`, and `runApiStep` throws `MutationNotApprovedError` unless the caller
   states the operator approved it.

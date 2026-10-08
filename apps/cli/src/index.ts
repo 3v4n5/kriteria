@@ -10,6 +10,7 @@ import { parseArgs } from "node:util";
 import { createAnthropicCaller } from "@kriteria/agents";
 import { baselineCommand } from "./baseline.js";
 import { goldenAddCommand } from "./golden-add.js";
+import { reviewCommand } from "./review.js";
 import { planCommand } from "./plan.js";
 import { evalCommand } from "./eval.js";
 import { reportCommand } from "./report.js";
@@ -24,6 +25,8 @@ Usage:
                             Ejecuta casos auto-api y luego guía los manuales (reanudable)
   qa report <out/REF>       Genera informe HTML legible de una corrida
   qa eval [--only REF]      Puntúa los planes contra el golden set (sin costo de API)
+  qa review <KEY>           Formulario guiado: registra TU criterio antes de ver el plan
+  qa review <KEY> --verdict Muestra el plan y registra tu veredicto de Fase 0
   qa baseline <KEY...>      Juicio de un modelo independiente que solo ve el brief,
                             para medir si predice el tuyo. CUESTA API (Opus).
   qa golden-add <KEY...>    Trae tickets públicos al corpus: fixture + golden en
@@ -113,6 +116,28 @@ async function main(): Promise<void> {
       `\n✓ ${results.length - failed.length}/${results.length} tickets en el corpus`,
     );
     if (failed.length > 0) process.exitCode = 1;
+    return;
+  }
+  if (command === "review") {
+    const { values, positionals } = parseArgs({
+      args: rest,
+      options: {
+        verdict: { type: "boolean", default: false },
+        evals: { type: "string", default: "evals" },
+        out: { type: "string", default: "out" },
+        as: { type: "string" },
+      },
+      allowPositionals: true,
+    });
+    const key = positionals[0];
+    if (!key) throw new Error("uso: qa review <KEY> [--verdict]");
+    await reviewCommand({
+      key,
+      phase: values.verdict ? "verdict" : "expect",
+      evalsDir: values.evals!,
+      outDir: values.out!,
+      ...(values.as ? { reviewer: values.as } : {}),
+    });
     return;
   }
   if (command === "baseline") {
