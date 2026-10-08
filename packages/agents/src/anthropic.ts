@@ -15,13 +15,44 @@ import type { CallModel } from "./runner.js";
 export interface AnthropicCallerOptions {
   /** Injected for tests; defaults to env-resolved credentials. */
   client?: Anthropic;
+  /**
+   * Workspace to bill and scope the request to.
+   *
+   * A user-scoped API key (`sk-ant-usr-…`) belongs to no workspace, so the
+   * API rejects it with a 400 telling you to send this header. Supporting it
+   * means such a key works without being regenerated — and for a future
+   * multi-tenant deployment, it is how a run gets attributed to the right
+   * workspace rather than to whatever the key happens to default to.
+   */
+  workspaceId?: string | undefined;
+}
+
+/**
+ * Client options for a workspace id. Separated so the decision is testable
+ * without constructing a real client or reading ambient credentials.
+ *
+ * An empty or whitespace-only value sends NO header: a blank
+ * `ANTHROPIC_WORKSPACE_ID=` in a .env would otherwise produce an empty header
+ * and a confusing 400 instead of the clear "not scoped to a workspace" one.
+ */
+export function clientOptions(
+  workspaceId: string | undefined,
+): { defaultHeaders?: Record<string, string> } {
+  const trimmed = workspaceId?.trim();
+  return trimmed
+    ? { defaultHeaders: { "anthropic-workspace-id": trimmed } }
+    : {};
 }
 
 export function createAnthropicCaller(
   options: AnthropicCallerOptions = {},
 ): CallModel {
-  // Zero-arg constructor resolves ANTHROPIC_API_KEY / auth-token / profile.
-  const client = options.client ?? new Anthropic();
+  // Zero-arg options resolve ANTHROPIC_API_KEY / auth-token / profile.
+  const client =
+    options.client ??
+    new Anthropic(
+      clientOptions(options.workspaceId ?? process.env["ANTHROPIC_WORKSPACE_ID"]),
+    );
 
   return async (req) => {
     // Plain format object (type + schema only): the SDK's AutoParseable

@@ -612,3 +612,34 @@ describe("runAgent", () => {
     await expect(runAgent(baseReq, call)).rejects.toThrow(AgentOutputError);
   });
 });
+
+describe("clientOptions", () => {
+  // A user-scoped key (sk-ant-usr-…) belongs to no workspace, and the API
+  // rejects it with a 400 asking for this header. Supporting it means such a
+  // key works without being regenerated.
+  it("sends the workspace header when an id is configured", async () => {
+    const { clientOptions } = await import("../src/anthropic.js");
+    expect(clientOptions("ws_123")).toEqual({
+      defaultHeaders: { "anthropic-workspace-id": "ws_123" },
+    });
+  });
+
+  it("sends no header at all when none is configured", async () => {
+    const { clientOptions } = await import("../src/anthropic.js");
+    expect(clientOptions(undefined)).toEqual({});
+  });
+
+  // A blank `ANTHROPIC_WORKSPACE_ID=` in a .env would otherwise send an empty
+  // header and trade a clear error for a confusing one.
+  it.each(["", "   "])("treats %j as no workspace rather than an empty header", async (value) => {
+    const { clientOptions } = await import("../src/anthropic.js");
+    expect(clientOptions(value)).toEqual({});
+  });
+
+  it("trims a pasted id", async () => {
+    const { clientOptions } = await import("../src/anthropic.js");
+    expect(clientOptions("  ws_123  ").defaultHeaders).toEqual({
+      "anthropic-workspace-id": "ws_123",
+    });
+  });
+});

@@ -44,7 +44,9 @@ Options:
   -h, --help          Show this help
 
 Environment (un .env en la raíz del proyecto también sirve — está gitignorado):
-  ANTHROPIC_API_KEY   or an \`ant auth login\` profile
+  ANTHROPIC_API_KEY       or an \`ant auth login\` profile
+  ANTHROPIC_WORKSPACE_ID  solo si la llave no está asociada a un workspace
+                          (las \`sk-ant-usr-…\` no lo están)
   JIRA_BASE_URL       required for jira: sources
   JIRA_EMAIL, JIRA_API_TOKEN   optional — omit both to read a public tracker
                       anonymously; half a pair is treated as neither
