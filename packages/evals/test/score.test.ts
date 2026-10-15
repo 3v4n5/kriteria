@@ -269,3 +269,32 @@ describe("topic matching across languages", () => {
     expect(d.status).toBe("mismatch");
   });
 });
+
+describe("blocking expectations", () => {
+  // On a ticket too vague to design against, the honest expectation is that
+  // the plan produces NO cases and a list of questions. Forbidding zero would
+  // make the instrument unable to record the judgement that bucket exists for.
+  it("accepts zero as a case expectation", () => {
+    const entry = GoldenEntrySchema.parse({
+      workItem: "T-1",
+      expect: { minCases: 0, maxCases: 0 },
+    });
+    expect(entry.expect.maxCases).toBe(0);
+  });
+
+  it("scores a plan that designed cases anyway as a mismatch", () => {
+    const d = scorePlan(golden({ minCases: 0, maxCases: 0 }), actual).dimensions.find(
+      (x) => x.dimension === "cantidad de casos",
+    )!;
+    expect(d.status).toBe("mismatch");
+    expect(d.detail).toContain("12 casos");
+  });
+
+  it("scores a plan that correctly designed none as a match", () => {
+    const d = scorePlan(
+      golden({ minCases: 0, maxCases: 0 }),
+      { ...actual, caseCount: 0 },
+    ).dimensions.find((x) => x.dimension === "cantidad de casos")!;
+    expect(d.status).toBe("match");
+  });
+});

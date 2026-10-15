@@ -54,8 +54,17 @@ export const ExpectationSchema = z.object({
   ambiguityTopics: blankAsAbsent(z.array(z.string()).default([])),
   /** Risks the plan MUST identify, matched the same way. */
   riskTopics: blankAsAbsent(z.array(z.string()).default([])),
-  minCases: blankAsAbsent(z.number().int().positive().optional()),
-  maxCases: blankAsAbsent(z.number().int().positive().optional()),
+  /**
+   * Sensible case count for this item.
+   *
+   * Zero is allowed, and it is not a degenerate value: on a ticket too vague
+   * to design against, a reviewer's honest answer is that the plan should
+   * produce NO cases and a list of questions instead. Forbidding it would
+   * make the instrument unable to record the judgement that matters most on
+   * exactly the items chosen to test for it.
+   */
+  minCases: blankAsAbsent(z.number().int().min(0).optional()),
+  maxCases: blankAsAbsent(z.number().int().min(0).optional()),
   /** The mechanical audit must end with no structural gaps. */
   requireCleanAudit: blankAsAbsent(z.boolean().default(true)),
 });
