@@ -304,10 +304,17 @@ async function expectPhase(
   console.log(`${"═".repeat(70)}`);
   if (entry.rationale) console.log(`\n  Está en el set porque: ${entry.rationale}`);
 
-  if (existsSync(join(planDir, "testplan.yml"))) {
+  // Recorded, not just warned about. Whether a plan was on disk is the only
+  // part of "was this written blind" a tool can establish, and asking the
+  // reviewer to self-report it would put the integrity of the number back
+  // where it was: in someone's memory of what they did and did not open.
+  const planExisted = existsSync(join(planDir, "testplan.yml"));
+  if (planExisted) {
     console.log(
       `\n  ⚠ Ya existe un plan generado para este ticket. NO lo abras todavía:\n` +
-        `    si llenas esto con el plan a la vista, el puntaje deja de medir tu criterio.`,
+        `    si llenas esto con el plan a la vista, el puntaje deja de medir tu criterio.\n` +
+        `    Queda anotado que el plan ya estaba, así que este expect no entra al\n` +
+        `    promedio de la suite — tus dimensiones se siguen mostrando una por una.`,
     );
   }
 
@@ -407,7 +414,12 @@ async function expectPhase(
 
   const confirm = await askYesNo(ask, "¿Guardo esto?");
   if (confirm !== true) return null;
-  return { ...entry, reviewerCriteria, expect };
+  return {
+    ...entry,
+    expectProvenance: planExisted ? "informed" : "blind-human",
+    reviewerCriteria,
+    expect,
+  };
 }
 
 /** The verdict phase is the only place the produced plan is shown. */

@@ -34,6 +34,10 @@
 # ─────────────────────────────────────────────────────────────────────────────
 
 workItem: SH-1136
+
+# Lo que el encabezado explica en prosa, ahora en un campo que qa eval lee:
+# este expect no entra al promedio mecanico de la suite.
+expectProvenance: model
 rationale: >-
   Spec deliberadamente debil: 12 issues en un ticket con preguntas abiertas sin resolver y duplicacion (Issues 6 y 11). Pone a prueba la deteccion de ambiguedades y si bloquea en vez de inventar supuestos. Los comentarios traen una auditoria humana completa, asi que tambien mide si el sistema lee el hilo y no solo la descripcion.
 

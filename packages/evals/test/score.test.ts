@@ -190,6 +190,92 @@ describe("summarizeSuite", () => {
   });
 });
 
+describe("an expectation that cannot measure the system", () => {
+  /**
+   * `agrees` decides whether the item scores 2/2 or 1/2, so every assertion
+   * below moves the ratio if the item is counted. A disagreeing item that
+   * scores the same as the agreeing one would make these tests pass with the
+   * exclusion deleted.
+   */
+  const entry = (
+    workItem: string,
+    expectProvenance: string,
+    { agrees = false, verdict = null }: { agrees?: boolean; verdict?: boolean | null } = {},
+  ) =>
+    scorePlan(
+      GoldenEntrySchema.parse({
+        workItem,
+        expectProvenance,
+        expect: { approach: agrees ? "analytical" : "reactive" },
+        humanVerdict: { wouldHaveDoneThis: verdict, notes: "" },
+      }),
+      actual,
+    );
+
+  it("counts a blind expectation, which is the only kind that measures", () => {
+    const summary = summarizeSuite([entry("T-1", "blind-human")]);
+    // Approach wrong, audit clean → 1 of 2.
+    expect(summary.dimensionRatio).toBe(0.5);
+    expect(summary.excludedFromRatio).toEqual([]);
+  });
+
+  // A ratio whose denominator is invisible is how "100%" over a single audit
+  // check comes to look like a measured corpus.
+  it("reports the denominator the ratio was computed from", () => {
+    const summary = summarizeSuite([
+      entry("T-1", "blind-human"),
+      entry("T-2", "model", { agrees: true }),
+    ]);
+    expect(summary).toMatchObject({ matched: 1, scored: 2, itemsInRatio: 1 });
+  });
+
+  it("defaults to blind, because entries written before this field predate any plan", () => {
+    const parsed = GoldenEntrySchema.parse({ workItem: "T-1", expect: {} });
+    expect(parsed.expectProvenance).toBe("blind-human");
+  });
+
+  // A model-derived expectation scored against the system is the system
+  // grading its own homework, whatever the percentage says.
+  it("leaves a model-derived expectation out of the ratio", () => {
+    const summary = summarizeSuite([
+      entry("T-1", "blind-human"),
+      entry("T-2", "model", { agrees: true }),
+    ]);
+    // The blind item alone: 1 of 2. Counting the agreeing model entry would
+    // flatter it to 3 of 4.
+    expect(summary.dimensionRatio).toBe(0.5);
+    expect(summary.excludedFromRatio).toEqual([
+      { workItem: "T-2", provenance: "model" },
+    ]);
+  });
+
+  it("leaves out an expectation written while the plan already existed", () => {
+    const summary = summarizeSuite([entry("T-1", "informed")]);
+    expect(summary.dimensionRatio).toBeNull();
+    expect(summary.excludedFromRatio).toEqual([
+      { workItem: "T-1", provenance: "informed" },
+    ]);
+  });
+
+  // The verdict is answered WITH the plan in view on purpose, so nothing
+  // about how the expectation was written can disqualify it.
+  it("still counts the human verdict of every excluded item", () => {
+    const summary = summarizeSuite([
+      entry("T-1", "model", { verdict: true }),
+      entry("T-2", "informed", { verdict: false }),
+    ]);
+    expect(summary).toMatchObject({ humanApproved: 1, humanReviewed: 2, humanPending: 0 });
+  });
+
+  // Dropping them silently is how a label stops describing its number.
+  it("keeps showing the dimensions of an excluded item", () => {
+    const summary = summarizeSuite([entry("T-1", "model")]);
+    expect(summary.results[0]!.dimensions.find((d) => d.dimension === "enfoque")).toMatchObject({
+      status: "mismatch",
+    });
+  });
+});
+
 describe("GoldenEntrySchema", () => {
   it("accepts a minimal entry and defaults the verdict to pending", () => {
     const entry = GoldenEntrySchema.parse({ workItem: "T-1", expect: {} });

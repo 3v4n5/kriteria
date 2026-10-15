@@ -52,6 +52,9 @@ for self-hosted Jira); `KRITERIA_API_BASE_URL`/`KRITERIA_API_TOKEN` for `auto-ap
   `evals/baseline/` instead — a separate track, never copied into `golden/`.
   `qa review` captures it as a form; its expectation phase prints nothing the
   pipeline produced, so the ordering is enforced by the tool, not by willpower.
+  It also records `expectProvenance` from whether a plan was already on disk,
+  and `qa eval` keeps anything but `blind-human` out of the mechanical ratio
+  while still showing its dimensions and counting its verdict.
 - **Any execution that mutates state requires a human gate.** `routeExecution` sets
   `requiresGate`, and `runApiStep` throws `MutationNotApprovedError` unless the caller
   states the operator approved it.

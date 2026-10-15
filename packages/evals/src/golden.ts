@@ -70,8 +70,37 @@ export const ExpectationSchema = z.object({
 });
 export type Expectation = z.infer<typeof ExpectationSchema>;
 
+/**
+ * How the expectation in this entry came to be written.
+ *
+ * An expectation only measures the system if it was committed to BEFORE its
+ * plan existed. The other two values are not degrees of trust, they are
+ * reasons the entry cannot score: it would be measuring the system against
+ * something derived from the system.
+ *
+ *   blind-human — a human wrote it with no plan on disk. The only one that
+ *                 counts toward the mechanical ratio.
+ *   informed    — a human wrote it while the plan already existed. Maybe
+ *                 they did not look; the instrument cannot know, and
+ *                 "probably blind" is not blind.
+ *   model       — derived by a model. Measures the system against itself.
+ *
+ * The human VERDICT stays valid under all three: it is answered with the
+ * plan deliberately in view, so seeing it first costs nothing.
+ */
+export const EXPECT_PROVENANCES = ["blind-human", "informed", "model"] as const;
+export type ExpectProvenance = (typeof EXPECT_PROVENANCES)[number];
+
 export const GoldenEntrySchema = z.object({
   workItem: z.string().min(1),
+  /**
+   * Set by `qa review`, not by hand: the form knows whether a plan was on
+   * disk when it captured the answers, which is the only part of this a tool
+   * can establish. Defaults to `blind-human` because an entry written before
+   * this field existed predates any plan — but a hand-written entry that is
+   * NOT blind has to say so, or it silently enters the ratio.
+   */
+  expectProvenance: blankAsAbsent(z.enum(EXPECT_PROVENANCES).default("blind-human")),
   /** One line on why this item is in the set — keeps the set intentional. */
   rationale: blankAsAbsent(z.string().optional()),
   /**

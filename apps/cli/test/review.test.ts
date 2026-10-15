@@ -227,6 +227,20 @@ describe("qa review — expectation phase", () => {
     expect(entry.expect.approach).toBeUndefined();
   });
 
+  // Self-reporting "I did not peek" would put the number's integrity back in
+  // someone's memory. The tool records what it can actually establish.
+  it("records that the expectation was written blind when no plan exists", async () => {
+    await review("expect", FULL);
+    expect(readGolden().expectProvenance).toBe("blind-human");
+  });
+
+  it("records that a plan already existed, instead of only warning about it", async () => {
+    writePlan();
+    await review("expect", FULL);
+    expect(readGolden().expectProvenance).toBe("informed");
+    expect(output()).toContain("no entra al");
+  });
+
   it("writes a file that still parses as a golden entry", async () => {
     await review("expect", FULL);
     expect(() => readGolden()).not.toThrow();

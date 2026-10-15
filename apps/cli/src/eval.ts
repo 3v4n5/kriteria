@@ -121,9 +121,26 @@ export function evalCommand(options: EvalCommandOptions): void {
   const baselineSummary = summarizeSuite(planVsBaseline);
   const agreement = summarizeAgreement(humanVsBaseline);
   console.log(`\n${"─".repeat(64)}`);
+  // The denominator travels with the percentage, always. Without it "100%"
+  // over one audit check on one ticket looks like a measured corpus.
   console.log(
-    `Puntaje mecánico: ${summary.dimensionRatio === null ? "—" : `${Math.round(summary.dimensionRatio * 100)}%`} de las dimensiones evaluadas`,
+    `Puntaje mecánico: ${summary.dimensionRatio === null ? "—" : `${Math.round(summary.dimensionRatio * 100)}%`}` +
+      ` — ${summary.matched}/${summary.scored} dimensiones en ${summary.itemsInRatio} ticket(s)`,
   );
+  // Named, never silent: a reader has to be able to see which items the
+  // percentage above does and does not cover.
+  if (summary.excludedFromRatio.length > 0) {
+    const why: Record<string, string> = {
+      informed: "el plan ya existía cuando se llenó el expect",
+      model: "expect derivado por un modelo, no por un humano",
+    };
+    console.log(
+      `  fuera del promedio (${summary.excludedFromRatio.length}) — sus dimensiones se muestran arriba:`,
+    );
+    for (const x of summary.excludedFromRatio) {
+      console.log(`    ${x.workItem}: ${why[x.provenance] ?? x.provenance}`);
+    }
+  }
   console.log(
     `Criterio de Fase 0: ${summary.humanApproved}/${summary.humanReviewed} planes aprobados por el QA` +
       (summary.humanPending > 0 ? ` · ${summary.humanPending} sin revisar` : ""),

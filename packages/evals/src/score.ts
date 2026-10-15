@@ -14,7 +14,7 @@
  * dimensions nobody committed to.
  */
 
-import type { Expectation, GoldenEntry } from "./golden.js";
+import type { Expectation, ExpectProvenance, GoldenEntry } from "./golden.js";
 import { mentions } from "./text.js";
 
 /** The subset of a produced plan the scorer reads. */
@@ -56,6 +56,14 @@ export interface EvalResult {
   matched: number;
   /** matched / scored, or null when nothing was scored. */
   ratio: number | null;
+  /**
+   * Carried so the suite can tell a measurement from a reflection. The
+   * dimensions are still scored and still shown — seeing WHERE a
+   * contaminated expectation diverges is useful, and a sustained
+   * disagreement is the one signal contamination cannot manufacture. It just
+   * cannot be added up with the rest.
+   */
+  expectProvenance: ExpectProvenance;
   humanVerdict: GoldenEntry["humanVerdict"];
 }
 
@@ -182,14 +190,35 @@ export function scorePlan(golden: GoldenEntry, actual: ActualPlan): EvalResult {
     scored,
     matched,
     ratio: scored === 0 ? null : Math.round((matched / scored) * 100) / 100,
+    expectProvenance: golden.expectProvenance,
     humanVerdict: golden.humanVerdict,
   };
 }
 
 export interface SuiteSummary {
   results: EvalResult[];
-  /** Mechanical: matched dimensions over scored dimensions, all items. */
+  /**
+   * Mechanical: matched dimensions over scored dimensions — counting only
+   * items whose expectation was written blind.
+   */
   dimensionRatio: number | null;
+  /**
+   * The ratio's own denominator, and how many items it came from.
+   *
+   * A percentage without these is the flattering number this whole package
+   * exists to avoid: "100%" over one audit check on one ticket reads exactly
+   * like "100%" over a reviewed corpus. Exposed so a caller cannot print the
+   * first without the second.
+   */
+  scored: number;
+  matched: number;
+  itemsInRatio: number;
+  /**
+   * Items left out of that ratio, and why each one was. They are reported
+   * rather than dropped: a hidden exclusion is how a number stops meaning
+   * what its label says.
+   */
+  excludedFromRatio: { workItem: string; provenance: ExpectProvenance }[];
   /** The Fase-0 metric: items a human confirmed, over items reviewed. */
   humanApproved: number;
   humanReviewed: number;
@@ -197,13 +226,25 @@ export interface SuiteSummary {
 }
 
 export function summarizeSuite(results: readonly EvalResult[]): SuiteSummary {
-  const scored = results.reduce((sum, r) => sum + r.scored, 0);
-  const matched = results.reduce((sum, r) => sum + r.matched, 0);
+  // An expectation written with the plan available cannot measure the plan.
+  // Averaging it in would move the suite number using the system's own
+  // output, which is the one thing this instrument exists to avoid.
+  const blind = results.filter((r) => r.expectProvenance === "blind-human");
+  const scored = blind.reduce((sum, r) => sum + r.scored, 0);
+  const matched = blind.reduce((sum, r) => sum + r.matched, 0);
+  // The verdict is answered WITH the plan in view by design, so every item
+  // counts here regardless of how its expectation was written.
   const verdicts = results.map((r) => r.humanVerdict.wouldHaveDoneThis);
 
   return {
     results: [...results],
     dimensionRatio: scored === 0 ? null : Math.round((matched / scored) * 100) / 100,
+    scored,
+    matched,
+    itemsInRatio: blind.length,
+    excludedFromRatio: results
+      .filter((r) => r.expectProvenance !== "blind-human")
+      .map((r) => ({ workItem: r.workItem, provenance: r.expectProvenance })),
     humanApproved: verdicts.filter((v) => v === true).length,
     humanReviewed: verdicts.filter((v) => v !== null).length,
     humanPending: verdicts.filter((v) => v === null).length,
