@@ -102,3 +102,13 @@ export const GoldenEntrySchema = z.object({
     .default({ wouldHaveDoneThis: null, notes: "" }),
 });
 export type GoldenEntry = z.infer<typeof GoldenEntrySchema>;
+
+/**
+ * Which filenames in a golden-set directory are entries.
+ *
+ * Lives with the contract because it constrains what else may be written
+ * into that directory: everything matching this is scored, so a sidecar that
+ * happens to end in `.yml` becomes a second, phantom expectation for the
+ * same work item.
+ */
+export const isGoldenEntryFile = (name: string): boolean => /\.ya?ml$/.test(name);

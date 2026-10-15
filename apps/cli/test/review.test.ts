@@ -1,10 +1,10 @@
-import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { GoldenEntrySchema } from "@kriteria/evals";
+import { GoldenEntrySchema, isGoldenEntryFile } from "@kriteria/evals";
 import { parse as fromYaml, stringify as toYaml } from "yaml";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { reviewCommand } from "../src/review.js";
+import { rejectedCopyPath, reviewCommand } from "../src/review.js";
 import type { Ask } from "../src/run.js";
 
 /** Feeds scripted answers; throws if the form asks more than expected. */
@@ -298,6 +298,104 @@ describe("qa review --verdict", () => {
 
     expect(output()).toContain("No registraste tu expectativa");
     expect(readGolden().humanVerdict.wouldHaveDoneThis).toBe(true);
+  });
+});
+
+describe("qa review — a file that changed while the form was open", () => {
+  const goldenPath = () => join(dir, "evals", "golden", "OFBIZ-1.yml");
+
+  /** Answers the form, and lets someone else edit the file behind its back. */
+  function askWhileAnotherWindowEdits(answers: string[], edit: () => void): Ask {
+    const queue = [...answers];
+    let edited = false;
+    return async () => {
+      if (!edited) {
+        edited = true;
+        edit();
+      }
+      if (queue.length === 0) throw new Error("el formulario preguntó más de lo guionado");
+      return queue.shift()!;
+    };
+  }
+
+  const ELSEWHERE = toYaml({
+    workItem: "OFBIZ-1",
+    rationale: "prueba límites",
+    reviewerCriteria: ["escrito en la otra ventana"],
+    expect: { levels: ["system"] },
+  });
+
+  const verdictWhile = (edit: () => void) =>
+    reviewCommand({
+      key: "OFBIZ-1",
+      phase: "verdict",
+      evalsDir: join(dir, "evals"),
+      outDir: join(dir, "out"),
+      ask: askWhileAnotherWindowEdits(["s", "Evans", ""], edit),
+    });
+
+  // The two phases write disjoint halves of the entry, so the natural
+  // two-window workflow — expectation here, verdict there — used to destroy
+  // one of them with no warning.
+  it("refuses to save, and the other window's work survives", async () => {
+    writePlan();
+
+    await expect(
+      verdictWhile(() => writeFileSync(goldenPath(), ELSEWHERE, "utf8")),
+    ).rejects.toThrow(/cambió mientras/);
+
+    const onDisk = readGolden();
+    expect(onDisk.reviewerCriteria).toEqual(["escrito en la otra ventana"]);
+    expect(onDisk.expect.levels).toEqual(["system"]);
+    expect(onDisk.humanVerdict.wouldHaveDoneThis).toBeNull();
+  });
+
+  // Refusing must not cost the reviewer the answers they just gave: that is
+  // a judgement too, and retyping a form from memory is how one gets lost.
+  it("keeps the answers just given in a sibling file", async () => {
+    writePlan();
+
+    await expect(
+      verdictWhile(() => writeFileSync(goldenPath(), ELSEWHERE, "utf8")),
+    ).rejects.toThrow(new RegExp(rejectedCopyPath(goldenPath()).replace(/[.]/g, "\\.")));
+
+    const rejected = GoldenEntrySchema.parse(
+      fromYaml(readFileSync(rejectedCopyPath(goldenPath()), "utf8")),
+    );
+    expect(rejected.humanVerdict).toMatchObject({
+      wouldHaveDoneThis: true,
+      reviewedBy: "Evans",
+    });
+  });
+
+  // Whoever finds this file later must not mistake it for an entry.
+  it("says in the rejected copy itself that it is not a golden entry", async () => {
+    writePlan();
+
+    await expect(
+      verdictWhile(() => writeFileSync(goldenPath(), ELSEWHERE, "utf8")),
+    ).rejects.toThrow();
+
+    const yml = readFileSync(rejectedCopyPath(goldenPath()), "utf8");
+    expect(yml).toContain("NO ES UNA ENTRADA DEL GOLDEN SET");
+    expect(yml).not.toContain("TU criterio");
+  });
+
+  // `qa eval` scores every *.yml in evals/golden, so a rejected copy with a
+  // .yml extension would be measured as a second expectation for the item.
+  it("names the rejected copy so qa eval cannot score it as an entry", () => {
+    expect(isGoldenEntryFile("OFBIZ-1.yml")).toBe(true);
+    expect(isGoldenEntryFile(rejectedCopyPath("OFBIZ-1.yml"))).toBe(false);
+  });
+
+  it("refuses just as firmly when the entry was moved away", async () => {
+    writePlan();
+
+    await expect(verdictWhile(() => rmSync(goldenPath()))).rejects.toThrow(
+      /cambió mientras/,
+    );
+    // Recreating it here would undo the move as blindly as overwriting.
+    expect(existsSync(goldenPath())).toBe(false);
   });
 });
 

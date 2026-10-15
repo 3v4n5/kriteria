@@ -13,6 +13,7 @@ import {
   BaselineEntrySchema,
   GoldenEntrySchema,
   compareExpectations,
+  isGoldenEntryFile,
   scorePlan,
   summarizeAgreement,
   summarizeSuite,
@@ -46,7 +47,7 @@ export function evalCommand(options: EvalCommandOptions): void {
     throw new Error(`no existe el directorio del golden set: ${goldenDir}`);
   }
 
-  const files = readdirSync(goldenDir).filter((f) => /\.ya?ml$/.test(f));
+  const files = readdirSync(goldenDir).filter(isGoldenEntryFile);
   if (files.length === 0) {
     throw new Error(
       `el golden set está vacío. Copia evals/golden/_plantilla.yml y llénala con tu criterio antes de medir.`,

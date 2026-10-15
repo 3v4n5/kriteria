@@ -29,7 +29,7 @@ import {
   TEST_TECHNIQUES,
   TEST_TYPES,
 } from "@kriteria/istqb";
-import { GoldenEntrySchema, type GoldenEntry } from "@kriteria/evals";
+import { GoldenEntrySchema, isGoldenEntryFile, type GoldenEntry } from "@kriteria/evals";
 import { parse as fromYaml, stringify as toYaml } from "yaml";
 import { createAsker, EndOfInput, type Ask } from "./run.js";
 
@@ -257,9 +257,11 @@ export async function reviewCommand(options: ReviewCommandOptions): Promise<void
     );
   }
 
-  const entry = GoldenEntrySchema.parse(
-    fromYaml(readFileSync(goldenPath, "utf8")),
-  );
+  // The bytes the form started from. It stays open for as long as the
+  // reviewer takes to read the report, so the save needs to know whether it
+  // is about to overwrite work that arrived in the meantime.
+  const openedWith = readFileSync(goldenPath, "utf8");
+  const entry = GoldenEntrySchema.parse(fromYaml(openedWith));
   const stdinAsker = options.ask ? undefined : createAsker(process.stdin);
   const ask: Ask = options.ask ?? stdinAsker!.ask;
 
@@ -272,7 +274,7 @@ export async function reviewCommand(options: ReviewCommandOptions): Promise<void
       console.log("\n✗ sin cambios.");
       return;
     }
-    writeEntry(goldenPath, updated);
+    saveWithoutClobbering(goldenPath, openedWith, updated);
     console.log(`\n✓ guardado en ${goldenPath}`);
     if (options.phase === "expect") {
       console.log(
@@ -589,7 +591,64 @@ const HEADER = `# ────────────────────�
 # Lo que quede vacio se reporta "sin evaluar", nunca como aprobado.
 # ─────────────────────────────────────────────────────────────────────────────`;
 
-function writeEntry(path: string, entry: GoldenEntry): void {
+function writeEntry(path: string, entry: GoldenEntry, header = HEADER): void {
   mkdirSync(join(path, ".."), { recursive: true });
-  writeFileSync(path, `${HEADER}\n${toYaml(entry)}`, "utf8");
+  writeFileSync(path, `${header}\n${toYaml(entry)}`, "utf8");
+}
+
+const REJECTED_HEADER = `# ─────────────────────────────────────────────────────────────────────────────
+# ESTO NO ES UNA ENTRADA DEL GOLDEN SET. Es lo que respondiste en un
+# formulario que NO se pudo guardar: el archivo real habia cambiado mientras
+# lo llenabas, y sobrescribirlo habria borrado ese cambio.
+#
+# Compara este archivo con la entrada real y quedate con lo que valga. Cuando
+# termines, borra este. \`qa eval\` no lo mira.
+# ─────────────────────────────────────────────────────────────────────────────`;
+
+/** Where a save goes when it refuses to overwrite the real entry. */
+export const rejectedCopyPath = (goldenPath: string): string => {
+  const path = `${goldenPath}.conflicto`;
+  // Suffixed, never `.conflicto.yml`: `qa eval` scores every *.yml in that
+  // directory, and a rejected copy must not become a second expectation.
+  if (isGoldenEntryFile(path)) throw new Error("la copia rechazada sería puntuada como entrada");
+  return path;
+};
+
+/**
+ * Saves the entry, unless saving would destroy a judgement.
+ *
+ * Both phases serialise the WHOLE entry back, and they write disjoint halves
+ * of it — `expect` and `reviewerCriteria` in one, `humanVerdict` in the
+ * other. So a reviewer who fills the expectation in one window while the
+ * verdict form is open in another loses whichever saves first, silently. In
+ * the one tool whose purpose is to preserve what a human decided, that is the
+ * worst available failure.
+ *
+ * Merging is not the fix: this file holds prose and judgement, and a tool
+ * guessing which version was meant would be a different way to lose it. So
+ * the save refuses — but the answers just given are a judgement too, so they
+ * go to a sibling file instead of the bin, and the reviewer reconciles two
+ * real files rather than retyping a form from memory.
+ */
+function saveWithoutClobbering(
+  path: string,
+  openedWith: string,
+  updated: GoldenEntry,
+): void {
+  // Missing counts as changed: someone moved it, and recreating it here
+  // would undo that just as blindly as overwriting an edit.
+  const current = existsSync(path) ? readFileSync(path, "utf8") : null;
+  if (current === openedWith) {
+    writeEntry(path, updated);
+    return;
+  }
+
+  const rejected = rejectedCopyPath(path);
+  writeEntry(rejected, updated, REJECTED_HEADER);
+  throw new Error(
+    `${path} cambió mientras llenabas el formulario — no lo sobrescribí.\n` +
+      `  Lo que acabas de responder está completo en:\n` +
+      `    ${rejected}\n` +
+      `  Compara las dos y quédate con la que valga.`,
+  );
 }
