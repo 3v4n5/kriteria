@@ -179,6 +179,14 @@ describe("qa review — expectation phase", () => {
     expect(output()).toContain("sin cambios");
   });
 
+  // The matcher is plain containment, so an inflected keyword silently never
+  // matches. The reviewer has no way to know that unless the form says it.
+  it("warns that topics must be stems, where the reviewer types them", async () => {
+    await review("expect", FULL);
+    expect(output()).toContain("Usa la raíz");
+    expect(output()).toContain("block encuentra blocking");
+  });
+
   it("keeps the rationale that explains why the ticket is in the set", async () => {
     await review("expect", FULL);
     expect(readGolden().rationale).toBe("prueba límites");

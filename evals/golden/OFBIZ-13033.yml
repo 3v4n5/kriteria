@@ -6,22 +6,74 @@
 # Lo que quede vacio se reporta "sin evaluar", nunca como aprobado.
 # ─────────────────────────────────────────────────────────────────────────────
 workItem: OFBIZ-13033
+
+# Puesto a mano, contra lo que diria la regla automatica.
+#
+# `qa review` deduce la procedencia de si habia un plan en disco, y aqui lo
+# hay, asi que la regla diria `informed`. Pero Evans redacto este expect en el
+# chat ANTES de que el plan existiera, y esta sesion lo escribe al archivo
+# despues. La regla automatica es la correcta por defecto justamente porque no
+# puede saber esto; cuando se contradice con el hecho, gana el hecho, y queda
+# anotado quien lo cambio y por que.
+#
+# Si alguien vuelve a correr `qa review OFBIZ-13033` sobre este archivo, el
+# campo volvera a `informed` — y para entonces sera verdad.
+expectProvenance: blind-human
+
 rationale: "Reporte de una linea: 'crear factura da error'. Mide si bloquea
   pidiendo reproduccion en vez de inventar el escenario."
+
 reviewerCriteria:
   - Al seleccionar un tipo de factura y una contraparte validos, y hacer clic en
     Crear, el sistema debe crear la factura correctamente.
   - La factura creada debe corresponder al tipo de factura y a la contraparte
     seleccionados.
   - El flujo descrito debe completarse sin presentar el error reportado.
+
 expect:
-  approachAlternatives: []
-  levels: []
-  types: []
-  mandatoryTechniques: []
-  ambiguityTopics: []
-  riskTopics: []
+  # ── Lo que Evans afirmo ────────────────────────────────────────────────────
+  levels: [system]
+  types: [functional]
+
+  # Sus cinco preguntas, acortadas a terminos que el matcher pueda encontrar.
+  # El plan se genera en ingles, asi que un tema en español solo encuentra algo
+  # si trae la alternativa en ingles: para eso es el `|`.
+  ambiguityTopics:
+    - error message|mensaje          # no aparece tras "following error is shown"
+    - invoice type|counterparty|contraparte
+    - precondition|prerequisite|datos
+    - reproduce|steps|environment|version
+    - expected|observed|esperado
+
+  riskTopics:
+    - blocked|cannot create|bloqueo
+    - assumption|supuesto
+    # Correccion de Evans sobre la traduccion propuesta: `unreproducible` dice
+    # que el error NO SE PUEDE reproducir. Su riesgo es que lo den por
+    # corregido SIN haberlo reproducido. Son afirmaciones distintas, y la
+    # primera habria hecho match con el ticket equivocado.
+    - without reproducing|not reproduced|sin reproducir
+
   requireCleanAudit: true
+
+  # ── Lo que quedo sin evaluar, a proposito ──────────────────────────────────
+  #
+  # approach, approachAlternatives, depth, riskLevel, mandatoryTechniques,
+  # minCases y maxCases se dejan ausentes: Evans nunca los eligio a ciegas.
+  # Dio valores despues, con el plan en pantalla, y pidio explicitamente que no
+  # entraran a este expect ni se puntuaran retroactivamente. Un campo ausente
+  # se reporta "sin evaluar"; nunca cuenta como acierto.
+  #
+  # Sus dos `approachAlternatives` en prosa — pedir el mensaje de error,
+  # bloquear hasta tener informacion suficiente — no son enfoques ISTQB y no
+  # tienen donde ir. Y `mandatoryTechniques: []` se lee como "sin opinion", no
+  # como "ninguna, deliberadamente": el esquema no distingue las dos cosas.
+  # Eso no es un campo sin llenar, es un hueco del instrumento, y el hueco de
+  # produccion es mas grande: DesignOutputSchema exige cases.min(1), asi que
+  # el sistema no puede declinar diseñar aunque sea la respuesta correcta.
+  approachAlternatives: []
+  mandatoryTechniques: []
+
 humanVerdict:
   wouldHaveDoneThis: null
   notes: ""

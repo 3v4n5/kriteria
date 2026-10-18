@@ -215,17 +215,37 @@ function readActualPlan(planDir: string, workItem: string): ActualPlan {
     levels: (plan.strategy.levels ?? []).map((l: { value: string }) => l.value),
     types: (plan.strategy.types ?? []).map((t: { value: string }) => t.value),
     mandatoryTechniques: [...mandatory],
-    ambiguities: (plan.analysis?.ambiguities ?? []).map(
-      (a: { question: string }) => a.question,
+    // Everything the plan SAYS about each item, not just its headline field.
+    //
+    // The question "did the plan raise this topic?" has to be answered over
+    // the whole entry: an analyst states the question in `question` and then
+    // what it would cost in `riskIfWrong`, and a risk factor carries the
+    // ask-the-reporter action in `mitigationHint`. Scoring only the headline
+    // reported a topic as unraised while the plan's own text named it — on
+    // OFBIZ-13033, "capture exact repro steps (invoice type, opposing party)
+    // from the reporter" sat in a `mitigationHint` and was invisible.
+    ambiguities: (plan.analysis?.ambiguities ?? []).map((a: AmbiguityLike) =>
+      [a.question, a.workingAssumption, a.riskIfWrong].filter(Boolean).join(" · "),
     ),
-    risks: (plan.riskRegister?.factors ?? []).map(
-      (f: { description: string }) => f.description,
+    risks: (plan.riskRegister?.factors ?? []).map((f: RiskLike) =>
+      [f.description, f.mitigationHint].filter(Boolean).join(" · "),
     ),
     caseCount: (cases.cases ?? []).length,
     // A missing audit file is reported as such, not as zero gaps — a stale
     // artifact must never score a false pass.
     auditFindingCount: audit === null ? null : audit.findings.length,
   };
+}
+
+interface AmbiguityLike {
+  question: string;
+  workingAssumption?: string;
+  riskIfWrong?: string;
+}
+
+interface RiskLike {
+  description: string;
+  mitigationHint?: string;
 }
 
 /**

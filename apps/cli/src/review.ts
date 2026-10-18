@@ -160,10 +160,12 @@ async function askKeywords(
   ask: Ask,
   question: string,
   hint: string,
+  stemHint: string,
   current: readonly string[] = [],
 ): Promise<string[]> {
   console.log(`\n${question}`);
   console.log(`   ${hint}`);
+  console.log(`   ${stemHint}`);
   if (current.length > 0) console.log(`   actual: ${current.join(", ")}`);
   console.log("   (separa con coma · Enter = ninguno)");
   const raw = (await ask("   > ")).trim();
@@ -378,12 +380,17 @@ async function expectPhase(
     ask,
     "8/9 · ¿Qué le preguntarías al autor antes de diseñar?",
     "Pocas palabras por tema, no frases. Ej: límite 80, modulo vendor",
+    // The matcher is plain containment, on purpose: a fuzzy match would turn
+    // a real gap into a silent pass. The cost lands here, so say it here —
+    // `bloqueo` finds "bloqueado", `bloqueado` does not find "bloqueo".
+    "Usa la raíz, no la forma conjugada: block encuentra blocking y blocked.",
     e.ambiguityTopics,
   );
   const riskTopics = await askKeywords(
     ask,
     "9/9 · ¿Qué te preocupa que se rompa?",
     "Mismo criterio. Ej: truncamiento|truncate, rename",
+    "El plan se escribe en inglés: agrega la alternativa con | si hace falta.",
     e.riskTopics,
   );
   const minCases = await askNumber(ask, "¿Mínimo de casos que considerarías sensato? (Enter = sin opinión)", e.minCases);
