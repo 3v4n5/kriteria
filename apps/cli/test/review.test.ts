@@ -249,6 +249,23 @@ describe("qa review — expectation phase", () => {
     expect(output()).toContain("no entra al");
   });
 
+  // A baseline is a model's judgement of this same brief, answering the same
+  // nine questions — the more tempting of the two to peek at, and the one a
+  // plan-only check would have missed.
+  it("treats an existing model baseline the same as an existing plan", async () => {
+    mkdirSync(join(dir, "evals", "baseline"), { recursive: true });
+    writeFileSync(
+      join(dir, "evals", "baseline", "OFBIZ-1.yml"),
+      toYaml({ workItem: "OFBIZ-1", expect: { approach: "analytical" } }),
+      "utf8",
+    );
+
+    await review("expect", FULL);
+
+    expect(readGolden().expectProvenance).toBe("informed");
+    expect(output()).toContain("baseline de modelo");
+  });
+
   it("writes a file that still parses as a golden entry", async () => {
     await review("expect", FULL);
     expect(() => readGolden()).not.toThrow();

@@ -270,7 +270,13 @@ export async function reviewCommand(options: ReviewCommandOptions): Promise<void
   try {
     const updated =
       options.phase === "expect"
-        ? await expectPhase(ask, entry, join(evalsDir, "briefs", `${options.key}.md`), join(outDir, options.key))
+        ? await expectPhase(
+            ask,
+            entry,
+            join(evalsDir, "briefs", `${options.key}.md`),
+            join(outDir, options.key),
+            join(evalsDir, "baseline", `${options.key}.yml`),
+          )
         : await verdictPhase(ask, entry, join(outDir, options.key), options.reviewer);
     if (!updated) {
       console.log("\n✗ sin cambios.");
@@ -300,23 +306,34 @@ async function expectPhase(
   entry: GoldenEntry,
   briefPath: string,
   planDir: string,
+  baselinePath: string,
 ): Promise<GoldenEntry | null> {
   console.log(`\n${"═".repeat(70)}`);
   console.log(`  ${entry.workItem} — ¿qué habrías hecho tú?`);
   console.log(`${"═".repeat(70)}`);
   if (entry.rationale) console.log(`\n  Está en el set porque: ${entry.rationale}`);
 
-  // Recorded, not just warned about. Whether a plan was on disk is the only
-  // part of "was this written blind" a tool can establish, and asking the
-  // reviewer to self-report it would put the integrity of the number back
-  // where it was: in someone's memory of what they did and did not open.
-  const planExisted = existsSync(join(planDir, "testplan.yml"));
+  // Recorded, not just warned about. What model output was on disk is the
+  // only part of "was this written blind" a tool can establish, and asking
+  // the reviewer to self-report it would put the integrity of the number
+  // back where it was: in someone's memory of what they did and did not open.
+  //
+  // A baseline counts for the same reason a plan does. It is a model's
+  // judgement of this same brief, reached without the reviewer — reading one
+  // first shapes the expectation exactly as reading the plan would, and it
+  // is the more tempting of the two because it is short and answers the same
+  // nine questions the form is about to ask.
+  const priorOutput = [
+    existsSync(join(planDir, "testplan.yml")) ? "un plan generado" : null,
+    existsSync(baselinePath) ? "un baseline de modelo" : null,
+  ].filter(Boolean);
+  const planExisted = priorOutput.length > 0;
   if (planExisted) {
     console.log(
-      `\n  ⚠ Ya existe un plan generado para este ticket. NO lo abras todavía:\n` +
-        `    si llenas esto con el plan a la vista, el puntaje deja de medir tu criterio.\n` +
-        `    Queda anotado que el plan ya estaba, así que este expect no entra al\n` +
-        `    promedio de la suite — tus dimensiones se siguen mostrando una por una.`,
+      `\n  ⚠ Ya existe ${priorOutput.join(" y ")} para este ticket. NO lo abras todavía:\n` +
+        `    si llenas esto con eso a la vista, el puntaje deja de medir tu criterio.\n` +
+        `    Queda anotado que ya estaba, así que este expect no entra al promedio\n` +
+        `    de la suite — tus dimensiones se siguen mostrando una por una.`,
     );
   }
 
