@@ -70,6 +70,35 @@ function readRun() {
 }
 
 describe("runCommand", () => {
+  describe("a plan the engine declined to design", () => {
+    it("refuses to run it, naming the blocker and the artifact that explains it", async () => {
+      writeFileSync(
+        join(dir, "testplan.yml"),
+        toYaml({
+          ...PLAN,
+          blocked: true,
+          entryBlockers: [
+            "BLOCKER: spec quality is insufficient and no domain expert is assigned",
+          ],
+        }),
+        "utf8",
+      );
+      // No testcases.yml: the entry gate stopped the run before the designer.
+
+      await expect(
+        runCommand({ dir, environment: "staging", ask: scriptedAsk([]) }),
+      ).rejects.toThrow(/declin\u00f3|spec quality is insufficient/);
+    });
+
+    it("says what is missing when there is no blocker to blame", async () => {
+      writeFileSync(join(dir, "testplan.yml"), toYaml(PLAN), "utf8");
+
+      await expect(
+        runCommand({ dir, environment: "staging", ask: scriptedAsk([]) }),
+      ).rejects.toThrow(/no tiene casos diseñados.*testcases\.yml/s);
+    });
+  });
+
   it("records a passing run and writes both artifacts", async () => {
     writeFixture([testCase("TC-1")]);
 

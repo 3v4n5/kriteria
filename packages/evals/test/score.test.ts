@@ -22,6 +22,7 @@ const actual: ActualPlan = {
   ],
   risks: ["Descuento aplicado dos veces en el límite", "Componente compartido sin regresión"],
   caseCount: 12,
+  declined: false,
   auditFindingCount: 0,
   criticVerdict: "pass",
   entryBlockers: [],
@@ -233,6 +234,35 @@ describe("plan estructuralmente sano", () => {
     const d = dimension({ auditFindingCount: null });
     expect(d.status).toBe("mismatch");
     expect(d.detail).toContain("no trae auditoría");
+  });
+
+  // A declined plan has no audit and no verdict, because it has no plan.
+  // Reporting that as "no trae auditoría" would read as a stale artifact and
+  // hide the fact that the system took a decision.
+  it("says the system declined instead of reporting a missing audit", () => {
+    const d = dimension({
+      declined: true,
+      auditFindingCount: null,
+      criticVerdict: null,
+      caseCount: 0,
+      entryBlockers: [
+        "BLOCKER: spec quality is insufficient and no domain expert is assigned",
+      ],
+    });
+    expect(d.status).toBe("mismatch");
+    expect(d.detail).toContain("declinó");
+    expect(d.detail).toContain("spec quality is insufficient");
+    expect(d.detail).not.toContain("no trae auditoría");
+  });
+
+  it("does not repeat the blocker it already named in the decline", () => {
+    const d = dimension({
+      declined: true,
+      auditFindingCount: null,
+      criticVerdict: null,
+      entryBlockers: ["BLOCKER: sin experto"],
+    });
+    expect(d.detail).not.toContain("criterio(s) de entrada sin satisfacer");
   });
 });
 

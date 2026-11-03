@@ -110,6 +110,14 @@ export interface TestStrategy {
   /** Reconciled total budget: what depth implies, bounded by tenant policy. */
   caseBudget: CaseBudget;
   entryCriteria: string[];
+  /**
+   * The subset of `entryCriteria` that blocks — preconditions no amount of
+   * test design can substitute for. Structured here instead of recovered
+   * downstream from a prose prefix: the engine knows which criterion it
+   * marked, and three readers each writing their own regex is a convention,
+   * not a contract.
+   */
+  entryBlockers: string[];
   exitCriteria: string[];
 }
 
@@ -146,6 +154,8 @@ export function buildStrategy(input: StrategyInput): TestStrategy {
     }),
   }));
 
+  const entryCriteria = buildEntryCriteria(context, input.traits);
+
   return {
     risk,
     depth: risk.overallDepth,
@@ -159,10 +169,25 @@ export function buildStrategy(input: StrategyInput): TestStrategy {
       input.areaCount ?? 1,
       input.policyCaseCap ?? null,
     ),
-    entryCriteria: buildEntryCriteria(context, input.traits),
+    entryCriteria: entryCriteria,
+    entryBlockers: entryBlockersFrom(entryCriteria),
     exitCriteria: buildExitCriteria(context, risk, types, techniquesByLevel),
   };
 }
+
+/**
+ * The marker that makes an entry criterion blocking.
+ *
+ * It is a prefix on the human-readable statement because the statement is
+ * what a reviewer reads, and `entryBlockers` is what code reads. Exported so
+ * a plan artifact written before `entryBlockers` existed can still be
+ * interpreted — by this rule and no other.
+ */
+export const BLOCKING_ENTRY_PREFIX = /^\s*BLOCKER\b/i;
+
+/** Blocking criteria among `criteria`. The back-compat path for old artifacts. */
+export const entryBlockersFrom = (criteria: readonly string[]): string[] =>
+  criteria.filter((c) => BLOCKING_ENTRY_PREFIX.test(c));
 
 function buildEntryCriteria(
   ctx: StrategyContext,

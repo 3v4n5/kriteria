@@ -83,6 +83,16 @@ export interface PipelineOptions {
    * `true` for the shipped library, or a registry to pin your own.
    */
   playbooks?: boolean | PlaybookRegistry;
+  /**
+   * Design anyway when the engine marked a blocking entry criterion.
+   *
+   * Off by default, and the default is the point: a blocker says the item
+   * cannot be tested its way out of this state, so designing past it bills
+   * for cases nobody can run. The override exists because "show me what you
+   * would have tested" is a legitimate request — it is just not the default
+   * answer to an untestable item.
+   */
+  ignoreEntryBlockers?: boolean;
   log?: (message: string) => void;
 }
 
@@ -96,11 +106,17 @@ export interface PlanResult {
   analysis: Analysis;
   riskRegister: RiskRegister;
   strategy: TestStrategy;
-  design: DesignOutput;
+  /**
+   * The designed cases, or null when the entry gate stopped the run before
+   * the designer: a blocking entry criterion was unsatisfied and the caller
+   * did not ask to ignore it. Null is the system declining to design, which
+   * is a valid answer and the cheapest one.
+   */
+  design: DesignOutput | null;
   /** Per-case execution routing: designer proposal validated by the router. */
   executionPlan: RoutedCase[];
-  /** Deterministic audit of the final design. */
-  audit: PlanAudit;
+  /** Deterministic audit of the final design. Null when nothing was designed. */
+  audit: PlanAudit | null;
   /** Procedure versions injected, so the plan can be reproduced exactly. */
   playbookVersions: PlaybookVersionStamp[];
   /**
@@ -111,9 +127,17 @@ export interface PlanResult {
   traitCorrections: TraitCorrection[];
   /** One audit per design revision, first to last. */
   auditHistory: PlanAudit[];
-  critique: CriticReport;
+  critique: CriticReport | null;
   /** Critic reports for every round, first to last. */
   critiqueHistory: CriticReport[];
+  /**
+   * Blocking entry criteria the strategy left unsatisfied — recorded whether
+   * or not the run proceeded, so a forced plan still carries the precondition
+   * it was built in spite of.
+   */
+  entryBlockers: string[];
+  /** The run designed cases despite `entryBlockers`, because it was asked to. */
+  designedPastBlockers: boolean;
   revisions: number;
   runs: AgentRunRecord[];
   totalUsage: { inputTokens: number; outputTokens: number };
@@ -217,7 +241,41 @@ ${json(analysis)}`,
     `▸ strategy (deterministic): ${strategy.approach.primary.approach}, depth ${strategy.depth}`,
   );
 
-  // 3b. Procedure — deterministic selection from the strategy, zero tokens
+  // 3b. Entry gate — the one place a blocking criterion actually blocks.
+  //
+  //     The engine already decides that some situations cannot be tested
+  //     their way out: a spec too thin to derive cases from, with nobody
+  //     assigned to clarify it. Until now that decision was written into the
+  //     plan and then ignored by every stage after it, so the system paid for
+  //     a full design it had itself declared premature — and the critic
+  //     rediscovered the contradiction afterwards, at full price. Declining
+  //     costs nothing and is the honest output.
+  if (strategy.entryBlockers.length > 0 && options.ignoreEntryBlockers !== true) {
+    for (const blocker of strategy.entryBlockers) {
+      log(`▸ entry gate: ${blocker}`);
+    }
+    log("▸ no se diseña: la precondición no se arregla con más casos");
+    return {
+      analysis,
+      riskRegister,
+      strategy,
+      design: null,
+      executionPlan: [],
+      audit: null,
+      playbookVersions: [],
+      traitCorrections,
+      auditHistory: [],
+      critique: null,
+      critiqueHistory: [],
+      entryBlockers: strategy.entryBlockers,
+      designedPastBlockers: false,
+      revisions: 0,
+      runs,
+      totalUsage: sumUsage(runs),
+    };
+  }
+
+  // 3c. Procedure — deterministic selection from the strategy, zero tokens
   //     to compute but not free to inject, so it runs under a char budget and
   //     names whatever did not fit.
   const registry =
@@ -379,16 +437,24 @@ ${json(design)}`,
     auditHistory,
     critique,
     critiqueHistory,
+    entryBlockers: strategy.entryBlockers,
+    designedPastBlockers: strategy.entryBlockers.length > 0,
     revisions,
     runs,
-    totalUsage: runs.reduce(
-      (sum, r) => ({
-        inputTokens: sum.inputTokens + r.usage.inputTokens,
-        outputTokens: sum.outputTokens + r.usage.outputTokens,
-      }),
-      { inputTokens: 0, outputTokens: 0 },
-    ),
+    totalUsage: sumUsage(runs),
   };
+}
+
+function sumUsage(
+  runs: AgentRunRecord[],
+): { inputTokens: number; outputTokens: number } {
+  return runs.reduce(
+    (sum, r) => ({
+      inputTokens: sum.inputTokens + r.usage.inputTokens,
+      outputTokens: sum.outputTokens + r.usage.outputTokens,
+    }),
+    { inputTokens: 0, outputTokens: 0 },
+  );
 }
 
 // ---------------------------------------------------------------------------

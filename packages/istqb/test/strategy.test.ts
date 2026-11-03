@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { buildStrategy, type StrategyInput } from "../src/index.js";
+import {
+  buildStrategy,
+  entryBlockersFrom,
+  type StrategyInput,
+} from "../src/index.js";
 
 const input = (overrides: Partial<StrategyInput> = {}): StrategyInput => ({
   context: {
@@ -96,6 +100,42 @@ describe("buildStrategy", () => {
       }),
     );
     expect(strategy.entryCriteria.some((c) => c.startsWith("BLOCKER"))).toBe(true);
+    // Structured, so a caller never has to know the prefix convention.
+    expect(strategy.entryBlockers).toEqual([
+      "BLOCKER: spec quality is insufficient and no domain expert is assigned",
+    ]);
+  });
+
+  it("marks nothing as blocking when the weak spec has an expert assigned", () => {
+    const strategy = buildStrategy(
+      input({
+        context: {
+          ...input().context,
+          specQuality: 0.2,
+          domainExpertAvailable: true,
+        },
+      }),
+    );
+    // Still a criterion to satisfy, but one a person can satisfy.
+    expect(strategy.entryCriteria.join(" ")).toContain("domain expert");
+    expect(strategy.entryBlockers).toEqual([]);
+  });
+
+  it("leaves entryBlockers empty for an ordinary change", () => {
+    expect(buildStrategy(input()).entryBlockers).toEqual([]);
+  });
+
+  it("recovers blockers from an artifact that predates the field", () => {
+    expect(
+      entryBlockersFrom([
+        "Test basis is available",
+        "BLOCKER: spec quality is insufficient and no domain expert is assigned",
+        "  blocker: lowercase and indented still blocks",
+      ]),
+    ).toEqual([
+      "BLOCKER: spec quality is insufficient and no domain expert is assigned",
+      "  blocker: lowercase and indented still blocks",
+    ]);
   });
 
   it("adds security scope and exit criteria when sensitive data is handled", () => {

@@ -41,6 +41,11 @@ Options:
   --playbooks         Inject procedural playbooks for the selected techniques.
                       Off by default: it changes the designer's input, so a
                       plan built with it is not comparable to one built without
+  --ignore-entry-blockers
+                      Design even when a blocking entry criterion is unmet.
+                      Off by default: the engine declines when the item cannot
+                      be tested its way out of its state, and paying for cases
+                      nobody can run does not change that
   -h, --help          Show this help
 
 Environment (un .env en la raíz del proyecto también sirve — está gitignorado):
@@ -214,6 +219,7 @@ async function main(): Promise<void> {
       revisions: { type: "string", default: "1" },
       tenant: { type: "string" },
       playbooks: { type: "boolean", default: false },
+      "ignore-entry-blockers": { type: "boolean", default: false },
       help: { type: "boolean", short: "h" },
     },
   });
@@ -229,6 +235,7 @@ async function main(): Promise<void> {
     outDir: values.out!,
     maxRevisions: Number.parseInt(values.revisions!, 10) || 1,
     playbooks: values.playbooks!,
+    ignoreEntryBlockers: values["ignore-entry-blockers"]!,
     ...(values.tenant ? { tenant: values.tenant } : {}),
   });
 }

@@ -25,6 +25,12 @@ export interface PlanCommandOptions {
   tenant?: string;
   /** Inject procedural playbooks into the designer brief. Off by default. */
   playbooks?: boolean;
+  /**
+   * Design even when a blocking entry criterion is unsatisfied. Off by
+   * default: an item the engine declared untestable does not become testable
+   * by paying for cases.
+   */
+  ignoreEntryBlockers?: boolean;
 }
 
 export async function planCommand(options: PlanCommandOptions): Promise<void> {
@@ -61,6 +67,7 @@ export async function planCommand(options: PlanCommandOptions): Promise<void> {
     call: createAnthropicCaller(),
     maxRevisions: options.maxRevisions,
     playbooks: options.playbooks ?? false,
+    ignoreEntryBlockers: options.ignoreEntryBlockers ?? false,
     cache: fileStageCache(join(dir, ".cache")),
     log: (msg) => console.log(`  ${msg}`),
   });
@@ -69,27 +76,39 @@ export async function planCommand(options: PlanCommandOptions): Promise<void> {
   mkdirSync(dir, { recursive: true });
   writeArtifacts(dir, basis.source.ref, result);
 
-  // The marker tracks the verdict. A ✓ printed over "needs-revision" is how
-  // a rejected plan gets filed as a finished one.
-  const rejected = result.critique.verdict !== "pass";
-  console.log(
-    `\n${rejected ? "⚠" : "✓"} verdict: ${result.critique.verdict} (${result.revisions} revision(s))`,
-  );
-  console.log(
-    `  auditoría mecánica: ${result.audit.findings.length} hueco(s) estructural(es) restante(s)`,
-  );
-  // The engine marks a blocking entry criterion and nothing downstream acts
-  // on it, so the plan ships with its own "spec quality is insufficient"
-  // unmet. Saying it here is the difference between a plan and a plan the
-  // system already knew it should not have written.
-  const entryBlockers = result.strategy.entryCriteria.filter((c) => /^\s*BLOCKER\b/i.test(c));
-  for (const blocker of entryBlockers) {
+  for (const blocker of result.entryBlockers) {
     console.log(`  ⚠ criterio de entrada sin satisfacer: ${blocker}`);
   }
-  if (rejected || entryBlockers.length > 0) {
+
+  if (result.design === null) {
+    // Declining is an outcome, not a failure. It gets its own marker so it
+    // never reads as a crash, and it names what would unblock it.
+    console.log(`\n■ sin diseñar — la precondición no se arregla con más casos`);
+    console.log(`  qué falta: ${result.entryBlockers.join(" · ")}`);
+    console.log(`  lee ${dir}/blocked.md — trae el análisis y las preguntas abiertas`);
     console.log(
-      `  → este plan NO está listo para ejecutar. Lee ${dir}/critic.md antes de usarlo.`,
+      `  si de todos modos quieres ver qué habría probado: --ignore-entry-blockers`,
     );
+  } else {
+    // The marker tracks the verdict. A ✓ printed over "needs-revision" is how
+    // a rejected plan gets filed as a finished one.
+    const rejected = result.critique === null || result.critique.verdict !== "pass";
+    console.log(
+      `\n${rejected ? "⚠" : "✓"} verdict: ${result.critique?.verdict ?? "sin crítico"} (${result.revisions} revision(s))`,
+    );
+    console.log(
+      `  auditoría mecánica: ${result.audit?.findings.length ?? 0} hueco(s) estructural(es) restante(s)`,
+    );
+    if (result.designedPastBlockers) {
+      console.log(
+        `  ⚠ se diseñó con --ignore-entry-blockers: los casos de arriba no son ejecutables hasta cerrar eso`,
+      );
+    }
+    if (rejected || result.designedPastBlockers) {
+      console.log(
+        `  → este plan NO está listo para ejecutar. Lee ${dir}/critic.md antes de usarlo.`,
+      );
+    }
   }
   const costUsd = result.runs.reduce(
     (sum, r) => sum + estimateCostUsd(r.model, r.usage),
@@ -119,9 +138,12 @@ function fileStageCache(cacheDir: string): StageCache {
   };
 }
 
+type Write = (name: string, content: string) => void;
+
 function writeArtifacts(dir: string, ref: string, result: PlanResult): void {
-  const write = (name: string, content: string) =>
+  const write: Write = (name, content) =>
     writeFileSync(join(dir, name), content, "utf8");
+  const { design, critique, audit } = result;
 
   write(
     "testplan.yml",
@@ -140,6 +162,10 @@ function writeArtifacts(dir: string, ref: string, result: PlanResult): void {
         caseBudget: result.strategy.caseBudget,
       },
       entryCriteria: result.strategy.entryCriteria,
+      // Stated separately from the prose list: a reader of this file should
+      // not have to know the prefix convention to learn the plan was gated.
+      entryBlockers: result.entryBlockers,
+      blocked: result.design === null,
       exitCriteria: result.strategy.exitCriteria,
       riskRegister: result.riskRegister,
       analysis: {
@@ -152,13 +178,54 @@ function writeArtifacts(dir: string, ref: string, result: PlanResult): void {
     }),
   );
 
+  if (design === null) {
+    // A declined plan still ships the work that WAS done — the analysis and
+    // the open questions are exactly what someone needs to lift the blocker.
+    write(
+      "blocked.md",
+      [
+        `# Sin diseñar — ${ref}`,
+        "",
+        "El motor marcó un criterio de entrada bloqueante y no se diseñaron casos.",
+        "No es un fallo: es la respuesta correcta a un ítem que todavía no se puede",
+        "probar. Cerrar esto es trabajo humano, no trabajo de diseño.",
+        "",
+        "## Qué falta",
+        "",
+        ...result.entryBlockers.map((b) => `- ${b}`),
+        "",
+        "## Preguntas abiertas que el análisis ya levantó",
+        "",
+        ...(result.analysis.ambiguities.length === 0
+          ? ["(ninguna)"]
+          : result.analysis.ambiguities.map(
+              (a) =>
+                `- **${a.question}**\n  - supuesto de trabajo: ${a.workingAssumption}\n  - riesgo si es falso: ${a.riskIfWrong}`,
+            )),
+        "",
+        "## Riesgos registrados",
+        "",
+        ...result.riskRegister.factors.map(
+          (f) => `- [${f.id}] ${f.description}`,
+        ),
+        "",
+        "---",
+        "",
+        "Para ver qué habría probado de todos modos:",
+        "`pnpm qa plan --from ... --ignore-entry-blockers`",
+      ].join("\n"),
+    );
+    writeRunRecord(write, result);
+    return;
+  }
+
   // Cases ship with their ROUTED execution mode attached — the deliverable
   // states who runs what, honestly degraded to the tenant's capabilities.
   const routingById = new Map(result.executionPlan.map((e) => [e.caseId, e]));
   write(
     "testcases.yml",
     toYaml({
-      cases: result.design.cases.map((c) => {
+      cases: design.cases.map((c) => {
         const routing = routingById.get(c.id);
         return {
           ...c,
@@ -173,7 +240,7 @@ function writeArtifacts(dir: string, ref: string, result: PlanResult): void {
             : null,
         };
       }),
-      exclusions: result.design.exclusions,
+      exclusions: design.exclusions,
     }),
   );
 
@@ -182,9 +249,9 @@ function writeArtifacts(dir: string, ref: string, result: PlanResult): void {
     [
       `# Critic report — ${ref}`,
       "",
-      `Verdict: **${result.critique.verdict}** after ${result.revisions} revision(s)`,
+      `Verdict: **${critique?.verdict ?? "sin crítico"}** after ${result.revisions} revision(s)`,
       "",
-      `Scope: ${result.critique.scopeStatement}`,
+      `Scope: ${critique?.scopeStatement ?? "—"}`,
       "",
       ...result.critiqueHistory.flatMap((report, round) => [
         `## Round ${round + 1} — ${report.verdict}`,
@@ -203,20 +270,35 @@ function writeArtifacts(dir: string, ref: string, result: PlanResult): void {
   write(
     "audit.json",
     JSON.stringify(
-      { findings: result.audit.findings, coverage: result.audit.coverage },
+      { findings: audit?.findings ?? [], coverage: audit?.coverage ?? null },
       null,
       2,
     ),
   );
 
+  writeRunRecord(write, result);
+}
+
+/**
+ * The run record — written for a designed plan and for a declined one alike.
+ *
+ * A declined run is still a run: it cost tokens up to the analyst and the
+ * risk assessor, and `qa eval` has to be able to tell "the system declined"
+ * apart from "no one ever ran this". `verdict: null` with a non-empty
+ * `entryBlockers` is that distinction on disk.
+ */
+function writeRunRecord(write: Write, result: PlanResult): void {
   write(
     "run.json",
     JSON.stringify(
       {
         ranAt: new Date().toISOString(),
         revisions: result.revisions,
-        verdict: result.critique.verdict,
-        auditFindings: result.audit.findings.length,
+        verdict: result.critique?.verdict ?? null,
+        auditFindings: result.audit?.findings.length ?? null,
+        blocked: result.design === null,
+        entryBlockers: result.entryBlockers,
+        designedPastBlockers: result.designedPastBlockers,
         // Which procedure produced this plan — a plan built with playbooks is
         // not comparable to one built without them.
         playbookVersions: result.playbookVersions,

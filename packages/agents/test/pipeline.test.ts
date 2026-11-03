@@ -198,7 +198,7 @@ describe("runPlanPipeline", () => {
     // Strategy is computed, not asked for: 2x3 risk → medium → standard.
     expect(result.strategy.risk.overallLevel).toBe("medium");
     expect(result.strategy.depth).toBe("standard");
-    expect(result.critique.verdict).toBe("pass");
+    expect(result.critique?.verdict).toBe("pass");
     expect(result.revisions).toBe(0);
     expect(result.totalUsage).toEqual({ inputTokens: 400, outputTokens: 200 });
   });
@@ -246,6 +246,85 @@ describe("runPlanPipeline", () => {
     expect(routed.routed.requiresGate).toBe(true);
   });
 
+  describe("entry gate", () => {
+    /** Spec too thin to design from, and nobody assigned to clarify it. */
+    const untestable = {
+      ...analysisFixture,
+      signals: {
+        ...analysisFixture.signals,
+        context: {
+          ...analysisFixture.signals.context,
+          specQuality: 0.2,
+          domainExpertAvailable: false,
+        },
+      },
+    };
+
+    it("declines to design when a blocking entry criterion is unsatisfied", async () => {
+      const { call, requests } = fakeCaller([untestable, riskFixture]);
+
+      const result = await runPlanPipeline(basis, { call });
+
+      // The designer and the critic are never billed.
+      expect(requests.map((r) => r.role)).toEqual(["analyst", "risk-assessor"]);
+      expect(result.design).toBeNull();
+      expect(result.audit).toBeNull();
+      expect(result.critique).toBeNull();
+      expect(result.auditHistory).toEqual([]);
+      expect(result.executionPlan).toEqual([]);
+      expect(result.designedPastBlockers).toBe(false);
+      expect(result.entryBlockers).toEqual([
+        "BLOCKER: spec quality is insufficient and no domain expert is assigned",
+      ]);
+      // The work that WAS done is still returned — it is what lifts the blocker.
+      expect(result.analysis.features).toHaveLength(1);
+      expect(result.strategy.depth).toBeDefined();
+    });
+
+    it("designs anyway when asked, and says so", async () => {
+      const { call, requests } = fakeCaller([
+        untestable,
+        riskFixture,
+        designFixture,
+        passCritique,
+      ]);
+
+      // No revision budget: the point here is that the designer and the
+      // critic run at all, not how many rounds a thin spec provokes.
+      const result = await runPlanPipeline(basis, {
+        call,
+        ignoreEntryBlockers: true,
+        maxRevisions: 0,
+      });
+
+      expect(requests.map((r) => r.role)).toEqual([
+        "analyst",
+        "risk-assessor",
+        "designer",
+        "critic",
+      ]);
+      expect(result.design).not.toBeNull();
+      // A forced plan still carries the precondition it was built in spite of.
+      expect(result.entryBlockers).toHaveLength(1);
+      expect(result.designedPastBlockers).toBe(true);
+    });
+
+    it("does not gate a plan whose entry criteria are all satisfiable", async () => {
+      const { call } = fakeCaller([
+        analysisFixture,
+        riskFixture,
+        designFixture,
+        passCritique,
+      ]);
+
+      const result = await runPlanPipeline(basis, { call });
+
+      expect(result.entryBlockers).toEqual([]);
+      expect(result.designedPastBlockers).toBe(false);
+      expect(result.design).not.toBeNull();
+    });
+  });
+
   describe("mechanical audit", () => {
     it("repairs structural gaps with the designer BEFORE spending a critic call", async () => {
       const { call, requests } = fakeCaller([
@@ -266,7 +345,7 @@ describe("runPlanPipeline", () => {
         "designer",
         "critic",
       ]);
-      expect(result.audit.findings).toEqual([]);
+      expect(result.audit?.findings).toEqual([]);
       expect(result.auditHistory).toHaveLength(2);
       expect(result.auditHistory[0]!.hasBlockers).toBe(true);
     });
@@ -315,7 +394,7 @@ describe("runPlanPipeline", () => {
 
       // One repair attempt, then it proceeds to the critic with gaps recorded.
       expect(requests.filter((r) => r.role === "designer")).toHaveLength(2);
-      expect(result.audit.hasBlockers).toBe(true);
+      expect(result.audit?.hasBlockers).toBe(true);
     });
   });
 
@@ -370,7 +449,7 @@ describe("runPlanPipeline", () => {
       // The correction propagated all the way to a free structural repair:
       // two designer calls, and no extra critic round to pay for.
       expect(requests.filter((r) => r.role === "designer")).toHaveLength(2);
-      expect(result.audit.findings).toEqual([]);
+      expect(result.audit?.findings).toEqual([]);
       expect(result.traitCorrections).toHaveLength(1);
       expect(result.traitCorrections[0]).toMatchObject({
         trait: "hasOrderedInputDomain",
@@ -522,8 +601,8 @@ describe("runPlanPipeline", () => {
       "critic",
     ]);
     expect(result.revisions).toBe(1);
-    expect(result.design.cases).toHaveLength(2);
-    expect(result.critique.verdict).toBe("pass");
+    expect(result.design?.cases).toHaveLength(2);
+    expect(result.critique?.verdict).toBe("pass");
     expect(result.critiqueHistory).toHaveLength(2);
 
     // The revision brief must carry the blocker findings to the designer.
@@ -545,7 +624,7 @@ describe("runPlanPipeline", () => {
     const result = await runPlanPipeline(basis, { call, maxRevisions: 1 });
 
     expect(result.revisions).toBe(1);
-    expect(result.critique.verdict).toBe("needs-revision");
+    expect(result.critique?.verdict).toBe("needs-revision");
   });
 
   it("injects tenant memory as labelled context, never as instructions", async () => {

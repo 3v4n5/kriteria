@@ -33,6 +33,14 @@ export interface ActualPlan {
   risks: string[];
   caseCount: number;
   /**
+   * The system refused to design: a blocking entry criterion was unsatisfied
+   * and the run stopped before the designer. Distinct from a plan with zero
+   * cases (impossible — the design schema requires one) and from a missing
+   * artifact (nobody ran it). Scored on its own wording, because "there is no
+   * plan" and "the plan is unsound" are different findings.
+   */
+  declined: boolean;
+  /**
    * Structural gaps left by the mechanical audit. `null` means the run has no
    * audit at all (an older artifact) — absence of a report is not a clean
    * report, so it scores as a mismatch with its own wording.
@@ -191,7 +199,14 @@ export function scorePlan(golden: GoldenEntry, actual: ActualPlan): EvalResult {
     skip("plan estructuralmente sano");
   } else {
     const failures: string[] = [];
-    if (actual.auditFindingCount === null) {
+    if (actual.declined) {
+      // Not a hole in the plan — the absence of one, on the system's own
+      // stated grounds. The expectation asked for a sound plan and there is
+      // none, so it cannot match; naming WHY keeps it from reading as a bug.
+      failures.push(
+        `el sistema declinó diseñar: ${actual.entryBlockers.join("; ") || "criterio de entrada bloqueante"}`,
+      );
+    } else if (actual.auditFindingCount === null) {
       failures.push("la corrida no trae auditoría (artefacto anterior a esta capacidad)");
     } else if (actual.auditFindingCount > 0) {
       failures.push(`${actual.auditFindingCount} hueco(s) estructural(es) sin cerrar`);
@@ -201,7 +216,7 @@ export function scorePlan(golden: GoldenEntry, actual: ActualPlan): EvalResult {
     if (actual.criticVerdict !== null && actual.criticVerdict !== "pass") {
       failures.push(`el crítico dictaminó "${actual.criticVerdict}"`);
     }
-    if (actual.entryBlockers.length > 0) {
+    if (!actual.declined && actual.entryBlockers.length > 0) {
       failures.push(
         `criterio(s) de entrada sin satisfacer: ${actual.entryBlockers.join("; ")}`,
       );

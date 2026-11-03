@@ -109,7 +109,21 @@ export async function runCommand(options: RunCommandOptions): Promise<void> {
   const plan = fromYaml(readFileSync(join(dir, "testplan.yml"), "utf8"));
   // The plan names its own work item; the directory name is only a fallback.
   const ref: string = plan.workItem ?? dir.replace(/\/+$/, "").split("/").pop()!;
-  const testcases = fromYaml(readFileSync(join(dir, "testcases.yml"), "utf8"));
+  // A declined plan ships no cases: the entry gate stopped the run before the
+  // designer because a precondition was unmet. Executing it is not a thing to
+  // degrade gracefully — there is nothing to execute, and the reason is the
+  // message. The refusal names the artifact that explains it.
+  const casesPath = join(dir, "testcases.yml");
+  if (!existsSync(casesPath)) {
+    const blockers: string[] = plan.entryBlockers ?? [];
+    throw new Error(
+      `${ref} no tiene casos diseñados` +
+        (blockers.length > 0
+          ? `: el motor declinó por criterio(s) de entrada sin satisfacer\n  ${blockers.join("\n  ")}\n  lee ${join(dir, "blocked.md")}`
+          : ` (falta ${casesPath})`),
+    );
+  }
+  const testcases = fromYaml(readFileSync(casesPath, "utf8"));
   const cases: DesignedCase[] = testcases.cases;
 
   const modeByCaseId = new Map<string, ExecutionMode>(

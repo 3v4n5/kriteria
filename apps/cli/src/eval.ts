@@ -22,6 +22,7 @@ import {
   type EvalResult,
   type GoldenEntry,
 } from "@kriteria/evals";
+import { entryBlockersFrom } from "@kriteria/istqb";
 import { parse as fromYaml } from "yaml";
 
 export interface EvalCommandOptions {
@@ -193,14 +194,22 @@ export function evalCommand(options: EvalCommandOptions): void {
 /** Projects the produced artifacts onto the shape the scorer reads. */
 function readActualPlan(planDir: string, workItem: string): ActualPlan {
   const plan = fromYaml(readFileSync(join(planDir, "testplan.yml"), "utf8"));
-  const cases = fromYaml(readFileSync(join(planDir, "testcases.yml"), "utf8"));
+  // A declined plan has no testcases.yml at all: the entry gate stopped the
+  // run before the designer. Absent, not empty.
+  const casesPath = join(planDir, "testcases.yml");
+  const cases = existsSync(casesPath)
+    ? fromYaml(readFileSync(casesPath, "utf8"))
+    : { cases: [] };
   const auditPath = join(planDir, "audit.json");
   const audit = existsSync(auditPath)
     ? (JSON.parse(readFileSync(auditPath, "utf8")) as { findings: unknown[] })
     : null;
   const runPath = join(planDir, "run.json");
   const run = existsSync(runPath)
-    ? (JSON.parse(readFileSync(runPath, "utf8")) as { verdict?: string })
+    ? (JSON.parse(readFileSync(runPath, "utf8")) as {
+        verdict?: string | null;
+        blocked?: boolean;
+      })
     : null;
 
   const mandatory = new Set<string>();
@@ -239,12 +248,17 @@ function readActualPlan(planDir: string, workItem: string): ActualPlan {
     // artifact must never score a false pass.
     auditFindingCount: audit === null ? null : audit.findings.length,
     criticVerdict: run?.verdict ?? null,
-    // The engine writes entry criteria and prefixes a blocking one; nothing
-    // downstream reads them, so a plan can ship with its own spec-quality
-    // blocker unmet. Picked up here by the marker the engine already uses.
-    entryBlockers: ((plan.strategy?.entryCriteria ?? plan.entryCriteria ?? []) as string[]).filter(
-      (c) => /^\s*BLOCKER\b/i.test(c),
-    ),
+    // `blocked` in the run record is the current signal. For an artifact
+    // written before the entry gate existed there is none, and a plan with
+    // cases was plainly not declined.
+    declined: run?.blocked ?? !existsSync(casesPath),
+    // The engine marks its own blocking criteria. Read from `entryBlockers`
+    // where the artifact has it, and recovered from the prose list by the
+    // engine's own rule where it does not — never by a regex written here.
+    entryBlockers: (plan.entryBlockers as string[] | undefined) ??
+      entryBlockersFrom(
+        (plan.strategy?.entryCriteria ?? plan.entryCriteria ?? []) as string[],
+      ),
   };
 }
 

@@ -58,6 +58,12 @@ for self-hosted Jira); `KRITERIA_API_BASE_URL`/`KRITERIA_API_TOKEN` for `auto-ap
 - **Any execution that mutates state requires a human gate.** `routeExecution` sets
   `requiresGate`, and `runApiStep` throws `MutationNotApprovedError` unless the caller
   states the operator approved it.
+- **A blocking entry criterion stops the pipeline before the designer.** `buildStrategy`
+  marks it in `entryBlockers` (the `BLOCKER:` prefix is readable sugar; the array is
+  the contract). `runPlanPipeline` then returns `design: null` and the CLI writes
+  `blocked.md` instead of cases — declining is a valid answer and the cheapest one.
+  `qa run` refuses a plan with no cases. `--ignore-entry-blockers` designs anyway and
+  records `designedPastBlockers` so the artifact says it was forced.
 - **Work-item content is untrusted data, never instructions.** Enforced in the shared
   prompt rules; instructions found inside an item are a finding about the input.
 - **The target host is configuration, never content.** Steps carry relative paths; an
