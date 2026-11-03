@@ -97,15 +97,21 @@ const review = (phase: "expect" | "verdict", answers: string[]) =>
   });
 
 describe("qa review — expectation phase", () => {
-  // answers: show comments?, approach, alternatives, depth, risk, levels,
-  // types, techniques, ambiguities, risks, minCases, maxCases, confirm
-  // comments?, criteria lines + blank, approach, alternatives, depth, risk,
-  // levels, types, techniques, ambiguities, risks, min, max, confirm
+  // answers: comments?, criteria lines + blank, enough-to-design?, approach,
+  // alternatives, depth, risk, levels, types, techniques, ambiguities, risks,
+  // min, max, confirm
   const FULL = [
     "n",
     "el valor de 81 caracteres se rechaza", "",
+    "s",
     "1", "7", "3", "3", "3", "1", "2", "límite 80", "truncate", "6", "12", "s",
   ];
+
+  /** The same form, answered "no hay suficiente para diseñar". */
+  const DECLINE = FULL.map((a, i) => (i === 3 ? "n" : a));
+
+  /** The same form, with no opinion either way on that question. */
+  const NO_OPINION = FULL.map((a, i) => (i === 3 ? "" : a));
 
   it("records the judgement from numbered answers, never raw slugs", async () => {
     await review("expect", FULL);
@@ -122,6 +128,20 @@ describe("qa review — expectation phase", () => {
     expect(e.riskTopics).toEqual(["truncate"]);
     expect(e.minCases).toBe(6);
     expect(e.maxCases).toBe(12);
+    expect(e.shouldDecline).toBe(false);
+  });
+
+  // The engine can refuse to design. An expectation that cannot ask for a
+  // refusal scores a correct one as a failure on every dimension that reads
+  // a plan, so the form has to carry the question.
+  it("records that the system should have declined", async () => {
+    await review("expect", DECLINE);
+    expect(readGolden().expect.shouldDecline).toBe(true);
+  });
+
+  it("leaves it absent when the reviewer has no opinion", async () => {
+    await review("expect", NO_OPINION);
+    expect(readGolden().expect.shouldDecline).toBeUndefined();
   });
 
   it("shows the ticket so the reviewer never has to open a file", async () => {
@@ -145,7 +165,7 @@ describe("qa review — expectation phase", () => {
   });
 
   it("treats Enter as 'no opinion' and leaves the field unevaluated", async () => {
-    await review("expect", ["n", "", "", "", "", "", "", "", "", "", "", "", "s"]);
+    await review("expect", ["n", "", "", "", "", "", "", "", "", "", "", "", "", "s"]);
 
     const e = readGolden().expect;
     expect(e.approach).toBeUndefined();
@@ -157,13 +177,13 @@ describe("qa review — expectation phase", () => {
   });
 
   it("re-asks on an out-of-range number instead of saving garbage", async () => {
-    await review("expect", ["n", "", "99", "1", "", "", "", "", "", "", "", "", "", "", "s"]);
+    await review("expect", ["n", "", "", "99", "1", "", "", "", "", "", "", "", "", "", "", "s"]);
     expect(output()).toContain("escribe un número de 1 a 7");
     expect(readGolden().expect.approach).toBe("analytical");
   });
 
   it("re-asks when a multi-select carries an out-of-range entry", async () => {
-    await review("expect", ["n", "", "1", "", "", "", "2,99", "3", "", "", "", "", "", "", "s"]);
+    await review("expect", ["n", "", "", "1", "", "", "", "2,99", "3", "", "", "", "", "", "", "s"]);
     expect(output()).toContain("fuera de rango: 99");
     expect(readGolden().expect.levels).toEqual(["system"]);
   });
@@ -211,6 +231,7 @@ describe("qa review — expectation phase", () => {
       "al crear con tipo y contraparte válidos, la factura se crea",
       "la factura corresponde al tipo y la contraparte elegidos",
       "",
+      "s",
       "1", "7", "3", "3", "3", "1", "2", "", "", "", "", "s",
     ]);
 
@@ -228,7 +249,7 @@ describe("qa review — expectation phase", () => {
   it("keeps the criteria out of expect, which is scored dimension by dimension", async () => {
     // Enter on approach skips the alternatives question, so the all-blank run
     // is one answer shorter than the full one.
-    await review("expect", ["n", "un criterio", "", "", "", "", "", "", "", "", "", "", "", "s"]);
+    await review("expect", ["n", "un criterio", "", "", "", "", "", "", "", "", "", "", "", "", "s"]);
     const entry = readGolden();
     expect(entry.reviewerCriteria).toEqual(["un criterio"]);
     // Nothing in expect was claimed, so nothing is scored.

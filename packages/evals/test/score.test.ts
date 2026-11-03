@@ -179,6 +179,62 @@ describe("summarizeSuite", () => {
 
 // Three gates over the same artifact, and they disagree. The suite used to
 // read one of them, so a plan its own critic had rejected scored a clean pass.
+describe("diseñar o declinar", () => {
+  const score = (
+    expect_: Partial<GoldenEntry["expect"]>,
+    a: Partial<typeof actual>,
+  ) => scorePlan(golden(expect_), { ...actual, ...a });
+  const find = (r: ReturnType<typeof scorePlan>, name: string) =>
+    r.dimensions.find((d) => d.dimension === name)!;
+
+  const declinedPlan = {
+    declined: true,
+    caseCount: 0,
+    auditFindingCount: null,
+    criticVerdict: null,
+    entryBlockers: ["BLOCKER: sin experto"],
+  } satisfies Partial<typeof actual>;
+
+  it("is unevaluated when the reviewer gave no opinion", () => {
+    expect(find(score({}, {}), "diseñar o declinar").status).toBe("not-scored");
+  });
+
+  it("credits a refusal the reviewer asked for", () => {
+    const r = score({ shouldDecline: true }, declinedPlan);
+    expect(find(r, "diseñar o declinar")).toMatchObject({ status: "match" });
+    // The dimensions that read a plan have nothing to read, and scoring them
+    // as mismatches would punish the system for the right answer.
+    expect(find(r, "plan estructuralmente sano").status).toBe("not-scored");
+  });
+
+  it("does not ask how many cases a refusal should have had", () => {
+    const r = score({ shouldDecline: true, minCases: 0, maxCases: 0 }, declinedPlan);
+    expect(find(r, "cantidad de casos").status).toBe("not-scored");
+  });
+
+  it("fails a plan the reviewer expected the system to refuse", () => {
+    const d = find(score({ shouldDecline: true }, {}), "diseñar o declinar");
+    expect(d.status).toBe("mismatch");
+    expect(d.detail).toContain("diseñó casos");
+  });
+
+  it("fails a refusal where the reviewer expected a plan, and still audits it", () => {
+    const r = score({ shouldDecline: false }, declinedPlan);
+    const d = find(r, "diseñar o declinar");
+    expect(d.status).toBe("mismatch");
+    expect(d.detail).toContain("sin experto");
+    // Not the expected outcome, so the plan dimensions keep reporting.
+    expect(find(r, "plan estructuralmente sano").status).toBe("mismatch");
+  });
+
+  it("keeps reporting an unexpected refusal's volume too", () => {
+    const r = score({ minCases: 6, maxCases: 12 }, declinedPlan);
+    const d = find(r, "cantidad de casos");
+    expect(d.status).toBe("mismatch");
+    expect(d.detail).toContain("0 casos");
+  });
+});
+
 describe("plan estructuralmente sano", () => {
   const dimension = (a: Partial<typeof actual>) =>
     scorePlan(golden({}), { ...actual, ...a }).dimensions.find(

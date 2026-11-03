@@ -167,8 +167,40 @@ export function scorePlan(golden: GoldenEntry, actual: ActualPlan): EvalResult {
     }
   }
 
+  // --- design or decline ----------------------------------------------------
+  //
+  // The first question about a thin item, and the only one the other
+  // dimensions presuppose: should there be a plan at all? The engine can
+  // refuse, so the expectation has to be able to ask for a refusal —
+  // otherwise a correct refusal scores as a failure on every dimension that
+  // reads a plan.
+  if (e.shouldDecline === undefined) {
+    skip("diseñar o declinar");
+  } else if (e.shouldDecline === actual.declined) {
+    add(
+      "diseñar o declinar",
+      "match",
+      e.shouldDecline
+        ? "declinó, como se esperaba"
+        : "diseñó un plan, como se esperaba",
+    );
+  } else {
+    add(
+      "diseñar o declinar",
+      "mismatch",
+      e.shouldDecline
+        ? "se esperaba que declinara y diseñó casos"
+        : `se esperaba un plan y declinó: ${actual.entryBlockers.join("; ") || "sin motivo registrado"}`,
+    );
+  }
+
   // --- volume ---------------------------------------------------------------
   if (e.minCases === undefined && e.maxCases === undefined) {
+    skip("cantidad de casos");
+  } else if (actual.declined && e.shouldDecline === true) {
+    // Asking how many cases a refusal should have had is not a question.
+    // Only when the refusal is what was expected: an unexpected one is a
+    // mismatch the volume dimension should keep reporting.
     skip("cantidad de casos");
   } else {
     const tooFew = e.minCases !== undefined && actual.caseCount < e.minCases;
@@ -196,6 +228,11 @@ export function scorePlan(golden: GoldenEntry, actual: ActualPlan): EvalResult {
   // insufficient and no domain expert is assigned". Scoring only the audit
   // reported that plan as clean.
   if (!e.requireCleanAudit) {
+    skip("plan estructuralmente sano");
+  } else if (actual.declined && e.shouldDecline === true) {
+    // The refusal was the expected outcome, and there is no artifact to audit.
+    // Scored as a mismatch this would punish the system for doing the right
+    // thing — the "diseñar o declinar" dimension above already credits it.
     skip("plan estructuralmente sano");
   } else {
     const failures: string[] = [];

@@ -365,9 +365,18 @@ async function expectPhase(
   console.log(`${"─".repeat(70)}`);
 
   const e = entry.expect;
+  // Asked first because every question after it presupposes a plan. On an
+  // item too thin to design against, the honest answer is a list of
+  // questions, and the engine can now give exactly that — so the form has
+  // to be able to ask for it, or a correct refusal scores as a failure.
+  const shouldDesign = await askYesNo(
+    ask,
+    "1/10 · ¿Hay suficiente en el ticket para diseñar casos?\n" +
+      "   n = no: el sistema debería negarse y pedir información, no inventar el escenario",
+  );
   const approach = await pickOne(
     ask,
-    "1/9 · ¿Qué enfoque de prueba usarías como principal?",
+    "2/10 · ¿Qué enfoque de prueba usarías como principal?",
     TEST_APPROACHES,
     APPROACH_LABELS,
     e.approach,
@@ -377,25 +386,25 @@ async function expectPhase(
       ? e.approachAlternatives
       : await pickMany(
           ask,
-          "2/9 · ¿Qué otros enfoques aceptarías como razonables?",
+          "3/10 · ¿Qué otros enfoques aceptarías como razonables?",
           TEST_APPROACHES,
           APPROACH_LABELS,
           e.approachAlternatives,
         );
-  const depth = await pickOne(ask, "3/9 · ¿Qué tan a fondo lo probarías?", TEST_DEPTHS, DEPTH_LABELS, e.depth);
-  const riskLevel = await pickOne(ask, "4/9 · ¿Qué tan riesgoso es este cambio?", RISK_LEVELS, RISK_LABELS, e.riskLevel);
-  const levels = await pickMany(ask, "5/9 · ¿En qué niveles DEBE haber pruebas?", TEST_LEVELS, LEVEL_LABELS, e.levels);
-  const types = await pickMany(ask, "6/9 · ¿Qué tipos de prueba DEBE incluir?", TEST_TYPES, TYPE_LABELS, e.types);
+  const depth = await pickOne(ask, "4/10 · ¿Qué tan a fondo lo probarías?", TEST_DEPTHS, DEPTH_LABELS, e.depth);
+  const riskLevel = await pickOne(ask, "5/10 · ¿Qué tan riesgoso es este cambio?", RISK_LEVELS, RISK_LABELS, e.riskLevel);
+  const levels = await pickMany(ask, "6/10 · ¿En qué niveles DEBE haber pruebas?", TEST_LEVELS, LEVEL_LABELS, e.levels);
+  const types = await pickMany(ask, "7/10 · ¿Qué tipos de prueba DEBE incluir?", TEST_TYPES, TYPE_LABELS, e.types);
   const mandatoryTechniques = await pickMany(
     ask,
-    "7/9 · ¿Qué técnicas son NO negociables? (rechazarías el plan sin ellas)",
+    "8/10 · ¿Qué técnicas son NO negociables? (rechazarías el plan sin ellas)",
     TEST_TECHNIQUES,
     TECHNIQUE_LABELS,
     e.mandatoryTechniques,
   );
   const ambiguityTopics = await askKeywords(
     ask,
-    "8/9 · ¿Qué le preguntarías al autor antes de diseñar?",
+    "9/10 · ¿Qué le preguntarías al autor antes de diseñar?",
     "Pocas palabras por tema, no frases. Ej: límite 80, modulo vendor",
     // The matcher is plain containment, on purpose: a fuzzy match would turn
     // a real gap into a silent pass. The cost lands here, so say it here —
@@ -405,7 +414,7 @@ async function expectPhase(
   );
   const riskTopics = await askKeywords(
     ask,
-    "9/9 · ¿Qué te preocupa que se rompa?",
+    "10/10 · ¿Qué te preocupa que se rompa?",
     "Mismo criterio. Ej: truncamiento|truncate, rename",
     "El plan se escribe en inglés: agrega la alternativa con | si hace falta.",
     e.riskTopics,
@@ -426,6 +435,9 @@ async function expectPhase(
     riskTopics,
     ...(minCases !== undefined ? { minCases } : {}),
     ...(maxCases !== undefined ? { maxCases } : {}),
+    // `null` from the prompt is "no opinion", which the schema stores as
+    // absent. `false` means a plan is owed, and that is an opinion.
+    ...(shouldDesign !== null ? { shouldDecline: !shouldDesign } : {}),
   };
 
   console.log(`\n${"─".repeat(70)}`);
@@ -602,6 +614,16 @@ function summarize(e: GoldenEntry["expect"]): string[] {
       `${empty ? "◻️" : "✅"} ${name}: ${empty ? "sin evaluar" : Array.isArray(value) ? value.join(", ") : String(value)}`,
     );
   };
+  show(
+    "diseñar o declinar",
+    // `false` is an opinion, so it must not render as "sin evaluar" the way
+    // an absent field does — `show` treats undefined as absence, nothing else.
+    e.shouldDecline === undefined
+      ? undefined
+      : e.shouldDecline
+        ? "debería declinar"
+        : "debería diseñar",
+  );
   show("enfoque", e.approach);
   show("profundidad", e.depth);
   show("riesgo", e.riskLevel);

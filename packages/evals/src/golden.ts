@@ -65,6 +65,20 @@ export const ExpectationSchema = z.object({
    */
   minCases: blankAsAbsent(z.number().int().min(0).optional()),
   maxCases: blankAsAbsent(z.number().int().min(0).optional()),
+  /**
+   * Whether the system should refuse to design at all.
+   *
+   * `true` means the item is not ready to be tested and the honest output is
+   * a list of questions, not cases — the engine's entry gate declining.
+   * `false` means a plan is owed. Absent means no opinion, and scores as
+   * unevaluated like every other absent field.
+   *
+   * It exists because the system CAN decline, and a measurement that cannot
+   * express the outcome it is measuring will score a correct refusal as a
+   * failure. `minCases: 0` was the closest this schema could come, and it
+   * says something different: zero cases in a plan that was still designed.
+   */
+  shouldDecline: blankAsAbsent(z.boolean().optional()),
   /** The mechanical audit must end with no structural gaps. */
   requireCleanAudit: blankAsAbsent(z.boolean().default(true)),
 });
