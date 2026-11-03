@@ -23,6 +23,8 @@ const actual: ActualPlan = {
   risks: ["Descuento aplicado dos veces en el límite", "Componente compartido sin regresión"],
   caseCount: 12,
   auditFindingCount: 0,
+  criticVerdict: "pass",
+  entryBlockers: [],
 };
 
 const golden = (expect_: Partial<GoldenEntry["expect"]>): GoldenEntry =>
@@ -141,22 +143,6 @@ describe("scorePlan", () => {
     });
   });
 
-  describe("audit cleanliness", () => {
-    it("requires a clean audit by default", () => {
-      const d = scorePlan(golden({}), { ...actual, auditFindingCount: 3 }).dimensions.find(
-        (x) => x.dimension === "auditoría mecánica",
-      )!;
-      expect(d.status).toBe("mismatch");
-    });
-
-    it("treats a missing audit as a gap, and says so in its own words", () => {
-      const d = scorePlan(golden({}), { ...actual, auditFindingCount: null }).dimensions.find(
-        (x) => x.dimension === "auditoría mecánica",
-      )!;
-      expect(d.status).toBe("mismatch");
-      expect(d.detail).toContain("no trae auditoría");
-    });
-  });
 });
 
 describe("summarizeSuite", () => {
@@ -187,6 +173,66 @@ describe("summarizeSuite", () => {
       humanReviewed: 2,
       humanPending: 1,
     });
+  });
+});
+
+// Three gates over the same artifact, and they disagree. The suite used to
+// read one of them, so a plan its own critic had rejected scored a clean pass.
+describe("plan estructuralmente sano", () => {
+  const dimension = (a: Partial<typeof actual>) =>
+    scorePlan(golden({}), { ...actual, ...a }).dimensions.find(
+      (d) => d.dimension === "plan estructuralmente sano",
+    )!;
+
+  it("passes only when all three gates are in order", () => {
+    expect(dimension({})).toMatchObject({ status: "match" });
+  });
+
+  it("requires a clean mechanical audit by default", () => {
+    const d = dimension({ auditFindingCount: 3 });
+    expect(d.status).toBe("mismatch");
+    expect(d.detail).toContain("3 hueco");
+  });
+
+  // The case that was silently passing: zero structural gaps, eleven critic
+  // findings, needs-revision.
+  it("fails a plan the critic rejected, even with a clean mechanical audit", () => {
+    const d = dimension({ auditFindingCount: 0, criticVerdict: "needs-revision" });
+    expect(d.status).toBe("mismatch");
+    expect(d.detail).toContain("needs-revision");
+  });
+
+  // The engine writes the blocker and nothing downstream reads it, so the
+  // plan ships with its own entry criterion unmet.
+  it("fails a plan whose strategy declared an unmet entry blocker", () => {
+    const d = dimension({
+      entryBlockers: ["BLOCKER: spec quality is insufficient and no domain expert is assigned"],
+    });
+    expect(d.status).toBe("mismatch");
+    expect(d.detail).toContain("spec quality is insufficient");
+  });
+
+  it("names every gate that failed, not just the first", () => {
+    const d = dimension({
+      auditFindingCount: 2,
+      criticVerdict: "needs-revision",
+      entryBlockers: ["BLOCKER: sin experto"],
+    });
+    expect(d.detail).toContain("2 hueco");
+    expect(d.detail).toContain("needs-revision");
+    expect(d.detail).toContain("sin experto");
+  });
+
+  // An older artifact has no verdict. Absence is reported by the audit
+  // branch; it must not be invented as a rejection.
+  it("does not treat a missing verdict as a rejection", () => {
+    expect(dimension({ criticVerdict: null })).toMatchObject({ status: "match" });
+  });
+
+  it("still reports a run with no audit at all", () => {
+    const d = dimension({ auditFindingCount: null });
+    expect(d.status).toBe("mismatch");
+    expect(d.detail).toContain("no trae auditoría");
   });
 });
 

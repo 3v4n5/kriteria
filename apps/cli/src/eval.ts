@@ -198,6 +198,10 @@ function readActualPlan(planDir: string, workItem: string): ActualPlan {
   const audit = existsSync(auditPath)
     ? (JSON.parse(readFileSync(auditPath, "utf8")) as { findings: unknown[] })
     : null;
+  const runPath = join(planDir, "run.json");
+  const run = existsSync(runPath)
+    ? (JSON.parse(readFileSync(runPath, "utf8")) as { verdict?: string })
+    : null;
 
   const mandatory = new Set<string>();
   for (const level of plan.strategy.techniquesByLevel ?? []) {
@@ -234,6 +238,13 @@ function readActualPlan(planDir: string, workItem: string): ActualPlan {
     // A missing audit file is reported as such, not as zero gaps — a stale
     // artifact must never score a false pass.
     auditFindingCount: audit === null ? null : audit.findings.length,
+    criticVerdict: run?.verdict ?? null,
+    // The engine writes entry criteria and prefixes a blocking one; nothing
+    // downstream reads them, so a plan can ship with its own spec-quality
+    // blocker unmet. Picked up here by the marker the engine already uses.
+    entryBlockers: ((plan.strategy?.entryCriteria ?? plan.entryCriteria ?? []) as string[]).filter(
+      (c) => /^\s*BLOCKER\b/i.test(c),
+    ),
   };
 }
 

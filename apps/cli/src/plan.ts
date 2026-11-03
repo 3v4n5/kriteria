@@ -69,10 +69,28 @@ export async function planCommand(options: PlanCommandOptions): Promise<void> {
   mkdirSync(dir, { recursive: true });
   writeArtifacts(dir, basis.source.ref, result);
 
-  console.log(`\n✓ verdict: ${result.critique.verdict} (${result.revisions} revision(s))`);
+  // The marker tracks the verdict. A ✓ printed over "needs-revision" is how
+  // a rejected plan gets filed as a finished one.
+  const rejected = result.critique.verdict !== "pass";
+  console.log(
+    `\n${rejected ? "⚠" : "✓"} verdict: ${result.critique.verdict} (${result.revisions} revision(s))`,
+  );
   console.log(
     `  auditoría mecánica: ${result.audit.findings.length} hueco(s) estructural(es) restante(s)`,
   );
+  // The engine marks a blocking entry criterion and nothing downstream acts
+  // on it, so the plan ships with its own "spec quality is insufficient"
+  // unmet. Saying it here is the difference between a plan and a plan the
+  // system already knew it should not have written.
+  const entryBlockers = result.strategy.entryCriteria.filter((c) => /^\s*BLOCKER\b/i.test(c));
+  for (const blocker of entryBlockers) {
+    console.log(`  ⚠ criterio de entrada sin satisfacer: ${blocker}`);
+  }
+  if (rejected || entryBlockers.length > 0) {
+    console.log(
+      `  → este plan NO está listo para ejecutar. Lee ${dir}/critic.md antes de usarlo.`,
+    );
+  }
   const costUsd = result.runs.reduce(
     (sum, r) => sum + estimateCostUsd(r.model, r.usage),
     0,

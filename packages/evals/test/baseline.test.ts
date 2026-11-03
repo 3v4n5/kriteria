@@ -213,7 +213,12 @@ describe("compareExpectations", () => {
 
   it("never compares requireCleanAudit — it is a policy, not a judgement", () => {
     const r = compareExpectations("T-1", E({}), E({}));
-    expect(r.dimensions.map((d) => d.dimension)).not.toContain("auditoría mecánica");
+    // Named by the current dimension, so a rename cannot make this pass by
+    // asserting the absence of something that no longer exists.
+    expect(r.dimensions.map((d) => d.dimension)).not.toContain(
+      "plan estructuralmente sano",
+    );
+    expect(r.dimensions.some((d) => /audit|sano/i.test(d.dimension))).toBe(false);
   });
 });
 

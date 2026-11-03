@@ -38,6 +38,22 @@ export interface ActualPlan {
    * report, so it scores as a mismatch with its own wording.
    */
   auditFindingCount: number | null;
+  /**
+   * The critic's verdict on this plan, or `null` for a run that recorded
+   * none. The mechanical audit and the critic are different gates over the
+   * same artifact and they disagree: on OFBIZ-13033 the audit found zero
+   * structural gaps while the critic returned `needs-revision` over eleven
+   * findings, and the suite reported a clean pass.
+   */
+  criticVerdict: string | null;
+  /**
+   * Entry criteria the strategy itself marked as blocking.
+   *
+   * The engine writes these, the designer does not read them, and the plan
+   * ships with its own "spec quality is insufficient" still unmet. Carried
+   * so the score cannot call that plan sound.
+   */
+  entryBlockers: string[];
 }
 
 export type DimensionStatus = "match" | "acceptable" | "mismatch" | "not-scored";
@@ -160,23 +176,41 @@ export function scorePlan(golden: GoldenEntry, actual: ActualPlan): EvalResult {
     }
   }
 
-  // --- structural cleanliness ----------------------------------------------
+  // --- structural soundness -------------------------------------------------
+  //
+  // Three gates over the same artifact, reported as one dimension because
+  // they answer one question: is this plan sound enough to hand to a tester?
+  // Each is named in the detail, so a reader sees WHICH gate failed.
+  //
+  // They disagree. On OFBIZ-13033 the mechanical audit found zero gaps while
+  // the critic returned needs-revision over eleven findings and the
+  // strategy's own entry criteria still carried "spec quality is
+  // insufficient and no domain expert is assigned". Scoring only the audit
+  // reported that plan as clean.
   if (!e.requireCleanAudit) {
-    skip("auditoría mecánica");
-  } else if (actual.auditFindingCount === null) {
-    add(
-      "auditoría mecánica",
-      "mismatch",
-      "la corrida no trae auditoría (artefacto anterior a esta capacidad)",
-    );
-  } else if (actual.auditFindingCount === 0) {
-    add("auditoría mecánica", "match", "sin huecos estructurales");
+    skip("plan estructuralmente sano");
   } else {
-    add(
-      "auditoría mecánica",
-      "mismatch",
-      `${actual.auditFindingCount} hueco(s) estructural(es) sin cerrar`,
-    );
+    const failures: string[] = [];
+    if (actual.auditFindingCount === null) {
+      failures.push("la corrida no trae auditoría (artefacto anterior a esta capacidad)");
+    } else if (actual.auditFindingCount > 0) {
+      failures.push(`${actual.auditFindingCount} hueco(s) estructural(es) sin cerrar`);
+    }
+    // Only a rejection counts. An absent verdict is an older artifact, and
+    // the audit branch above already reports that case.
+    if (actual.criticVerdict !== null && actual.criticVerdict !== "pass") {
+      failures.push(`el crítico dictaminó "${actual.criticVerdict}"`);
+    }
+    if (actual.entryBlockers.length > 0) {
+      failures.push(
+        `criterio(s) de entrada sin satisfacer: ${actual.entryBlockers.join("; ")}`,
+      );
+    }
+    if (failures.length === 0) {
+      add("plan estructuralmente sano", "match", "auditoría, crítico y criterios de entrada en orden");
+    } else {
+      add("plan estructuralmente sano", "mismatch", failures.join(" · "));
+    }
   }
 
   const scored = dimensions.filter((d) => d.status !== "not-scored").length;

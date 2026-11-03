@@ -1,0 +1,56 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# BASELINE — juicio de un modelo independiente. NO es el golden set.
+#
+# Generado por un agente que vio UNICAMENTE el brief de este ticket: ni el
+# plan de Kriteria, ni la estrategia, ni el golden. La aislacion la impone la
+# firma de buildBaselinePrompt, que solo acepta el texto del brief, y
+# source.briefSha256 digiere ese unico documento.
+#
+# Para que sirve: el eval compara tres pares — Kriteria vs humano (el gate de
+# Fase 0), Kriteria vs este baseline, y humano vs este baseline. El tercero
+# dice si el juicio de un modelo PREDICE el de un humano.
+#
+# Limite honesto: este baseline es la misma familia de modelo que el pipeline,
+# razonando sobre la misma literatura ISTQB. El acuerdo entre ambos es
+# evidencia debil. Lo informativo es el desacuerdo, y el acuerdo con el humano.
+#
+# NO copies esto a evals/golden/. Ahi va tu criterio.
+# ─────────────────────────────────────────────────────────────────────────────
+workItem: OFBIZ-13033
+source:
+  model: claude-opus-5
+  generatedAt: 2026-11-03T13:13:54.366Z
+  briefSha256: a9cbb62c458a292666d2bec70523129da7ac63413cf8466bb6b855fd269424e4
+expect:
+  approach: reactive
+  approachAlternatives:
+    - directed
+    - regression-averse
+  depth: standard
+  riskLevel: medium
+  levels:
+    - system
+    - acceptance
+  types:
+    - functional
+    - confirmation
+    - regression
+  mandatoryTechniques:
+    - use-case
+    - error-guessing
+    - exploratory
+  ambiguityTopics:
+    - not reproducible on demo-trunk
+    - exact steps and invoice type used
+    - branch/revision under test
+    - dependency on OFBIZ-12994 fix
+    - overlap with OFBIZ-13017 scope
+  riskTopics:
+    - missing/renamed screen reference InvoiceOverview
+    - post-create redirect to invoice view
+    - other invoice screens referencing same widget
+    - invoice created but not displayed
+    - regression across all invoice types (sales/purchase)
+  minCases: 6
+  maxCases: 14
+  requireCleanAudit: true
