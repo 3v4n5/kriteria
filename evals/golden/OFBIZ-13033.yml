@@ -68,9 +68,15 @@ expect:
   # bloquear hasta tener informacion suficiente — no son enfoques ISTQB y no
   # tienen donde ir. Y `mandatoryTechniques: []` se lee como "sin opinion", no
   # como "ninguna, deliberadamente": el esquema no distingue las dos cosas.
-  # Eso no es un campo sin llenar, es un hueco del instrumento, y el hueco de
-  # produccion es mas grande: DesignOutputSchema exige cases.min(1), asi que
-  # el sistema no puede declinar diseñar aunque sea la respuesta correcta.
+  # Eso no es un campo sin llenar, es un hueco del instrumento.
+  #
+  # Corregido el 2026-11-18: cuando se escribio esto, el hueco de produccion
+  # era mas grande — DesignOutputSchema exige cases.min(1), asi que parecia
+  # que el sistema no podia declinar. Era falso: el motor SI declinaba, en sus
+  # propios entryCriteria, y nadie downstream los leia. Hoy el gate de entrada
+  # detiene el pipeline antes del disenador, y `expect.shouldDecline` deja
+  # pedir esa negativa. Este expect no se retrofitea: Evans nunca la contesto
+  # a ciegas, asi que el campo queda ausente y se reporta sin evaluar.
   approachAlternatives: []
   mandatoryTechniques: []
 
