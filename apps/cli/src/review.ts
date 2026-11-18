@@ -18,7 +18,7 @@
  * and into the tool.
  */
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import {
   APPROACH_LABELS,
@@ -29,7 +29,12 @@ import {
   TEST_TECHNIQUES,
   TEST_TYPES,
 } from "@kriteria/istqb";
-import { GoldenEntrySchema, isGoldenEntryFile, type GoldenEntry } from "@kriteria/evals";
+import {
+  GoldenEntrySchema,
+  isExpectationBlank,
+  isGoldenEntryFile,
+  type GoldenEntry,
+} from "@kriteria/evals";
 import { parse as fromYaml, stringify as toYaml } from "yaml";
 import { createAsker, EndOfInput, type Ask } from "./run.js";
 
@@ -242,6 +247,17 @@ export interface ReviewCommandOptions {
   key: string;
   /** "expect" shows the ticket only; "verdict" shows the produced plan. */
   phase: "expect" | "verdict";
+  /**
+   * The short expectation form: five questions instead of ten.
+   *
+   * It drops the ones that cost judgement without buying much — and
+   * deliberately drops `levels` and `types`, which are the two the engine
+   * matched most easily, so the short form scores HARSHER than the long one,
+   * not kinder. What it keeps is where the system and a human have actually
+   * diverged: whether to design at all, depth, risk, and the questions a
+   * reviewer would ask before touching a case.
+   */
+  short?: boolean;
   evalsDir?: string;
   outDir?: string;
   reviewer?: string;
@@ -249,7 +265,12 @@ export interface ReviewCommandOptions {
   log?: (message: string) => void;
 }
 
-export async function reviewCommand(options: ReviewCommandOptions): Promise<void> {
+/** What a single form did, so a queue of them knows whether to continue. */
+export type ReviewOutcome = "saved" | "unchanged" | "aborted";
+
+export async function reviewCommand(
+  options: ReviewCommandOptions,
+): Promise<ReviewOutcome> {
   const evalsDir = options.evalsDir ?? "evals";
   const outDir = options.outDir ?? "out";
   const goldenPath = join(evalsDir, "golden", `${options.key}.yml`);
@@ -276,11 +297,12 @@ export async function reviewCommand(options: ReviewCommandOptions): Promise<void
             join(evalsDir, "briefs", `${options.key}.md`),
             join(outDir, options.key),
             join(evalsDir, "baseline", `${options.key}.yml`),
+            options.short === true,
           )
         : await verdictPhase(ask, entry, join(outDir, options.key), options.reviewer);
     if (!updated) {
       console.log("\n✗ sin cambios.");
-      return;
+      return "unchanged";
     }
     saveWithoutClobbering(goldenPath, openedWith, updated);
     console.log(`\n✓ guardado en ${goldenPath}`);
@@ -289,11 +311,140 @@ export async function reviewCommand(options: ReviewCommandOptions): Promise<void
         `  Siguiente: cuando exista el plan, da tu veredicto con\n    pnpm qa review ${options.key} --verdict`,
       );
     }
+    return "saved";
   } catch (error) {
     if (!(error instanceof EndOfInput)) throw error;
     console.log("\n✗ entrada agotada — no se guardó nada.");
+    return "aborted";
   } finally {
     stdinAsker?.close();
+  }
+}
+
+/**
+ * Golden entries whose expectation nobody has filled, split by whether a
+ * blind one is still possible.
+ *
+ * `blind` is the asset: a brief to read and no model output on disk, so the
+ * expectation measures the system. `spent` already has a plan or a baseline,
+ * and an expectation written now would be recorded `informed` and kept out
+ * of the mechanical ratio — still worth having, but it is no longer the
+ * thing the corpus exists for. `noBrief` has nothing to read.
+ */
+export function pendingExpectations(
+  evalsDir: string,
+  outDir: string,
+): { blind: string[]; spent: string[]; noBrief: string[] } {
+  const goldenDir = join(evalsDir, "golden");
+  const blind: string[] = [];
+  const spent: string[] = [];
+  const noBrief: string[] = [];
+
+  for (const file of readdirSync(goldenDir).filter(isGoldenEntryFile).sort()) {
+    if (file.startsWith("_")) continue; // templates
+    const entry = GoldenEntrySchema.parse(
+      fromYaml(readFileSync(join(goldenDir, file), "utf8")),
+    );
+    if (!isExpectationBlank(entry.expect)) continue;
+    const key = entry.workItem;
+    if (!existsSync(join(evalsDir, "briefs", `${key}.md`))) {
+      noBrief.push(key);
+    } else if (
+      existsSync(join(outDir, key, "testplan.yml")) ||
+      existsSync(join(evalsDir, "baseline", `${key}.yml`))
+    ) {
+      spent.push(key);
+    } else {
+      blind.push(key);
+    }
+  }
+  return { blind, spent, noBrief };
+}
+
+export interface PendingReviewOptions {
+  evalsDir?: string;
+  outDir?: string;
+  /** The five-question form. See `ReviewCommandOptions.short`. */
+  short?: boolean;
+  /** Stop after this many tickets, so a session can be bounded up front. */
+  limit?: number;
+  ask?: Ask;
+}
+
+/**
+ * Walk the unfilled expectations, one form after another.
+ *
+ * The queue exists because the bottleneck was never the engine — it is that
+ * recording a judgement cost a decision about WHICH ticket plus a command
+ * plus ten questions, and the corpus has sat at one filled entry out of
+ * twenty for months. Here the reviewer picks nothing: the next blind ticket
+ * comes up on its own, and stopping is always one keystroke away.
+ */
+export async function pendingReviewCommand(
+  options: PendingReviewOptions = {},
+): Promise<void> {
+  const evalsDir = options.evalsDir ?? "evals";
+  const outDir = options.outDir ?? "out";
+  const { blind, spent, noBrief } = pendingExpectations(evalsDir, outDir);
+
+  if (blind.length === 0) {
+    console.log("\n✓ no queda ninguna expectativa ciega pendiente.");
+    if (spent.length > 0) {
+      console.log(
+        `  ${spent.length} con salida de modelo ya en disco (${spent.join(", ")}):\n` +
+          "    su expectativa ya no puede ser ciega. Se llenan una por una con\n" +
+          "    qa review <KEY>, y quedan marcadas informed.",
+      );
+    }
+    if (noBrief.length > 0) {
+      console.log(`  ${noBrief.length} sin brief que leer: ${noBrief.join(", ")}`);
+    }
+    return;
+  }
+
+  const queue = options.limit ? blind.slice(0, options.limit) : blind;
+  const stdinAsker = options.ask ? undefined : createAsker(process.stdin);
+  const ask: Ask = options.ask ?? stdinAsker!.ask;
+
+  console.log(`\n${"═".repeat(70)}`);
+  console.log(`  ${queue.length} expectativa(s) ciega(s) pendiente(s)`);
+  console.log(`${"═".repeat(70)}`);
+  console.log(
+    "\n  Ninguna de estas tiene plan generado, así que lo que registres aquí\n" +
+      "  mide al sistema de verdad. En cualquier momento: q para parar — lo\n" +
+      "  que ya guardaste se queda guardado.",
+  );
+
+  let saved = 0;
+  try {
+    for (const [index, key] of queue.entries()) {
+      console.log(`\n■ ${index + 1} de ${queue.length} — ${key}`);
+      const outcome = await reviewCommand({
+        key,
+        phase: "expect",
+        evalsDir,
+        outDir,
+        ask,
+        ...(options.short === true ? { short: true } : {}),
+      });
+      if (outcome === "aborted") break;
+      if (outcome === "saved") saved++;
+      if (index === queue.length - 1) break;
+      const more = await ask("\n¿Sigues con el siguiente? (Enter = sí · q = parar)\n   > ");
+      if (more.trim().toLowerCase() === "q") break;
+    }
+  } catch (error) {
+    if (!(error instanceof EndOfInput)) throw error;
+  } finally {
+    stdinAsker?.close();
+  }
+
+  console.log(`\n✓ ${saved} de ${queue.length} registradas.`);
+  const left = blind.length - saved;
+  if (left > 0) {
+    console.log(
+      `  ${left === 1 ? "queda 1 ciega" : `quedan ${left} ciegas`} — sigue con: pnpm qa review --pendientes`,
+    );
   }
 }
 
@@ -307,6 +458,7 @@ async function expectPhase(
   briefPath: string,
   planDir: string,
   baselinePath: string,
+  short = false,
 ): Promise<GoldenEntry | null> {
   console.log(`\n${"═".repeat(70)}`);
   console.log(`  ${entry.workItem} — ¿qué habrías hecho tú?`);
@@ -365,46 +517,59 @@ async function expectPhase(
   console.log(`${"─".repeat(70)}`);
 
   const e = entry.expect;
+  // Numbered by a counter, not by hand: the short form asks five of these and
+  // the long one ten, and a hardcoded "3/10" is wrong in one of the two.
+  const total = short ? 5 : 10;
+  let asked = 0;
+  const q = (text: string) => `${++asked}/${total} · ${text}`;
   // Asked first because every question after it presupposes a plan. On an
   // item too thin to design against, the honest answer is a list of
   // questions, and the engine can now give exactly that — so the form has
   // to be able to ask for it, or a correct refusal scores as a failure.
   const shouldDesign = await askYesNo(
     ask,
-    "1/10 · ¿Hay suficiente en el ticket para diseñar casos?\n" +
+    q("¿Hay suficiente en el ticket para diseñar casos?") + "\n" +
       "   n = no: el sistema debería negarse y pedir información, no inventar el escenario",
   );
-  const approach = await pickOne(
-    ask,
-    "2/10 · ¿Qué enfoque de prueba usarías como principal?",
-    TEST_APPROACHES,
-    APPROACH_LABELS,
-    e.approach,
-  );
+  const approach = short
+    ? e.approach
+    : await pickOne(
+        ask,
+        q("¿Qué enfoque de prueba usarías como principal?"),
+        TEST_APPROACHES,
+        APPROACH_LABELS,
+        e.approach,
+      );
   const approachAlternatives =
-    approach === undefined
+    short || approach === undefined
       ? e.approachAlternatives
       : await pickMany(
           ask,
-          "3/10 · ¿Qué otros enfoques aceptarías como razonables?",
+          q("¿Qué otros enfoques aceptarías como razonables?"),
           TEST_APPROACHES,
           APPROACH_LABELS,
           e.approachAlternatives,
         );
-  const depth = await pickOne(ask, "4/10 · ¿Qué tan a fondo lo probarías?", TEST_DEPTHS, DEPTH_LABELS, e.depth);
-  const riskLevel = await pickOne(ask, "5/10 · ¿Qué tan riesgoso es este cambio?", RISK_LEVELS, RISK_LABELS, e.riskLevel);
-  const levels = await pickMany(ask, "6/10 · ¿En qué niveles DEBE haber pruebas?", TEST_LEVELS, LEVEL_LABELS, e.levels);
-  const types = await pickMany(ask, "7/10 · ¿Qué tipos de prueba DEBE incluir?", TEST_TYPES, TYPE_LABELS, e.types);
-  const mandatoryTechniques = await pickMany(
-    ask,
-    "8/10 · ¿Qué técnicas son NO negociables? (rechazarías el plan sin ellas)",
-    TEST_TECHNIQUES,
-    TECHNIQUE_LABELS,
-    e.mandatoryTechniques,
-  );
+  const depth = await pickOne(ask, q("¿Qué tan a fondo lo probarías?"), TEST_DEPTHS, DEPTH_LABELS, e.depth);
+  const riskLevel = await pickOne(ask, q("¿Qué tan riesgoso es este cambio?"), RISK_LEVELS, RISK_LABELS, e.riskLevel);
+  const levels = short
+    ? e.levels
+    : await pickMany(ask, q("¿En qué niveles DEBE haber pruebas?"), TEST_LEVELS, LEVEL_LABELS, e.levels);
+  const types = short
+    ? e.types
+    : await pickMany(ask, q("¿Qué tipos de prueba DEBE incluir?"), TEST_TYPES, TYPE_LABELS, e.types);
+  const mandatoryTechniques = short
+    ? e.mandatoryTechniques
+    : await pickMany(
+        ask,
+        q("¿Qué técnicas son NO negociables? (rechazarías el plan sin ellas)"),
+        TEST_TECHNIQUES,
+        TECHNIQUE_LABELS,
+        e.mandatoryTechniques,
+      );
   const ambiguityTopics = await askKeywords(
     ask,
-    "9/10 · ¿Qué le preguntarías al autor antes de diseñar?",
+    q("¿Qué le preguntarías al autor antes de diseñar?"),
     "Pocas palabras por tema, no frases. Ej: límite 80, modulo vendor",
     // The matcher is plain containment, on purpose: a fuzzy match would turn
     // a real gap into a silent pass. The cost lands here, so say it here —
@@ -414,13 +579,17 @@ async function expectPhase(
   );
   const riskTopics = await askKeywords(
     ask,
-    "10/10 · ¿Qué te preocupa que se rompa?",
+    q("¿Qué te preocupa que se rompa?"),
     "Mismo criterio. Ej: truncamiento|truncate, rename",
     "El plan se escribe en inglés: agrega la alternativa con | si hace falta.",
     e.riskTopics,
   );
-  const minCases = await askNumber(ask, "¿Mínimo de casos que considerarías sensato? (Enter = sin opinión)", e.minCases);
-  const maxCases = await askNumber(ask, "¿Máximo?", e.maxCases);
+  const minCases = short
+    ? e.minCases
+    : await askNumber(ask, "¿Mínimo de casos que considerarías sensato? (Enter = sin opinión)", e.minCases);
+  const maxCases = short
+    ? e.maxCases
+    : await askNumber(ask, "¿Máximo?", e.maxCases);
 
   const expect = {
     ...e,
@@ -472,12 +641,7 @@ async function verdictPhase(
     );
   }
 
-  const blank =
-    entry.expect.approach === undefined &&
-    entry.expect.depth === undefined &&
-    entry.expect.riskLevel === undefined &&
-    entry.expect.mandatoryTechniques.length === 0 &&
-    entry.expect.ambiguityTopics.length === 0;
+  const blank = isExpectationBlank(entry.expect);
 
   console.log(`\n${"═".repeat(70)}`);
   console.log(`  ${entry.workItem} — veredicto`);

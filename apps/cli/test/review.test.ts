@@ -4,7 +4,12 @@ import { join } from "node:path";
 import { GoldenEntrySchema, isGoldenEntryFile } from "@kriteria/evals";
 import { parse as fromYaml, stringify as toYaml } from "yaml";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { rejectedCopyPath, reviewCommand } from "../src/review.js";
+import {
+  pendingExpectations,
+  pendingReviewCommand,
+  rejectedCopyPath,
+  reviewCommand,
+} from "../src/review.js";
 import type { Ask } from "../src/run.js";
 
 /** Feeds scripted answers; throws if the form asks more than expected. */
@@ -96,22 +101,170 @@ const review = (phase: "expect" | "verdict", answers: string[]) =>
     ask: scripted(answers),
   });
 
+// answers: comments?, criteria lines + blank, enough-to-design?, approach,
+// alternatives, depth, risk, levels, types, techniques, ambiguities, risks,
+// min, max, confirm
+const FULL = [
+  "n",
+  "el valor de 81 caracteres se rechaza", "",
+  "s",
+  "1", "7", "3", "3", "3", "1", "2", "límite 80", "truncate", "6", "12", "s",
+];
+
+/** The same form, answered "no hay suficiente para diseñar". */
+const DECLINE = FULL.map((a, i) => (i === 3 ? "n" : a));
+
+/** The same form, with no opinion either way on that question. */
+const NO_OPINION = FULL.map((a, i) => (i === 3 ? "" : a));
+
+// The short form: comments?, criteria blank, enough-to-design?, depth, risk,
+// ambiguities, risks, confirm. Five questions, same answers where they overlap.
+const SHORT = ["n", "", "s", "3", "3", "límite 80", "truncate", "s"];
+
+/** A blank golden entry plus its brief, as `qa golden-add` would leave them. */
+function addPending(key: string, opts: { brief?: boolean } = {}): void {
+  writeFileSync(
+    join(dir, "evals", "golden", `${key}.yml`),
+    toYaml({ workItem: key, expect: {} }),
+    "utf8",
+  );
+  if (opts.brief !== false) {
+    writeFileSync(join(dir, "evals", "briefs", `${key}.md`), BRIEF, "utf8");
+  }
+}
+
+const pending = () =>
+  pendingExpectations(join(dir, "evals"), join(dir, "out"));
+
+describe("qa review — pendientes", () => {
+  it("lists the blank expectations that can still be answered blind", () => {
+    addPending("AAA-1");
+    addPending("BBB-2");
+    expect(pending().blind).toEqual(["AAA-1", "BBB-2", "OFBIZ-1"]);
+  });
+
+  it("leaves out an expectation someone already filled", async () => {
+    addPending("AAA-1");
+    await review("expect", FULL); // fills OFBIZ-1
+    expect(pending().blind).toEqual(["AAA-1"]);
+  });
+
+  // The asset is a brief with NO model output beside it. Once a plan or a
+  // baseline exists, an expectation written now is `informed` and stays out
+  // of the mechanical ratio, so the queue must not spend a blind slot on it.
+  it("separates the ones a plan already spent", () => {
+    addPending("AAA-1");
+    writePlan(); // out/OFBIZ-1/testplan.yml
+    const p = pending();
+    expect(p.blind).toEqual(["AAA-1"]);
+    expect(p.spent).toEqual(["OFBIZ-1"]);
+  });
+
+  it("counts a baseline on disk as spent too", () => {
+    addPending("AAA-1");
+    mkdirSync(join(dir, "evals", "baseline"), { recursive: true });
+    writeFileSync(
+      join(dir, "evals", "baseline", "AAA-1.yml"),
+      toYaml({ workItem: "AAA-1", expect: {} }),
+      "utf8",
+    );
+    const p = pending();
+    expect(p.blind).toEqual(["OFBIZ-1"]);
+    expect(p.spent).toEqual(["AAA-1"]);
+  });
+
+  it("sets aside the ones with no brief to read", () => {
+    addPending("AAA-1", { brief: false });
+    const p = pending();
+    expect(p.blind).toEqual(["OFBIZ-1"]);
+    expect(p.noBrief).toEqual(["AAA-1"]);
+  });
+
+  it("walks several tickets in one session, so the reviewer picks none", async () => {
+    addPending("AAA-1");
+    await pendingReviewCommand({
+      evalsDir: join(dir, "evals"),
+      outDir: join(dir, "out"),
+      short: true,
+      ask: scripted([...SHORT, "", ...SHORT]),
+    });
+
+    const read = (key: string) =>
+      GoldenEntrySchema.parse(
+        fromYaml(readFileSync(join(dir, "evals", "golden", `${key}.yml`), "utf8")),
+      );
+    expect(read("AAA-1").expect.depth).toBe("thorough");
+    expect(read("OFBIZ-1").expect.depth).toBe("thorough");
+    expect(output()).toContain("2 de 2");
+  });
+
+  it("stops on q and keeps what was already saved", async () => {
+    addPending("AAA-1");
+    await pendingReviewCommand({
+      evalsDir: join(dir, "evals"),
+      outDir: join(dir, "out"),
+      short: true,
+      ask: scripted([...SHORT, "q"]),
+    });
+
+    expect(pending().blind).toEqual(["OFBIZ-1"]);
+    expect(output()).toContain("1 de 2");
+    expect(output()).toContain("queda 1");
+  });
+
+  it("says so when nothing blind is left, instead of opening a form", async () => {
+    await review("expect", FULL);
+    await pendingReviewCommand({
+      evalsDir: join(dir, "evals"),
+      outDir: join(dir, "out"),
+      ask: scripted([]),
+    });
+    expect(output()).toContain("no queda ninguna expectativa ciega");
+  });
+});
+
+describe("qa review — formulario corto", () => {
+  it("asks five questions and records only those dimensions", async () => {
+    await reviewCommand({
+      key: "OFBIZ-1",
+      phase: "expect",
+      evalsDir: join(dir, "evals"),
+      outDir: join(dir, "out"),
+      short: true,
+      ask: scripted(SHORT),
+    });
+
+    const e = GoldenEntrySchema.parse(
+      fromYaml(readFileSync(join(dir, "evals", "golden", "OFBIZ-1.yml"), "utf8")),
+    ).expect;
+    expect(e.shouldDecline).toBe(false);
+    expect(e.depth).toBe("thorough");
+    expect(e.riskLevel).toBe("high");
+    expect(e.ambiguityTopics).toEqual(["límite 80"]);
+    expect(e.riskTopics).toEqual(["truncate"]);
+    // Dropped on purpose: these are the two the engine matches most easily,
+    // so leaving them unevaluated makes the short form harsher, not kinder.
+    expect(e.levels).toEqual([]);
+    expect(e.types).toEqual([]);
+    expect(e.approach).toBeUndefined();
+    expect(e.minCases).toBeUndefined();
+  });
+
+  it("numbers the questions out of five, not out of ten", async () => {
+    await reviewCommand({
+      key: "OFBIZ-1",
+      phase: "expect",
+      evalsDir: join(dir, "evals"),
+      outDir: join(dir, "out"),
+      short: true,
+      ask: scripted(SHORT),
+    });
+    expect(output()).toContain("5/5");
+    expect(output()).not.toContain("/10");
+  });
+});
+
 describe("qa review — expectation phase", () => {
-  // answers: comments?, criteria lines + blank, enough-to-design?, approach,
-  // alternatives, depth, risk, levels, types, techniques, ambiguities, risks,
-  // min, max, confirm
-  const FULL = [
-    "n",
-    "el valor de 81 caracteres se rechaza", "",
-    "s",
-    "1", "7", "3", "3", "3", "1", "2", "límite 80", "truncate", "6", "12", "s",
-  ];
-
-  /** The same form, answered "no hay suficiente para diseñar". */
-  const DECLINE = FULL.map((a, i) => (i === 3 ? "n" : a));
-
-  /** The same form, with no opinion either way on that question. */
-  const NO_OPINION = FULL.map((a, i) => (i === 3 ? "" : a));
 
   it("records the judgement from numbered answers, never raw slugs", async () => {
     await review("expect", FULL);

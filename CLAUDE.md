@@ -30,6 +30,8 @@ pnpm qa report out/<REF>            # HTML report
 pnpm qa eval [--only REF]           # score against the golden set (no API cost)
 pnpm qa review <KEY>                # guided form: your judgement, before seeing the plan
 pnpm qa review <KEY> --verdict      # shows the plan, records the Fase 0 verdict
+pnpm qa review --pendientes         # walk every unfilled blind expectation, one after another
+pnpm qa review --pendientes --rapido  # the 5-question form (drops levels/types: harsher, not kinder)
 pnpm qa golden-add <KEY...>         # pull public tickets into the corpus (no API cost)
 pnpm qa baseline <KEY...>           # independent model judgement — COSTS API (Opus)
 pnpm test                           # vitest

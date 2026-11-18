@@ -154,4 +154,27 @@ export type GoldenEntry = z.infer<typeof GoldenEntrySchema>;
  * happens to end in `.yml` becomes a second, phantom expectation for the
  * same work item.
  */
+/**
+ * No dimension of this expectation was claimed, so there is nothing to score.
+ *
+ * `requireCleanAudit` is deliberately ignored: it defaults to true, so every
+ * untouched entry carries it, and counting it would make a blank form look
+ * answered. Lives here rather than in a command because two readers ask it —
+ * the verdict phase, to warn that there will be no comparison, and the
+ * pending-review queue, to find the forms nobody has filled.
+ */
+export const isExpectationBlank = (e: Expectation): boolean =>
+  e.approach === undefined &&
+  e.depth === undefined &&
+  e.riskLevel === undefined &&
+  e.shouldDecline === undefined &&
+  e.minCases === undefined &&
+  e.maxCases === undefined &&
+  e.approachAlternatives.length === 0 &&
+  e.levels.length === 0 &&
+  e.types.length === 0 &&
+  e.mandatoryTechniques.length === 0 &&
+  e.ambiguityTopics.length === 0 &&
+  e.riskTopics.length === 0;
+
 export const isGoldenEntryFile = (name: string): boolean => /\.ya?ml$/.test(name);
