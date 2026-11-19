@@ -160,25 +160,109 @@ async function pickMany<T extends string>(
   }
 }
 
-/** Free-text keywords, comma separated. */
-async function askKeywords(
+/**
+ * The two topic checklists.
+ *
+ * These questions used to be free text, and that quietly required the reviewer
+ * to be a domain expert on whatever repository the ticket came from. The
+ * corpus is public Apache and Jenkins issues: "what would you ask the author"
+ * is unanswerable if you have never seen the module, and a question nobody can
+ * answer is a field that stays empty — which is exactly where this corpus sat
+ * for months.
+ *
+ * What a senior QA CAN judge from a hundred words of someone else's ticket is
+ * structural: which of the things a test designer needs this ticket does not
+ * say, and which generic failure modes this kind of change invites. So both
+ * questions became checklists over those.
+ *
+ * The keyword behind each option is a constant written here by hand, exactly
+ * like the Spanish labels for the ISTQB enums above. The reviewer still
+ * supplies the judgement — which boxes — and no model writes into `expect`.
+ * Typing a topic stays available for the case where the reviewer does know the
+ * module and has something specific to say.
+ */
+interface TopicOption {
+  /** Matched against the plan's prose by containment. See `mentions`. */
+  readonly keyword: string;
+  readonly label: string;
+}
+
+/** What the ticket does not say — becomes `ambiguityTopics`. */
+const GAP_CHECKLIST: readonly TopicOption[] = [
+  { keyword: "expected|esperado", label: "qué resultado se espera — dice qué está mal, no qué debería pasar" },
+  { keyword: "reproduc", label: "cómo reproducirlo — los pasos, o el caso donde ocurre" },
+  { keyword: "version|entorno|environment", label: "en qué versión o entorno pasa" },
+  { keyword: "config|setting|parametr", label: "qué configuración hace falta para que ocurra" },
+  { keyword: "scope|alcance", label: "hasta dónde llega el cambio — qué NO debería tocarse" },
+  { keyword: "example|ejemplo|sample", label: "datos o valores concretos de ejemplo" },
+  { keyword: "accept|criteri|verif", label: "cómo se verifica que quedó bien" },
+  { keyword: "root cause|causa|why", label: "por qué pasa — la causa, no solo el síntoma" },
+  { keyword: "impact|afecta|user", label: "a quién afecta y en qué flujo" },
+];
+
+/** How this kind of change tends to break — becomes `riskTopics`. */
+const FAILURE_CHECKLIST: readonly TopicOption[] = [
+  { keyword: "boundary|limit|limite|edge", label: "los bordes — vacío, cero, el máximo, lo muy largo" },
+  { keyword: "invalid|malformed|invalido", label: "datos inválidos o mal formados" },
+  { keyword: "regress|regresion", label: "que el arreglo rompa lo que ya funcionaba" },
+  { keyword: "concurren|race|simultane", label: "concurrencia — dos cosas a la vez, orden de los eventos" },
+  { keyword: "permission|role|authoriz|permiso", label: "permisos — quién puede ver o hacer qué" },
+  { keyword: "performance|volume|rendimiento", label: "rendimiento con volumen real" },
+  { keyword: "backward|compat|migrat", label: "compatibilidad con los datos o la configuración que ya existen" },
+  { keyword: "integrat|integracion", label: "la integración con otro sistema o servicio" },
+  { keyword: "error handling|failure|fallo", label: "qué pasa cuando algo falla — el manejo del error" },
+  { keyword: "incomplete|partial|missed", label: "que el cambio se aplique en un camino y se olvide de otro" },
+];
+
+/**
+ * A checklist of topics, with typing still allowed.
+ *
+ * Numbers pick from the list. Anything that is not a list of numbers is read
+ * as topics typed by hand, so a reviewer who knows the module is never forced
+ * through a generic menu to say something specific.
+ */
+async function pickTopics(
   ask: Ask,
   question: string,
   hint: string,
-  stemHint: string,
+  options: readonly TopicOption[],
   current: readonly string[] = [],
 ): Promise<string[]> {
   console.log(`\n${question}`);
   console.log(`   ${hint}`);
-  console.log(`   ${stemHint}`);
+  options.forEach((option, i) => {
+    const mark = current.includes(option.keyword) ? " \u2190" : "";
+    console.log(`   ${String(i + 1).padStart(2)}) ${option.label}${mark}`);
+  });
   if (current.length > 0) console.log(`   actual: ${current.join(", ")}`);
-  console.log("   (separa con coma · Enter = ninguno)");
-  const raw = (await ask("   > ")).trim();
-  if (raw === "") return [...current];
-  return raw
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean);
+  console.log("   (marca varias con coma, ej: 1,3,7 · Enter = ninguna)");
+  // The matcher is plain containment, on purpose: a fuzzy match would turn a
+  // real gap into a silent pass. The cost of that lands on anyone typing a
+  // topic by hand, so it is said right where they would type it.
+  console.log("   (o escríbelo tú: usa la raíz — block encuentra blocking y blocked)");
+
+  for (;;) {
+    const raw = (await ask("   > ")).trim();
+    if (raw === "") return [...current];
+    const parts = raw.split(/[,\s]+/).filter(Boolean);
+    if (!parts.every((part) => /^\d+$/.test(part))) {
+      return raw
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+    }
+    const picked = parts.map((part) => Number.parseInt(part, 10));
+    const invalid = picked.filter((n) => n < 1 || n > options.length);
+    if (invalid.length > 0) {
+      console.log(
+        `   \u26a0 fuera de rango: ${invalid.join(", ")} — usa 1 a ${options.length}, o escribe el tema`,
+      );
+      continue;
+    }
+    const chosen = new Set(picked);
+    // In the table's own order, so the file is stable however it was typed.
+    return options.filter((_, i) => chosen.has(i + 1)).map((option) => option.keyword);
+  }
 }
 
 /**
@@ -524,8 +608,9 @@ async function expectPhase(
   console.log("  Tus decisiones. Enter en cualquiera = no tengo opinión.");
   if (short) {
     console.log(
-      "  (formulario corto: 5 preguntas. Los criterios de aceptación y las\n" +
-        `   demás dimensiones te las pide el largo: qa review ${entry.workItem})`,
+      "  (formulario corto: 5 preguntas, todas de opción múltiple — se contestan\n" +
+        "   leyendo solo lo de arriba, sin conocer el código. Los criterios de\n" +
+        `   aceptación y las demás te las pide el largo: qa review ${entry.workItem})`,
     );
   }
   console.log(`${"─".repeat(70)}`);
@@ -542,7 +627,8 @@ async function expectPhase(
   // to be able to ask for it, or a correct refusal scores as a failure.
   const shouldDesign = await askYesNo(
     ask,
-    q("¿Hay suficiente en el ticket para diseñar casos?") + "\n" +
+    q("¿Se pueden diseñar pruebas con lo que este ticket dice?") + "\n" +
+      "   s = sí: alcanza para saber qué comprobarías y cómo sabrías que quedó bien\n" +
       "   n = no: el sistema debería negarse y pedir información, no inventar el escenario",
   );
   const approach = short
@@ -564,8 +650,23 @@ async function expectPhase(
           APPROACH_LABELS,
           e.approachAlternatives,
         );
-  const depth = await pickOne(ask, q("¿Qué tan a fondo lo probarías?"), TEST_DEPTHS, DEPTH_LABELS, e.depth);
-  const riskLevel = await pickOne(ask, q("¿Qué tan riesgoso es este cambio?"), RISK_LEVELS, RISK_LABELS, e.riskLevel);
+  // Risk first, then depth: in ISTQB the second follows from the first
+  // (`riskLevelFromScore` then `depthForLevel`), and asking depth cold invites
+  // an answer that contradicts the risk the same reviewer is about to give.
+  const riskLevel = await pickOne(
+    ask,
+    q("Si esto sale mal en producción, ¿qué tan grave es?"),
+    RISK_LEVELS,
+    RISK_LABELS,
+    e.riskLevel,
+  );
+  const depth = await pickOne(
+    ask,
+    q("Entonces, ¿cuánto esfuerzo de prueba merece?"),
+    TEST_DEPTHS,
+    DEPTH_LABELS,
+    e.depth,
+  );
   const levels = short
     ? e.levels
     : await pickMany(ask, q("¿En qué niveles DEBE haber pruebas?"), TEST_LEVELS, LEVEL_LABELS, e.levels);
@@ -581,21 +682,18 @@ async function expectPhase(
         TECHNIQUE_LABELS,
         e.mandatoryTechniques,
       );
-  const ambiguityTopics = await askKeywords(
+  const ambiguityTopics = await pickTopics(
     ask,
-    q("¿Qué le preguntarías al autor antes de diseñar?"),
-    "Pocas palabras por tema, no frases. Ej: límite 80, modulo vendor",
-    // The matcher is plain containment, on purpose: a fuzzy match would turn
-    // a real gap into a silent pass. The cost lands here, so say it here —
-    // `bloqueo` finds "bloqueado", `bloqueado` does not find "bloqueo".
-    "Usa la raíz, no la forma conjugada: block encuentra blocking y blocked.",
+    q("¿Qué le falta a este ticket?"),
+    "Marca lo que el ticket NO dice. Eso es lo que el sistema debería preguntar.",
+    GAP_CHECKLIST,
     e.ambiguityTopics,
   );
-  const riskTopics = await askKeywords(
+  const riskTopics = await pickTopics(
     ask,
     q("¿Qué te preocupa que se rompa?"),
-    "Mismo criterio. Ej: truncamiento|truncate, rename",
-    "El plan se escribe en inglés: agrega la alternativa con | si hace falta.",
+    "No hace falta conocer el código: son las formas típicas en que esto falla.",
+    FAILURE_CHECKLIST,
     e.riskTopics,
   );
   const minCases = short
@@ -783,6 +881,21 @@ const truncate = (text: string, max: number): string =>
     ? text
     : `${text.slice(0, max)}\n… (${text.length - max} caracteres más — están en el brief)`;
 
+/**
+ * A ticked box reads back as its label; a typed topic reads back as itself.
+ *
+ * Only the head of the label, up to the dash: the tail is the example that
+ * made the option understandable in the list, and three of those joined by
+ * commas in one summary line is unreadable.
+ */
+const describeTopic = (
+  topic: string,
+  options: readonly TopicOption[],
+): string => {
+  const found = options.find((option) => option.keyword === topic);
+  return found ? (found.label.split(" \u2014 ")[0] ?? found.label) : topic;
+};
+
 function summarize(e: GoldenEntry["expect"]): string[] {
   const out: string[] = [];
   const show = (name: string, value: unknown) => {
@@ -808,8 +921,11 @@ function summarize(e: GoldenEntry["expect"]): string[] {
   show("niveles", e.levels);
   show("tipos", e.types);
   show("técnicas obligatorias", e.mandatoryTechniques);
-  show("ambigüedades", e.ambiguityTopics);
-  show("riesgos", e.riskTopics);
+  // Read back as what was ticked, not as the keyword stored. A reviewer who
+  // just picked "cómo reproducirlo" should not have to recognise himself in
+  // `reproduc` to check that the form understood him.
+  show("ambigüedades", e.ambiguityTopics.map((t) => describeTopic(t, GAP_CHECKLIST)));
+  show("riesgos", e.riskTopics.map((t) => describeTopic(t, FAILURE_CHECKLIST)));
   show(
     "casos",
     e.minCases === undefined && e.maxCases === undefined

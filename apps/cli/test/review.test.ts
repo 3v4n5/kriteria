@@ -385,8 +385,48 @@ describe("qa review — expectation phase", () => {
   // matches. The reviewer has no way to know that unless the form says it.
   it("warns that topics must be stems, where the reviewer types them", async () => {
     await review("expect", FULL);
-    expect(output()).toContain("Usa la raíz");
+    expect(output()).toContain("usa la raíz");
     expect(output()).toContain("block encuentra blocking");
+  });
+
+  // The corpus is public Apache and Jenkins issues. A reviewer who has never
+  // seen the module cannot answer "what would you ask the author" as prose,
+  // and the field sat empty for months because of it. Both topic questions
+  // must therefore offer something to tick.
+  it("offers the topic questions as a checklist, not as an empty prompt", async () => {
+    await review("expect", FULL);
+    expect(output()).toContain("¿Qué le falta a este ticket?");
+    expect(output()).toContain("cómo reproducirlo");
+    expect(output()).toContain("¿Qué te preocupa que se rompa?");
+    expect(output()).toContain("que el arreglo rompa lo que ya funcionaba");
+  });
+
+  // Picking a box must store the keyword the scorer matches with, never the
+  // number the reviewer typed: a golden entry of "2,3" would match nothing
+  // and report as a miss on every plan forever.
+  it("stores the keyword behind a ticked box, not the number", async () => {
+    const picked = FULL.map((a, i) => (i === 11 ? "2,3" : i === 12 ? "3" : a));
+    await review("expect", picked);
+    expect(readGolden().expect.ambiguityTopics).toEqual([
+      "reproduc",
+      "version|entorno|environment",
+    ]);
+    expect(readGolden().expect.riskTopics).toEqual(["regress|regresion"]);
+  });
+
+  it("rejects a box that is not on the list instead of storing it", async () => {
+    const bad = [...FULL.slice(0, 11), "99", "1", ...FULL.slice(12)];
+    await review("expect", bad);
+    expect(output()).toContain("fuera de rango: 99");
+    expect(readGolden().expect.ambiguityTopics).toEqual(["expected|esperado"]);
+  });
+
+  // A reviewer who does know the module must not be forced through a generic
+  // menu to say something specific, so anything that is not numbers is prose.
+  it("still accepts a topic typed by hand", async () => {
+    await review("expect", FULL);
+    expect(readGolden().expect.ambiguityTopics).toEqual(["límite 80"]);
+    expect(readGolden().expect.riskTopics).toEqual(["truncate"]);
   });
 
   it("keeps the rationale that explains why the ticket is in the set", async () => {
