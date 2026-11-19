@@ -501,19 +501,33 @@ async function expectPhase(
   const hasOwnCriteria = /\*\*AC-\d/.test(
     existsSync(briefPath) ? readFileSync(briefPath, "utf8") : "",
   );
-  const reviewerCriteria = await askLines(
-    ask,
-    hasOwnCriteria
-      ? "El ticket ya trae criterios. ¿Agregarías o corregirías alguno?"
-      : "Este ticket NO trae criterios de aceptación. ¿Cuáles deberían ser?",
-    hasOwnCriteria
-      ? "Solo los que falten o estén mal. Enter directo si los de arriba te sirven."
-      : "Lo que debe cumplirse para darlo por bueno. Uno por línea.",
-    entry.reviewerCriteria,
-  );
+  // The short form skips this one, and it is the reason the short form is
+  // worth having: on a corpus of real tickets most carry NO acceptance
+  // criteria, so this prompt asks the reviewer to WRITE them in prose before
+  // any of the scored questions. It is the most expensive thing in the form
+  // and the only part `qa eval` never reads. A form nobody finishes measures
+  // nothing, so in `--rapido` it waits for the long form.
+  const reviewerCriteria = short
+    ? entry.reviewerCriteria
+    : await askLines(
+        ask,
+        hasOwnCriteria
+          ? "El ticket ya trae criterios. ¿Agregarías o corregirías alguno?"
+          : "Este ticket NO trae criterios de aceptación. ¿Cuáles deberían ser?",
+        hasOwnCriteria
+          ? "Solo los que falten o estén mal. Enter directo si los de arriba te sirven."
+          : "Lo que debe cumplirse para darlo por bueno. Uno por línea.",
+        entry.reviewerCriteria,
+      );
 
   console.log(`\n${"─".repeat(70)}`);
   console.log("  Tus decisiones. Enter en cualquiera = no tengo opinión.");
+  if (short) {
+    console.log(
+      "  (formulario corto: 5 preguntas. Los criterios de aceptación y las\n" +
+        `   demás dimensiones te las pide el largo: qa review ${entry.workItem})`,
+    );
+  }
   console.log(`${"─".repeat(70)}`);
 
   const e = entry.expect;

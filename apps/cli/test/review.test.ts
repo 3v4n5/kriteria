@@ -117,9 +117,9 @@ const DECLINE = FULL.map((a, i) => (i === 3 ? "n" : a));
 /** The same form, with no opinion either way on that question. */
 const NO_OPINION = FULL.map((a, i) => (i === 3 ? "" : a));
 
-// The short form: comments?, criteria blank, enough-to-design?, depth, risk,
-// ambiguities, risks, confirm. Five questions, same answers where they overlap.
-const SHORT = ["n", "", "s", "3", "3", "límite 80", "truncate", "s"];
+// The short form: comments?, enough-to-design?, depth, risk, ambiguities,
+// risks, confirm. No criteria prompt — that is what makes it short.
+const SHORT = ["n", "s", "3", "3", "límite 80", "truncate", "s"];
 
 /** A blank golden entry plus its brief, as `qa golden-add` would leave them. */
 function addPending(key: string, opts: { brief?: boolean } = {}): void {
@@ -248,6 +248,35 @@ describe("qa review — formulario corto", () => {
     expect(e.types).toEqual([]);
     expect(e.approach).toBeUndefined();
     expect(e.minCases).toBeUndefined();
+  });
+
+  // 12 of the 15 real tickets carry no acceptance criteria, so the long form
+  // asks the reviewer to write them in prose before anything scored. That is
+  // the cost that kept the corpus empty.
+  it("never asks for acceptance criteria, and keeps the ones already there", async () => {
+    writeFileSync(
+      join(dir, "evals", "golden", "OFBIZ-1.yml"),
+      toYaml({
+        workItem: "OFBIZ-1",
+        reviewerCriteria: ["lo que escribí antes"],
+        expect: {},
+      }),
+      "utf8",
+    );
+    await reviewCommand({
+      key: "OFBIZ-1",
+      phase: "expect",
+      evalsDir: join(dir, "evals"),
+      outDir: join(dir, "out"),
+      short: true,
+      ask: scripted(SHORT), // one answer short if it asked
+    });
+
+    const entry = GoldenEntrySchema.parse(
+      fromYaml(readFileSync(join(dir, "evals", "golden", "OFBIZ-1.yml"), "utf8")),
+    );
+    expect(entry.reviewerCriteria).toEqual(["lo que escribí antes"]);
+    expect(entry.expect.depth).toBe("thorough");
   });
 
   it("numbers the questions out of five, not out of ten", async () => {
