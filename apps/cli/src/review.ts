@@ -43,14 +43,14 @@ import { createAsker, EndOfInput, type Ask } from "./run.js";
 // owns the vocabulary; how it is shown to this reviewer is a UI concern.
 // ---------------------------------------------------------------------------
 
-const DEPTH_LABELS: Record<string, string> = {
+export const DEPTH_LABELS: Record<string, string> = {
   smoke: "smoke — solo que no esté roto",
   standard: "standard — cobertura normal",
   thorough: "thorough — a fondo, incluye bordes y regresión",
   exhaustive: "exhaustive — todo lo que se pueda enumerar",
 };
 
-const RISK_LABELS: Record<string, string> = {
+export const RISK_LABELS: Record<string, string> = {
   low: "bajo — si falla, molesta",
   medium: "medio — si falla, duele",
   high: "alto — si falla, hay pérdida real",
@@ -181,14 +181,14 @@ async function pickMany<T extends string>(
  * Typing a topic stays available for the case where the reviewer does know the
  * module and has something specific to say.
  */
-interface TopicOption {
+export interface TopicOption {
   /** Matched against the plan's prose by containment. See `mentions`. */
   readonly keyword: string;
   readonly label: string;
 }
 
 /** What the ticket does not say — becomes `ambiguityTopics`. */
-const GAP_CHECKLIST: readonly TopicOption[] = [
+export const GAP_CHECKLIST: readonly TopicOption[] = [
   { keyword: "expected|esperado", label: "qué resultado se espera — dice qué está mal, no qué debería pasar" },
   { keyword: "reproduc", label: "cómo reproducirlo — los pasos, o el caso donde ocurre" },
   { keyword: "version|entorno|environment", label: "en qué versión o entorno pasa" },
@@ -201,7 +201,7 @@ const GAP_CHECKLIST: readonly TopicOption[] = [
 ];
 
 /** How this kind of change tends to break — becomes `riskTopics`. */
-const FAILURE_CHECKLIST: readonly TopicOption[] = [
+export const FAILURE_CHECKLIST: readonly TopicOption[] = [
   { keyword: "boundary|limit|limite|edge", label: "los bordes — vacío, cero, el máximo, lo muy largo" },
   { keyword: "invalid|malformed|invalido", label: "datos inválidos o mal formados" },
   { keyword: "regress|regresion", label: "que el arreglo rompa lo que ya funcionaba" },
