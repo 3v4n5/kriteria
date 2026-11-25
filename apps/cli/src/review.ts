@@ -19,7 +19,7 @@
  */
 
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { basename, dirname, join } from "node:path";
 import {
   APPROACH_LABELS,
   RISK_LEVELS,
@@ -573,18 +573,22 @@ async function expectPhase(
     );
   }
 
-  if (!existsSync(briefPath)) {
+  const brief = existsSync(briefPath) ? readBrief(briefPath) : null;
+  if (!brief) {
     console.log(`\n  ⚠ no hay brief en ${briefPath} — vas a juzgar a ciegas.`);
   } else {
-    await showBrief(ask, readFileSync(briefPath, "utf8"));
+    if (brief.translated) {
+      console.log(
+        `\n  (traducción literal al español — el original está en ${briefPath})`,
+      );
+    }
+    await showBrief(ask, brief.text);
   }
 
   // Asked BEFORE the strategy questions: writing the criteria is how a
   // reviewer works out what the ticket even asks for, and the answer should
   // inform the decisions that follow — not be an afterthought.
-  const hasOwnCriteria = /\*\*AC-\d/.test(
-    existsSync(briefPath) ? readFileSync(briefPath, "utf8") : "",
-  );
+  const hasOwnCriteria = /\*\*AC-\d/.test(brief?.text ?? "");
   // The short form skips this one, and it is the reason the short form is
   // worth having: on a corpus of real tickets most carry NO acceptance
   // criteria, so this prompt asks the reviewer to WRITE them in prose before
@@ -824,6 +828,26 @@ async function verdictPhase(
       notes: notes || entry.humanVerdict.notes,
     },
   };
+}
+
+/**
+ * The brief to read, preferring the Spanish translation beside it.
+ *
+ * `briefs/es/<KEY>.md` is a literal translation of `briefs/<KEY>.md`: same
+ * sections, same wording, same gaps. It exists because the corpus is public
+ * tickets from repositories the reviewer has never seen, and a form nobody
+ * can read produces an empty field — which measures nothing at all.
+ *
+ * The translation completes nothing and explains nothing, on purpose: where
+ * it reads vague the ticket is vague, and that vagueness is the thing the
+ * reviewer is being asked to judge. The original stays on disk, and the
+ * caller says where.
+ */
+function readBrief(briefPath: string): { text: string; translated: boolean } {
+  const spanish = join(dirname(briefPath), "es", basename(briefPath));
+  return existsSync(spanish)
+    ? { text: readFileSync(spanish, "utf8"), translated: true }
+    : { text: readFileSync(briefPath, "utf8"), translated: false };
 }
 
 /** Prints the ticket in sections, with the comments behind a prompt. */

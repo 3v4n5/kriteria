@@ -42,6 +42,28 @@ The field must reject values over 80 characters.
 Lowering the column from 255 to 80 can truncate existing data.
 `;
 
+/** The same ticket, translated the way `briefs/es/<KEY>.md` holds it. */
+const BRIEF_ES = `> Fuente: apache · https://issues.apache.org/jira/browse/OFBIZ-1
+
+# OFBIZ-1 — El nombre del proveedor debe permitir máximo 80 caracteres
+
+**Tipo:** Bug · **Prioridad:** Major
+
+## Descripción
+
+El campo debe rechazar valores de más de 80 caracteres.
+
+## Criterios de aceptación
+
+- **AC-1** Un valor de 81 caracteres se rechaza
+
+## Comentarios
+
+### Comentario 1
+
+Bajar la columna de 255 a 80 puede truncar los datos que ya existen.
+`;
+
 const PLAN = {
   workItem: "OFBIZ-1",
   strategy: {
@@ -120,6 +142,12 @@ const NO_OPINION = FULL.map((a, i) => (i === 3 ? "" : a));
 // The short form: comments?, enough-to-design?, depth, risk, ambiguities,
 // risks, confirm. No criteria prompt — that is what makes it short.
 const SHORT = ["n", "s", "3", "3", "límite 80", "truncate", "s"];
+
+/** Drops a Spanish brief beside the English one, as the repo ships it. */
+function writeTranslation(text: string): void {
+  mkdirSync(join(dir, "evals", "briefs", "es"), { recursive: true });
+  writeFileSync(join(dir, "evals", "briefs", "es", "OFBIZ-1.md"), text, "utf8");
+}
 
 /** A blank golden entry plus its brief, as `qa golden-add` would leave them. */
 function addPending(key: string, opts: { brief?: boolean } = {}): void {
@@ -466,6 +494,56 @@ describe("qa review — expectation phase", () => {
   it("asks only for additions when the ticket already declares criteria", async () => {
     await review("expect", [...FULL]);
     expect(output()).toContain("ya trae criterios");
+  });
+
+  // The corpus is public tickets from repositories the reviewer has never
+  // seen. A form in a language they read with effort produces empty fields,
+  // and an empty field measures nothing — so a translation beside the brief
+  // is what gets shown.
+  it("shows the translation when one sits beside the brief", async () => {
+    writeTranslation(BRIEF_ES);
+    await review("expect", FULL);
+    expect(output()).toContain("El campo debe rechazar valores de más de 80");
+    expect(output()).not.toContain("The field must reject values over 80");
+  });
+
+  // Translating puts a model between the reviewer and the input the system is
+  // measured on. The reviewer has to be able to go check it, so the form says
+  // where the untouched original is.
+  it("names the original whenever it shows a translation", async () => {
+    writeTranslation(BRIEF_ES);
+    await review("expect", FULL);
+    expect(output()).toContain("traducción literal");
+    expect(output()).toContain(join("briefs", "OFBIZ-1.md"));
+  });
+
+  it("shows the original ticket when there is no translation", async () => {
+    await review("expect", FULL);
+    expect(output()).toContain("The field must reject values over 80");
+    expect(output()).not.toContain("traducción literal");
+  });
+
+  // The criteria prompt has to follow the text on screen, not the file on
+  // disk: asking "the ticket already has criteria" about a section the
+  // reviewer was never shown is how a form loses its reader.
+  it("asks for criteria based on the brief it actually showed", async () => {
+    writeTranslation(
+      BRIEF_ES.replace(
+        "- **AC-1** Un valor de 81 caracteres se rechaza",
+        "_(el ticket no declara criterios de aceptación)_",
+      ),
+    );
+
+    await review("expect", [
+      "n",
+      "un valor de 81 caracteres se rechaza",
+      "",
+      "s",
+      "1", "7", "3", "3", "3", "1", "2", "", "", "", "", "s",
+    ]);
+
+    expect(output()).toContain("NO trae criterios de aceptación");
+    expect(readGolden().reviewerCriteria).toHaveLength(1);
   });
 
   it("keeps the criteria out of expect, which is scored dimension by dimension", async () => {
